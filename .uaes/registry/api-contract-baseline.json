@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "source_repository": "hu-xulin/uter",
-  "source_commit": "24a7d9a4f6525134c5fa8c2a6a2cf076e25cfacc",
+  "source_commit": "a79780810d02f775699138cd36b9ac050abb4bd0",
   "documents": {
     "docs-dev/openapi/api.json": {
       "openapi": "3.0.1",
@@ -1754,7 +1754,7 @@
           ]
         },
         "POST /v1/images/edits": {
-          "operationId": "createImage",
+          "operationId": "editImage",
           "requiredParameters": [],
           "requiredBodyProperties": [
             "input",
