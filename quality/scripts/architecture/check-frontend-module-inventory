@@ -91,7 +91,7 @@ files.each do |file|
       test_edges[edge_key] += 1
     else
       production_edges[edge_key] += 1
-      if from != to && production_samples[edge_key].length < 8
+      if from != to && production_samples[edge_key].length < 64
         production_samples[edge_key] << "#{relative_importer} -> #{specifier} => #{target_relative}"
       end
     end
