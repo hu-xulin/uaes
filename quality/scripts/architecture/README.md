@@ -10,6 +10,7 @@ The architecture gate remains **DRAFT**. A check is considered accepted only whe
 | check-api-contracts | IMPLEMENTED FOR TWO OPENAPI DOCS; CI PASS | Validates OpenAPI 3.x structure, local references, security scheme references, operationId uniqueness, responses, and compatibility against the pinned baseline (operation removals, operationId changes, new required parameters/body fields, response removals, schema/property/type/enum breaks). |
 | check-database-migrations | INVENTORY VALIDATION IMPLEMENTED; SAFETY NOT_VERIFIED | Validates pinned source identity, every registered custom migration source/function, unique IDs/order, and manual SQL files. It explicitly does not claim cross-dialect compatibility or rollback safety; those remain blocked. |
 | check-frontend-module-inventory | INVENTORY ONLY; BOUNDARIES NOT_VERIFIED | Resolves alias/relative TypeScript/JavaScript imports and reports observed top-level module edges. It does not yet enforce allowed dependency directions; those require review of the measured graph. |
+| check-router-openapi-drift | IMPLEMENTED; RUNTIME DRIFT FOUND; RECHECK PENDING | Captures static Gin routes plus the active built-in task-plugin generation, then checks documented OpenAPI operations against actual route patterns. First run exposed 7 mismatches; 5 are built-in dynamic plugin routes now added to inventory, while 2 management operations remain undocumented by runtime Gin routes. |
 
 ## Source requirements
 
@@ -23,13 +24,15 @@ ruby quality/scripts/architecture/check-dependency-rules
 ruby quality/scripts/architecture/test-dependency-rules.rb
 UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-frontend-module-inventory
 ruby quality/scripts/architecture/test-frontend-module-inventory.rb
+UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-router-openapi-drift
+ruby quality/scripts/architecture/test-router-openapi-drift.rb
 ```
 
 ## CI evidence
 
 Current pinned source: Uter PR #15 head `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Latest Architecture Source Checks: **PASS** — https://github.com/hu-xulin/uaes/actions/runs/41900900229 (UAES commit `870553801fa568d34700ddaa227a882211f3fcad`).
+Latest fully successful Architecture Source Checks before the router/OpenAPI checker was added: https://github.com/hu-xulin/uaes/actions/runs/41901973265 (UAES commit `c00435e2d564eb563afb473101c0481ec923620f`). Current Governance Validation passed at `ecf539cf7696e7afec4b57916a8f87a09318bb38`; the current Architecture Source Checks run failed on the initial route inventory because built-in dynamic plugin routes were not yet included. The checker has been corrected; a new run is required before reporting its outcome.
 
 Successful steps:
 - Validate module manifests
@@ -58,4 +61,4 @@ Database migration inventory integrity is now checked in CI: **20 custom migrati
 
 Frontend import inventory is now implemented and runs in CI against the pinned Uter checkout. The first scan covered 1,500 TypeScript/JavaScript source files and resolved all alias/relative local imports. Observed edges include `components → features` (18), `hooks → features` (2), `lib → features` (4), `stores → features` (1), and `features → routes` (6); `features → features` (2,809) and `features → components` (1,751) are also substantial. These are evidence of existing cross-layer coupling, not automatically defects. The checker is inventory-only and prints `FRONTEND MODULE BOUNDARIES: NOT_VERIFIED`; the exact dependency policy must be designed around this measured graph, including workspace-level relative imports, before any MUST rule is enforced. `features/` is organized into domain slices such as auth, channels, chat, dashboard, keys, models, and playground.
 
-Router-to-OpenAPI implementation drift is also not yet covered. Source inspection confirms that `SetRouter` composes `SetApiRouter`, `SetDashboardRouter`, `SetRelayRouter`, `SetTaskPluginProtocolRouter`, `SetVideoRouter`, `SetTaskRouter`, and `SetPluginRouter`; route creation includes nested Gin `Group` prefixes, helper-based `handlePermissionRoute`, dynamic `Handle(method, path)` registrations, host protocol operations from `HostProtocols()`, and plugin-generation routes. A line-oriented regex inventory would therefore be incomplete and can mis-normalize nested `/` groups. The current OpenAPI checker validates the documents and compatibility baseline only; it does not compare a runtime Gin route inventory to OpenAPI. The next implementation must capture the actual Gin engine route table in an isolated test harness and explicitly classify dynamic/plugin/SPA routes before diffing. This remains an explicit architecture blocker. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
+Router-to-OpenAPI drift checker now captures the real Gin route table in a temporary test and also reads `jsplugin.DefaultRegistry.Generation().Routes()` so built-in dynamic plugin endpoints are not omitted merely because they are served through the plugin dispatcher rather than the outer Gin engine. The first runtime capture recorded 450 static Gin routes and identified 7 OpenAPI operations without a matching static route. Source inspection and `plugins/builtin_plugins_test.go` confirmed that 4 Kling operations and `POST /jimeng/` are declared by the built-in `kling` and `jimeng` plugin generation; the checker has now been corrected to include those dynamic routes. Two management API operations remain absent from the actual router registrations: `POST /api/oauth/wechat/bind` and `GET /api/verify/status` (the current router instead registers WeChat web OAuth flows and `/api/verify/methods` / `/api/verify`). These are contract discrepancies, not safe-to-ignore false positives. The updated runtime check must be rerun; if those two operations remain unmatched, the gate correctly fails pending an explicit API implementation or contract-owner decision. Do not delete or waive either operation automatically. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
