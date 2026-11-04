@@ -2,8 +2,8 @@
 
 > Status: **DRAFT / NOT ENFORCED**
 > Source repository: `hu-xulin/uter`
-> Pinned source commit: `442ddb5a7c234f2ee2d78651e0882407e9371c91`
-> Evidence run: https://github.com/hu-xulin/uaes/actions/runs/41906580552
+> Pinned source commit: `682bb73d728115fc8201e64b0fefddce14c2592d`
+> Evidence run: https://github.com/hu-xulin/uaes/actions/runs/41910992383
 > Owner approval: pending
 
 ## 1. Purpose and non-goals
