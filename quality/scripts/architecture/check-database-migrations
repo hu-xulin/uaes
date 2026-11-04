@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Fail-closed placeholder. This is NOT an implemented architecture check.
+set -euo pipefail
+cat >&2 <<'EOF'
+BLOCKED: database migration validation is not implemented as an executable architecture control.
+Reason: No complete migration inventory, compatibility policy, or rollback test harness has been validated.
+Do not report this check as PASS. Keep UAES-04-GATE-001 in DRAFT until the
+required project inputs, implementation, positive tests, and negative tests
+are available and independently verified.
+EOF
+exit 2
