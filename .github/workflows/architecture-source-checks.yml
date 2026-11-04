@@ -1,0 +1,36 @@
+name: Architecture Source Checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "quality/scripts/architecture/**"
+      - ".uaes/registry/modules.yaml"
+      - ".github/workflows/architecture-source-checks.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: uaes
+      - uses: actions/checkout@v4
+        with:
+          repository: hu-xulin/uter
+          ref: 24a7d9a4f6525134c5fa8c2a6a2cf076e25cfacc
+          path: uter
+      - name: Validate module manifests
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-architecture-manifests
+      - name: Validate RelayKit module boundary
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-module-boundaries
