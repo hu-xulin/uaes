@@ -61,6 +61,8 @@ This is not full replay of all 20 migration steps, not ClickHouse log-database c
 
 ### Frontend production dependency evidence
 
+The detailed evidence register, preliminary classification of all 21 reverse-direction imports, proposed target layers, and staged migration/acceptance criteria are maintained in [FRONTEND-MODULE-BOUNDARY-PROPOSAL.md](FRONTEND-MODULE-BOUNDARY-PROPOSAL.md). The proposal is DRAFT and is not enforced.
+
 The scanner covers **1,500 source files**: 1,217 production, 282 test, and 1 generated source; it excludes 2 imports targeting generated route-tree files. All scanned local alias/relative imports resolved.
 
 Production dependency edge counts include:
