@@ -1,0 +1,127 @@
+{
+  "report_id": "UAES-P13-REGISTRY-VALIDATION",
+  "generated_at": "2026-11-04T17:16:38.347Z",
+  "governance_root": "/Users/lincolnhu/uter-ai",
+  "code_root": "/Users/lincolnhu/uter",
+  "checks": [
+    {
+      "id": "G-001",
+      "name": "registries loadable",
+      "status": "PASS",
+      "detail": "modules=10 mappings=9 gates=13 standards=178"
+    },
+    {
+      "id": "G-002",
+      "name": "module registry schema",
+      "status": "PASS",
+      "detail": "conforms"
+    },
+    {
+      "id": "G-003",
+      "name": "mapping schema",
+      "status": "PASS",
+      "detail": "conforms"
+    },
+    {
+      "id": "G-004",
+      "name": "gate registry schema",
+      "status": "PASS",
+      "detail": "conforms"
+    },
+    {
+      "id": "G-005",
+      "name": "unique module IDs",
+      "status": "PASS",
+      "detail": "10 unique"
+    },
+    {
+      "id": "G-006",
+      "name": "module paths exist in code repo",
+      "status": "PASS",
+      "detail": "10/10 exist"
+    },
+    {
+      "id": "G-007",
+      "name": "module manifests exist",
+      "status": "PASS",
+      "detail": "all manifests present"
+    },
+    {
+      "id": "G-008",
+      "name": "domain IDs resolvable",
+      "status": "PASS",
+      "detail": "13 domains indexed"
+    },
+    {
+      "id": "G-009",
+      "name": "mapped rule IDs are REAL",
+      "status": "PASS",
+      "detail": "21 mapped IDs all found in standards/**/*.md (590 available)"
+    },
+    {
+      "id": "G-010",
+      "name": "rule-level status consistency",
+      "status": "PASS",
+      "detail": "consistent"
+    },
+    {
+      "id": "G-011",
+      "name": "mapping modules resolvable",
+      "status": "PASS",
+      "detail": "all resolvable"
+    },
+    {
+      "id": "G-012",
+      "name": "mapping gates resolvable",
+      "status": "PASS",
+      "detail": "13 gates indexed"
+    },
+    {
+      "id": "G-013",
+      "name": "verification IDs resolvable",
+      "status": "PASS",
+      "detail": "20 catalog entries"
+    },
+    {
+      "id": "G-014",
+      "name": "declared_in artefacts exist",
+      "status": "PASS",
+      "detail": "20 verification declarations verified"
+    },
+    {
+      "id": "G-015",
+      "name": "gate documents exist in governance repo",
+      "status": "PASS",
+      "detail": "13 gate docs present"
+    },
+    {
+      "id": "G-016",
+      "name": "shared impact zones resolve",
+      "status": "PASS",
+      "detail": "4 zones"
+    },
+    {
+      "id": "G-017",
+      "name": "read-only boundary enforced",
+      "status": "PASS",
+      "detail": "code repo is read-only for the governance layer"
+    },
+    {
+      "id": "G-018",
+      "name": "no implicit PASS for unexecuted layers",
+      "status": "PASS",
+      "detail": "L3/L4 default NOT_RUN"
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "pass": 18,
+    "fail": 0,
+    "not_run": 0
+  },
+  "findings": [],
+  "rule_catalog": {
+    "total_real_ids": 590,
+    "mapped_ids": 21
+  }
+}

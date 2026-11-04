@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/module-registry.schema.json",
+  "title": "UAES Code Module Registry",
+  "type": "object",
+  "required": [
+    "version",
+    "repository",
+    "modules"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "audit_date": {
+      "type": "string"
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "path",
+          "manifest",
+          "owner",
+          "standards"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^MOD-[A-Z0-9-]+$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "go-module",
+              "web-application",
+              "desktop-application",
+              "test-suite",
+              "tooling",
+              "delivery"
+            ]
+          },
+          "path": {
+            "type": "string"
+          },
+          "manifest": {
+            "type": "string"
+          },
+          "module_name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "stack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "include": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "standards": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^UAES-[0-9]{2}$"
+            }
+          },
+          "verification": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "shared_impact_zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "paths",
+          "expands_to",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expands_to": {
+            "type": [
+              "array",
+              "string"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

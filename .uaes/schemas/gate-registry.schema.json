@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/gate-registry.schema.json",
+  "title": "UAES Gate Registry",
+  "type": "object",
+  "required": [
+    "version",
+    "global_gate",
+    "gates"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "global_gate": {
+      "type": "object",
+      "required": [
+        "id",
+        "layer",
+        "runner",
+        "execution"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "layer": {
+          "type": "string"
+        },
+        "runner": {
+          "type": "string"
+        },
+        "aggregates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "execution": {
+          "type": "string"
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "file",
+          "execution"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "layer": {
+            "type": "string"
+          },
+          "mapped_modules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mappings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verification": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "execution": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "BLOCKED",
+              "NOT_RUN",
+              "NOT_VERIFIED"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

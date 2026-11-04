@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/change-impact.schema.json",
+  "title": "UAES Change Impact Result",
+  "type": "object",
+  "required": [
+    "task_id",
+    "changed_files",
+    "direct_modules",
+    "expanded_modules",
+    "domains",
+    "rules",
+    "gates",
+    "required_verification",
+    "generated_at"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "direct_modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expanded_modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "impact_zones": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_verification": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "unmatched_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "generated_at": {
+      "type": "string"
+    }
+  }
+}

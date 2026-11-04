@@ -1,0 +1,69 @@
+# UAES Engineering Governance Layer — global configuration.
+# This layer is INDEPENDENT of the product code repository. It only reads it.
+# Single source of truth for standards remains .uaes/STANDARD-REGISTRY.yaml.
+
+version: "1.0.0"
+id: UAES-GOVERNANCE-LAYER
+status: IMPLEMENTED_PARTIAL   # Layer 1-2 executable; Layer 3-4 evidence-only until authorised
+
+repositories:
+  governance:
+    id: REPO-UAES
+    root: "."                      # this repository (the UAES standard library)
+    single_source_of_truth: ".uaes/STANDARD-REGISTRY.yaml"
+  code:
+    id: REPO-UTER
+    # Resolved by quality/scripts/uaes/paths.mjs; override with UTER_REPO_ROOT.
+    root_env: UTER_REPO_ROOT
+    root_default: "/Users/lincolnhu/uter"
+    default_branch: main
+    relationship: PARALLEL        # registry.project.architecture_relationship
+    write_access: false           # governance layer NEVER writes into the code repo
+
+registries:
+  standards: ".uaes/registry/standards.yaml"
+  modules: ".uaes/registry/modules.yaml"
+  mappings: ".uaes/registry/mappings.yaml"
+  gates: ".uaes/registry/gates.yaml"
+
+policies:
+  execution: ".uaes/policies/execution-policy.yaml"
+
+schemas:
+  directory: ".uaes/schemas/"
+
+validators:
+  # Machine-readable validator contracts live here; executable implementations
+  # live under governance.script_directory (quality/scripts/) per the registry.
+  contracts: ".uaes/validators/"
+  scripts: "quality/scripts/uaes/"
+
+reports:
+  inventory: "reports/baseline/"
+  verification: "reports/quality/"
+
+layers:
+  - id: L1
+    name: Governance Validation
+    validator: validate-registry.mjs
+    executes: true
+  - id: L2
+    name: Module Validation and Change Impact
+    validator: change-impact.mjs
+    executes: true
+  - id: L3
+    name: Domain Quality Gates
+    validator: quality-gate-runner.mjs
+    # Requires authorisation: runs commands inside the code repository.
+    executes: false
+    default_status: NOT_RUN
+  - id: L4
+    name: Global Quality Gate
+    validator: quality-gate-runner.mjs
+    executes: false
+    default_status: NOT_RUN
+
+evidence:
+  report_schema: ".uaes/schemas/quality-report.schema.json"
+  # Checks that cannot run MUST be recorded as NOT_RUN, never as PASS.
+  forbid_implicit_pass: true

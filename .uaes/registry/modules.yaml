@@ -1,0 +1,201 @@
+# Code Module Registry — paths are RELATIVE to repositories.code.root.
+# Every path below was verified against the real /Users/lincolnhu/uter tree on
+# 2026-11-05. No business code was moved or renamed to produce this file.
+# `standards` is the DOMAIN-level scope only; rule-level scope is in mappings.yaml.
+
+version: "1.0.0"
+repository: REPO-UTER
+audit_date: "2026-11-05"
+relationship: PARALLEL
+note: >-
+  A module may be constrained by several UAES domains, and a UAES standard may
+  apply to several modules. This registry therefore expresses a many-to-many
+  relationship; it is NOT a one-standard-per-directory mapping.
+
+modules:
+  - id: MOD-GO-ROOT
+    name: Uter Root Go Module
+    type: go-module
+    path: "."
+    manifest: "go.mod"
+    module_name: "github.com/uter-ai/uter"
+    language: go
+    owner: backend
+    platforms: [server]
+    # Go business packages are flat at the repository root (no backend/ dir).
+    include: ["*.go", "go.mod", "go.sum", "common/**", "constant/**", "controller/**",
+              "dto/**", "i18n/**", "logger/**", "middleware/**", "model/**", "oauth/**",
+              "pkg/**", "plugins/**", "relay/**", "router/**", "service/**", "setting/**",
+              "types/**", "data/**", "assets/**"]
+    exclude: ["relaykit/**", "tokenkit/**", "web/**", "docs-web/**", "electron/**",
+              "e2e/**", "docs/**", "scripts/**", ".git/**", ".quality/**"]
+    standards: [UAES-04, UAES-06, UAES-09, UAES-10, UAES-11, UAES-12]
+    verification: ["gofmt", "go-vet", "go-test:root", "govulncheck"]
+
+  - id: MOD-RELAYKIT
+    name: RelayKit
+    type: go-module
+    path: "relaykit"
+    manifest: "relaykit/go.mod"
+    module_name: "github.com/uter-ai/uter/relaykit"
+    language: go
+    owner: backend
+    platforms: [server]
+    include: ["relaykit/**"]
+    exclude: ["relaykit/node_modules/**"]
+    standards: [UAES-04, UAES-06, UAES-09, UAES-10, UAES-11, UAES-12]
+    verification: ["gofmt", "go-vet", "go-test:relaykit"]
+
+  - id: MOD-TOKENKIT
+    name: TokenKit
+    type: go-module
+    path: "tokenkit"
+    manifest: "tokenkit/go.mod"
+    module_name: "github.com/uter-ai/uter/tokenkit"
+    language: go
+    owner: backend
+    platforms: [server]
+    include: ["tokenkit/**"]
+    exclude: ["tokenkit/tokenkit/**"]   # nested module is registered separately
+    standards: [UAES-04, UAES-06, UAES-09, UAES-10, UAES-11, UAES-12]
+    verification: ["gofmt", "go-vet", "go-test:tokenkit"]
+
+  - id: MOD-TOKENKIT-INNER
+    name: TokenKit Inner Go Module
+    type: go-module
+    path: "tokenkit/tokenkit"
+    manifest: "tokenkit/tokenkit/go.mod"
+    # Upstream identifier is protected by the product repo's AGENTS.md. Do not rename.
+    module_name: "github.com/QuantumNous/new-api/tokenkit"
+    language: go
+    owner: backend
+    platforms: [server]
+    include: ["tokenkit/tokenkit/**"]
+    exclude: []
+    standards: [UAES-04, UAES-06, UAES-09, UAES-10]
+    verification: ["gofmt", "go-vet", "go-test:tokenkit-inner"]
+    audit_note: >-
+      The existing quality inventory (.quality/.state/inventory.txt) lists only
+      ". / tokenkit / relaykit" and does NOT list this fourth module, while
+      UAES-06/09 gates forbid claiming all modules PASS from one root go test.
+      This missing coverage is recorded as an open finding, not silently marked PASS.
+
+  - id: MOD-WEB
+    name: Uter Web
+    type: web-application
+    path: "web"
+    manifest: "web/package.json"
+    package_name: "uter-web"
+    language: typescript
+    owner: frontend
+    platforms: [PC_WEB, H5]
+    stack: [React, TypeScript, Rsbuild, Bun, Vitest]
+    include: ["web/**"]
+    exclude: ["web/node_modules/**", "web/dist/**"]
+    standards: [UAES-04, UAES-05, UAES-06, UAES-07, UAES-09, UAES-10, UAES-11]
+    verification: ["web-typecheck", "web-lint", "web-design-tokens", "web-test", "web-build"]
+
+  - id: MOD-DOCS-WEB
+    name: Uter Docs Site
+    type: web-application
+    path: "docs-web"
+    manifest: "docs-web/package.json"
+    package_name: "uter-docs"
+    language: typescript
+    owner: frontend
+    platforms: [PC_WEB]
+    stack: [Next.js, Fumadocs, React, TypeScript]
+    include: ["docs-web/**"]
+    exclude: ["docs-web/node_modules/**", "docs-web/.next/**"]
+    standards: [UAES-03, UAES-05, UAES-06, UAES-09, UAES-11, UAES-12]
+    verification: ["docs-web-build"]
+    audit_note: "Not present in the reference architecture sketch; found in the real repo."
+
+  - id: MOD-ELECTRON
+    name: Uter Electron Desktop
+    type: desktop-application
+    path: "electron"
+    manifest: "electron/package.json"
+    package_name: "uter-electron"
+    language: typescript
+    owner: desktop
+    platforms: [ELECTRON]
+    stack: [Electron]
+    include: ["electron/**"]
+    exclude: ["electron/node_modules/**", "electron/dist/**"]
+    standards: [UAES-04, UAES-05, UAES-06, UAES-07, UAES-09, UAES-10, UAES-11]
+    verification: ["electron-build"]
+
+  - id: MOD-E2E
+    name: End-to-End Tests
+    type: test-suite
+    path: "e2e"
+    manifest: "e2e/"
+    language: go
+    owner: quality
+    platforms: [server]
+    include: ["e2e/**"]
+    exclude: []
+    standards: [UAES-09, UAES-10]
+    verification: ["go-test:e2e"]
+
+  - id: MOD-SCRIPTS
+    name: Engineering Automation Scripts
+    type: tooling
+    path: "scripts"
+    manifest: "scripts/verify-all.sh"
+    owner: devops
+    platforms: [server]
+    include: ["scripts/**"]
+    exclude: []
+    standards: [UAES-09, UAES-11, UAES-12]
+    verification: ["verify-all"]
+
+  - id: MOD-CI
+    name: GitHub Actions and Delivery Assets
+    type: delivery
+    path: ".github"
+    manifest: ".github/workflows/ci.yml"
+    owner: devops
+    platforms: [server]
+    include: [".github/**"]
+    exclude: []
+    standards: [UAES-09, UAES-10, UAES-11, UAES-12]
+    verification: ["ci-config-review"]
+
+# Existing governance systems in the code repo. The UAES layer maps to them,
+# it does NOT replace them and does not create a competing rule source.
+existing_governance_systems:
+  - id: AIES
+    root: ".ai/AIES.md"
+    note: "AI execution standard; AGENTS.md is higher priority."
+  - id: SPEC-ROUTING
+    root: "AGENTS.md"
+    note: "14-row Task-based spec routing table is the single source of truth for spec loading."
+  - id: AI-SPECS
+    root: "docs/ai-specs/"
+    note: "15 domain specs plus engineering-quality/ group."
+  - id: QUALITY-SCRIPTS
+    root: "scripts/verify-all.sh"
+    note: "Converged gate entry; scripts/quality/uter-quality.sh runs review/test/security/coverage."
+  - id: QUALITY-STATE
+    root: ".quality/.state/"
+    note: "Per-module coverage and regression status evidence."
+
+shared_impact_zones:
+  - id: SHARED-GO-CORE
+    paths: ["model/**", "common/**", "constant/**", "dto/**", "types/**", "go.mod", "go.sum"]
+    expands_to: [MOD-GO-ROOT, MOD-RELAYKIT, MOD-TOKENKIT, MOD-TOKENKIT-INNER, MOD-E2E]
+    reason: "Shared domain types, DB models and module manifests; a change can affect every Go module."
+  - id: SHARED-DESIGN-TOKENS
+    paths: ["web/src/design-system/**", "web/src/styles/**"]
+    expands_to: [MOD-WEB, MOD-DOCS-WEB]
+    reason: "Design tokens and theme sources feed both web surfaces."
+  - id: SHARED-SPECS
+    paths: ["AGENTS.md", "CLAUDE.md", ".ai/**", "docs/ai-specs/**"]
+    expands_to: "*"
+    reason: "Rule-source change affects every module's AI execution contract."
+  - id: SHARED-DELIVERY
+    paths: [".github/**", "scripts/verify-all.sh", "scripts/quality/**"]
+    expands_to: "*"
+    reason: "CI / gate change affects the delivery evidence of every module."

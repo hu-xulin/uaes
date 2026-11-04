@@ -1,0 +1,76 @@
+# Machine-readable execution policy for AI agents using the governance layer.
+# This policy CONSTRAINS the governance layer; it does not grant permissions.
+
+version: "1.0.0"
+id: UAES-EXECUTION-POLICY
+status: ACTIVE
+authority: ".uaes/STANDARD-REGISTRY.yaml"
+compatibility:
+  code_repo_rule_sources:
+    - "AGENTS.md"          # higher priority; Task-based spec routing is its single source of truth
+    - "CLAUDE.md"
+    - ".ai/AIES.md"
+    - "docs/ai-specs/"
+  conflict_resolution: >-
+    If this policy conflicts with the code repository's AGENTS.md, AGENTS.md
+    wins inside that repository. The governance layer never overrides it.
+
+read_only_boundary:
+  code_repository_writable: false
+  allowed_operations: [READ_FILE, LIST_DIR, RUN_READONLY_VALIDATOR, GENERATE_REPORT_IN_GOVERNANCE_REPO]
+  forbidden_operations: [MOVE_BUSINESS_CODE, RENAME_MODULE, EDIT_CODE_REPO_ANY_FILE, MODIFY_CI_WITHOUT_AUTHORISATION]
+  note: >-
+    "先适配现有代码，再逐步规范代码" — never reorganise the product tree to make
+    it look like a reference architecture diagram.
+
+domain_responsibility_boundary:
+  - domain: UAES-01
+    decides: "Whether an AI agent is permitted to act"
+    does_not_decide: "Whether the resulting code is quality-approved"
+  - domain: UAES-06
+    decides: "How code should be written"
+    does_not_decide: "Final quality acceptance"
+  - domain: UAES-09
+    decides: "Review, test and quality PASS"
+    does_not_decide: "Authorisation of production operations"
+  - domain: UAES-10
+    decides: "Security and reliability requirements"
+    does_not_decide: "Replacing the full quality gate set"
+  - domain: UAES-11
+    decides: "CI/CD and delivery process"
+    does_not_decide: "Expanding AI permissions"
+  - domain: UAES-12
+    decides: "Long-term evolution and lifecycle"
+    does_not_decide: "Executing concrete tests"
+
+change_protection:
+  inspect_dirty_worktree_first: true
+  isolate_in_worktree_or_branch: true
+  never_mix_parallel_wip: true
+  git_add_explicit_paths_only: true
+  commit_push_merge_deploy_require_separate_authorisation: true
+  forbid_force_push: true
+  forbid_auto_merge_pr: true
+  delete_via_trash_only: true
+
+task_flow:
+  - {step: 1, id: TASK_IDENTIFICATION, action: "Create Task ID; identify business objects"}
+  - {step: 2, id: MODULE_LOCATION, action: "Resolve modules via .uaes/registry/modules.yaml"}
+  - {step: 3, id: STANDARD_LOADING, action: "Load applicable domains and real rule IDs via mappings.yaml"}
+  - {step: 4, id: TASK_PLANNING, action: "Impact list, scope, risk level, acceptance, test plan"}
+  - {step: 5, id: ISOLATED_EXECUTION, action: "Worktree / fix branch, protect uncommitted work"}
+  - {step: 6, id: REVIEW_AND_TEST, action: "Run module-specific tests, impact-expanded tests, security checks"}
+  - {step: 7, id: QUALITY_GATE, action: "UAES-09 quality verdict + UAES-10 security gate; no false PASS"}
+  - {step: 8, id: DELIVERY, action: "Commit / push / PR only with explicit authorisation, with evidence"}
+
+evidence_rules:
+  require_real_command_exit_code: true
+  forbid_claim_without_execution: true
+  not_run_must_be_recorded_as: NOT_RUN
+  never_convert_not_run_to_pass: true
+  report_schema: ".uaes/schemas/quality-report.schema.json"
+
+impact_analysis_rules:
+  git_diff_alone_is_insufficient: true
+  must_consider: [MODULE_DEPENDENCY_GRAPH, INTERFACE_REFERENCES, SHARED_DATABASE, BUSINESS_IMPACT]
+  shared_zones_source: ".uaes/registry/modules.yaml#shared_impact_zones"

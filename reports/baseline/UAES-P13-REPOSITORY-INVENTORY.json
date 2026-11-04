@@ -1,0 +1,1032 @@
+{
+  "report_id": "UAES-P13-REPOSITORY-INVENTORY",
+  "task_id": "UAES-P13-REPOSITORY-INTEGRATION",
+  "generated_at": "2026-11-04T17:16:38.572Z",
+  "repository": {
+    "id": "REPO-UTER",
+    "root": "/Users/lincolnhu/uter",
+    "head": "e4cbd007934be4825bde4cbc0345b1cbeebd0aa5",
+    "default_branch": "main",
+    "dirty_files_at_audit": 40,
+    "note": "Audited read-only. Uncommitted work was NOT touched, staged or committed."
+  },
+  "governance_repository": {
+    "id": "REPO-UAES",
+    "root": "/Users/lincolnhu/uter-ai",
+    "relationship": "PARALLEL"
+  },
+  "summary": {
+    "top_level_directories": 39,
+    "go_modules": 4,
+    "code_modules": 10,
+    "uaes_domains": 13,
+    "uaes_standards": 178,
+    "uaes_gates": 13,
+    "real_rule_ids": 590,
+    "mappings": 9,
+    "verification_entries": 20
+  },
+  "top_level_directories": [
+    ".agents",
+    ".ai",
+    ".github",
+    ".playwright-cli",
+    ".quality",
+    ".vscode",
+    ".workbuddy",
+    ".workbuddy-ai",
+    "_reports",
+    "assets",
+    "bin",
+    "common",
+    "constant",
+    "controller",
+    "data",
+    "deploy",
+    "docs",
+    "docs-dev",
+    "docs-web",
+    "dto",
+    "e2e",
+    "electron",
+    "i18n",
+    "logger",
+    "logs",
+    "middleware",
+    "model",
+    "oauth",
+    "pkg",
+    "plugins",
+    "relay",
+    "relaykit",
+    "router",
+    "scripts",
+    "service",
+    "setting",
+    "tokenkit",
+    "types",
+    "web"
+  ],
+  "go_manifests": [
+    {
+      "manifest": "go.mod",
+      "module": "github.com/uter-ai/uter",
+      "go": "1.27.3"
+    },
+    {
+      "manifest": "relaykit/go.mod",
+      "module": "github.com/uter-ai/uter/relaykit",
+      "go": "1.27.3"
+    },
+    {
+      "manifest": "tokenkit/go.mod",
+      "module": "github.com/uter-ai/uter/tokenkit",
+      "go": "1.27.3"
+    },
+    {
+      "manifest": "tokenkit/tokenkit/go.mod",
+      "module": "github.com/QuantumNous/new-api/tokenkit",
+      "go": "1.27.3"
+    }
+  ],
+  "code_modules": [
+    {
+      "id": "MOD-GO-ROOT",
+      "name": "Uter Root Go Module",
+      "type": "go-module",
+      "path": ".",
+      "manifest": "go.mod",
+      "owner": "backend",
+      "platforms": [
+        "server"
+      ],
+      "stack": [],
+      "domains": [
+        "UAES-04",
+        "UAES-06",
+        "UAES-09",
+        "UAES-10",
+        "UAES-11",
+        "UAES-12"
+      ],
+      "verification": [
+        "gofmt",
+        "go-vet",
+        "go-test:root",
+        "govulncheck"
+      ],
+      "manifest_exists": true,
+      "package": null
+    },
+    {
+      "id": "MOD-RELAYKIT",
+      "name": "RelayKit",
+      "type": "go-module",
+      "path": "relaykit",
+      "manifest": "relaykit/go.mod",
+      "owner": "backend",
+      "platforms": [
+        "server"
+      ],
+      "stack": [],
+      "domains": [
+        "UAES-04",
+        "UAES-06",
+        "UAES-09",
+        "UAES-10",
+        "UAES-11",
+        "UAES-12"
+      ],
+      "verification": [
+        "gofmt",
+        "go-vet",
+        "go-test:relaykit"
+      ],
+      "manifest_exists": true,
+      "package": null
+    },
+    {
+      "id": "MOD-TOKENKIT",
+      "name": "TokenKit",
+      "type": "go-module",
+      "path": "tokenkit",
+      "manifest": "tokenkit/go.mod",
+      "owner": "backend",
+      "platforms": [
+        "server"
+      ],
+      "stack": [],
+      "domains": [
+        "UAES-04",
+        "UAES-06",
+        "UAES-09",
+        "UAES-10",
+        "UAES-11",
+        "UAES-12"
+      ],
+      "verification": [
+        "gofmt",
+        "go-vet",
+        "go-test:tokenkit"
+      ],
+      "manifest_exists": true,
+      "package": null
+    },
+    {
+      "id": "MOD-TOKENKIT-INNER",
+      "name": "TokenKit Inner Go Module",
+      "type": "go-module",
+      "path": "tokenkit/tokenkit",
+      "manifest": "tokenkit/tokenkit/go.mod",
+      "owner": "backend",
+      "platforms": [
+        "server"
+      ],
+      "stack": [],
+      "domains": [
+        "UAES-04",
+        "UAES-06",
+        "UAES-09",
+        "UAES-10"
+      ],
+      "verification": [
+        "gofmt",
+        "go-vet",
+        "go-test:tokenkit-inner"
+      ],
+      "manifest_exists": true,
+      "package": null
+    },
+    {
+      "id": "MOD-WEB",
+      "name": "Uter Web",
+      "type": "web-application",
+      "path": "web",
+      "manifest": "web/package.json",
+      "owner": "frontend",
+      "platforms": [
+        "PC_WEB",
+        "H5"
+      ],
+      "stack": [
+        "React",
+        "TypeScript",
+        "Rsbuild",
+        "Bun",
+        "Vitest"
+      ],
+      "domains": [
+        "UAES-04",
+        "UAES-05",
+        "UAES-06",
+        "UAES-07",
+        "UAES-09",
+        "UAES-10",
+        "UAES-11"
+      ],
+      "verification": [
+        "web-typecheck",
+        "web-lint",
+        "web-design-tokens",
+        "web-test",
+        "web-build"
+      ],
+      "manifest_exists": true,
+      "package": {
+        "name": "uter-web",
+        "version": "1.0.0",
+        "dependencies": [
+          "@base-ui/react",
+          "@codemirror/lang-javascript",
+          "@codemirror/lang-markdown",
+          "@codemirror/language",
+          "@codemirror/state",
+          "@codemirror/view",
+          "@fontsource-variable/inter",
+          "@fontsource-variable/noto-sans-sc",
+          "@hookform/resolvers",
+          "@hugeicons/core-free-icons",
+          "@hugeicons/react",
+          "@lezer/highlight",
+          "@lobehub/icons",
+          "@tanstack/react-query",
+          "@tanstack/react-router",
+          "@tanstack/react-table",
+          "@tanstack/react-virtual",
+          "@visactor/react-vchart",
+          "@visactor/vchart",
+          "ai",
+          "axios",
+          "class-variance-authority",
+          "clsx",
+          "cmdk",
+          "dayjs",
+          "dompurify",
+          "i18next",
+          "i18next-browser-languagedetector",
+          "input-otp",
+          "katex",
+          "lucide-react",
+          "marked",
+          "motion",
+          "nanoid",
+          "node-forge",
+          "qrcode.react",
+          "react",
+          "react-day-picker",
+          "react-dom",
+          "react-hook-form",
+          "react-i18next",
+          "react-icons",
+          "react-resizable-panels",
+          "react-top-loading-bar",
+          "recharts",
+          "shiki",
+          "sonner",
+          "sse.js",
+          "stream-markdown-parser",
+          "tailwind-merge",
+          "tailwindcss",
+          "tokenlens",
+          "tw-animate-css",
+          "use-stick-to-bottom",
+          "vaul",
+          "yace",
+          "yaml",
+          "zod",
+          "zustand"
+        ],
+        "devDependencies": [
+          "@playwright/test",
+          "@rsbuild/core",
+          "@rsbuild/plugin-react",
+          "@rsbuild/plugin-tailwindcss",
+          "@tanstack/react-query-devtools",
+          "@tanstack/react-router-devtools",
+          "@tanstack/router-plugin",
+          "@testing-library/jest-dom",
+          "@testing-library/react",
+          "@testing-library/user-event",
+          "@types/node",
+          "@types/node-forge"
+        ],
+        "scripts": [
+          "dev",
+          "build",
+          "build:check",
+          "prepare",
+          "typecheck",
+          "lint",
+          "lint:design",
+          "lint:design:strict",
+          "lint:design:baseline",
+          "lint:design:baseline:update",
+          "lint:fix",
+          "lint:plugins",
+          "format:plugins",
+          "format:plugins:check",
+          "preview",
+          "test",
+          "test:visual",
+          "test:visual:update",
+          "test:visual:e2e",
+          "test:visual:e2e:update",
+          "test:visual:e2e:auth",
+          "test:watch",
+          "format:check",
+          "format",
+          "copyright:check",
+          "copyright",
+          "i18n:sync",
+          "settings:hints",
+          "i18n:check",
+          "knip"
+        ]
+      }
+    },
+    {
+      "id": "MOD-DOCS-WEB",
+      "name": "Uter Docs Site",
+      "type": "web-application",
+      "path": "docs-web",
+      "manifest": "docs-web/package.json",
+      "owner": "frontend",
+      "platforms": [
+        "PC_WEB"
+      ],
+      "stack": [
+        "Next.js",
+        "Fumadocs",
+        "React",
+        "TypeScript"
+      ],
+      "domains": [
+        "UAES-03",
+        "UAES-05",
+        "UAES-06",
+        "UAES-09",
+        "UAES-11",
+        "UAES-12"
+      ],
+      "verification": [
+        "docs-web-build"
+      ],
+      "manifest_exists": true,
+      "package": {
+        "name": "uter-docs",
+        "version": "0.1.0",
+        "dependencies": [
+          "@fontsource-variable/inter",
+          "@fontsource-variable/noto-sans-sc",
+          "fumadocs-core",
+          "fumadocs-ui",
+          "next",
+          "react",
+          "react-dom",
+          "rehype-slug",
+          "rehype-stringify",
+          "remark-gfm",
+          "remark-parse",
+          "remark-rehype",
+          "unified"
+        ],
+        "devDependencies": [
+          "@tailwindcss/postcss",
+          "@types/mdast",
+          "@types/node",
+          "@types/react",
+          "@types/react-dom",
+          "postcss",
+          "tailwindcss",
+          "typescript"
+        ],
+        "scripts": [
+          "dev",
+          "build",
+          "start",
+          "postbuild"
+        ]
+      }
+    },
+    {
+      "id": "MOD-ELECTRON",
+      "name": "Uter Electron Desktop",
+      "type": "desktop-application",
+      "path": "electron",
+      "manifest": "electron/package.json",
+      "owner": "desktop",
+      "platforms": [
+        "ELECTRON"
+      ],
+      "stack": [
+        "Electron"
+      ],
+      "domains": [
+        "UAES-04",
+        "UAES-05",
+        "UAES-06",
+        "UAES-07",
+        "UAES-09",
+        "UAES-10",
+        "UAES-11"
+      ],
+      "verification": [
+        "electron-build"
+      ],
+      "manifest_exists": true,
+      "package": {
+        "name": "uter-electron",
+        "version": "1.0.0",
+        "dependencies": [],
+        "devDependencies": [
+          "cross-env",
+          "electron",
+          "electron-builder"
+        ],
+        "scripts": [
+          "start-app",
+          "dev-app",
+          "build",
+          "build:mac",
+          "build:win",
+          "build:linux"
+        ]
+      }
+    },
+    {
+      "id": "MOD-E2E",
+      "name": "End-to-End Tests",
+      "type": "test-suite",
+      "path": "e2e",
+      "manifest": "e2e/",
+      "owner": "quality",
+      "platforms": [
+        "server"
+      ],
+      "stack": [],
+      "domains": [
+        "UAES-09",
+        "UAES-10"
+      ],
+      "verification": [
+        "go-test:e2e"
+      ],
+      "manifest_exists": true,
+      "package": null
+    },
+    {
+      "id": "MOD-SCRIPTS",
+      "name": "Engineering Automation Scripts",
+      "type": "tooling",
+      "path": "scripts",
+      "manifest": "scripts/verify-all.sh",
+      "owner": "devops",
+      "platforms": [
+        "server"
+      ],
+      "stack": [],
+      "domains": [
+        "UAES-09",
+        "UAES-11",
+        "UAES-12"
+      ],
+      "verification": [
+        "verify-all"
+      ],
+      "manifest_exists": true,
+      "package": null
+    },
+    {
+      "id": "MOD-CI",
+      "name": "GitHub Actions and Delivery Assets",
+      "type": "delivery",
+      "path": ".github",
+      "manifest": ".github/workflows/ci.yml",
+      "owner": "devops",
+      "platforms": [
+        "server"
+      ],
+      "stack": [],
+      "domains": [
+        "UAES-09",
+        "UAES-10",
+        "UAES-11",
+        "UAES-12"
+      ],
+      "verification": [
+        "ci-config-review"
+      ],
+      "manifest_exists": true,
+      "package": null
+    }
+  ],
+  "existing_governance_systems": [
+    {
+      "id": "AIES",
+      "root": ".ai/AIES.md",
+      "note": "AI execution standard; AGENTS.md is higher priority."
+    },
+    {
+      "id": "SPEC-ROUTING",
+      "root": "AGENTS.md",
+      "note": "14-row Task-based spec routing table is the single source of truth for spec loading."
+    },
+    {
+      "id": "AI-SPECS",
+      "root": "docs/ai-specs/",
+      "note": "15 domain specs plus engineering-quality/ group."
+    },
+    {
+      "id": "QUALITY-SCRIPTS",
+      "root": "scripts/verify-all.sh",
+      "note": "Converged gate entry; scripts/quality/uter-quality.sh runs review/test/security/coverage."
+    },
+    {
+      "id": "QUALITY-STATE",
+      "root": ".quality/.state/",
+      "note": "Per-module coverage and regression status evidence."
+    }
+  ],
+  "shared_impact_zones": [
+    {
+      "id": "SHARED-GO-CORE",
+      "paths": [
+        "model/**",
+        "common/**",
+        "constant/**",
+        "dto/**",
+        "types/**",
+        "go.mod",
+        "go.sum"
+      ],
+      "expands_to": [
+        "MOD-GO-ROOT",
+        "MOD-RELAYKIT",
+        "MOD-TOKENKIT",
+        "MOD-TOKENKIT-INNER",
+        "MOD-E2E"
+      ],
+      "reason": "Shared domain types, DB models and module manifests; a change can affect every Go module."
+    },
+    {
+      "id": "SHARED-DESIGN-TOKENS",
+      "paths": [
+        "web/src/design-system/**",
+        "web/src/styles/**"
+      ],
+      "expands_to": [
+        "MOD-WEB",
+        "MOD-DOCS-WEB"
+      ],
+      "reason": "Design tokens and theme sources feed both web surfaces."
+    },
+    {
+      "id": "SHARED-SPECS",
+      "paths": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        ".ai/**",
+        "docs/ai-specs/**"
+      ],
+      "expands_to": "*",
+      "reason": "Rule-source change affects every module's AI execution contract."
+    },
+    {
+      "id": "SHARED-DELIVERY",
+      "paths": [
+        ".github/**",
+        "scripts/verify-all.sh",
+        "scripts/quality/**"
+      ],
+      "expands_to": "*",
+      "reason": "CI / gate change affects the delivery evidence of every module."
+    }
+  ],
+  "domain_rule_mapping": [
+    {
+      "id": "MAP-WEB-DESIGN-TOKENS",
+      "domain": "UAES-05",
+      "modules": [
+        "MOD-WEB",
+        "MOD-DOCS-WEB"
+      ],
+      "rule_count": 5,
+      "rules": [
+        "UAES-05-001-002",
+        "UAES-05-001-009",
+        "UAES-05-002-001",
+        "UAES-05-002-002",
+        "UAES-05-002-003"
+      ],
+      "rule_level_status": "REGISTERED",
+      "gate": "UAES-05-GATE-001",
+      "verification": [
+        "web-design-tokens",
+        "web-typecheck",
+        "web-test"
+      ]
+    },
+    {
+      "id": "MAP-WEB-CROSS-PLATFORM",
+      "domain": "UAES-07",
+      "modules": [
+        "MOD-WEB",
+        "MOD-ELECTRON",
+        "MOD-DOCS-WEB"
+      ],
+      "rule_count": 3,
+      "rules": [
+        "UAES-07-001-001",
+        "UAES-07-001-002",
+        "UAES-07-001-007"
+      ],
+      "rule_level_status": "REGISTERED",
+      "gate": "UAES-07-GATE-001",
+      "verification": [
+        "web-build",
+        "electron-build",
+        "docs-web-build"
+      ]
+    },
+    {
+      "id": "MAP-GO-ENGINEERING",
+      "domain": "UAES-06",
+      "modules": [
+        "MOD-GO-ROOT",
+        "MOD-RELAYKIT",
+        "MOD-TOKENKIT",
+        "MOD-TOKENKIT-INNER"
+      ],
+      "rule_count": 5,
+      "rules": [
+        "UAES-06-001-001",
+        "UAES-06-001-003",
+        "UAES-06-001-008",
+        "UAES-06-002-001",
+        "UAES-06-002-002"
+      ],
+      "rule_level_status": "REGISTERED",
+      "gate": "UAES-06-GATE-001",
+      "verification": [
+        "gofmt",
+        "go-vet",
+        "go-test-per-module",
+        "golangci-lint"
+      ]
+    },
+    {
+      "id": "MAP-QUALITY-ENGINEERING",
+      "domain": "UAES-09",
+      "modules": "*",
+      "rule_count": 0,
+      "rules": [],
+      "rule_level_status": "NO_RULE_IDS_REGISTERED_IN_DOMAIN",
+      "gate": "UAES-09-GATE-001",
+      "verification": [
+        "verify-all",
+        "uter-quality-test",
+        "coverage-gate",
+        "spec-integrity"
+      ]
+    },
+    {
+      "id": "MAP-GLOBAL-SECURITY",
+      "domain": "UAES-10",
+      "modules": "*",
+      "rule_count": 0,
+      "rules": [],
+      "rule_level_status": "NO_RULE_IDS_REGISTERED_IN_DOMAIN",
+      "gate": "UAES-10-GATE-001",
+      "verification": [
+        "security-scan",
+        "secret-scan",
+        "verify-all"
+      ]
+    },
+    {
+      "id": "MAP-PRODUCT-ENGINEERING",
+      "domain": "UAES-02",
+      "modules": "*",
+      "rule_count": 3,
+      "rules": [
+        "UAES-02-001-001",
+        "UAES-02-001-002",
+        "UAES-02-002-001"
+      ],
+      "rule_level_status": "REGISTERED",
+      "gate": "UAES-02-GATE-001",
+      "verification": [
+        "product-review"
+      ]
+    },
+    {
+      "id": "MAP-AGENT-GOVERNANCE",
+      "domain": "UAES-08",
+      "modules": "*",
+      "rule_count": 5,
+      "rules": [
+        "UAES-08-001-001",
+        "UAES-08-001-002",
+        "UAES-08-001-003",
+        "UAES-08-001-004",
+        "UAES-08-001-005"
+      ],
+      "rule_level_status": "REGISTERED",
+      "gate": "UAES-08-GATE-001",
+      "verification": [
+        "agent-registry-review"
+      ]
+    },
+    {
+      "id": "MAP-DELIVERY",
+      "domain": "UAES-11",
+      "modules": [
+        "MOD-CI",
+        "MOD-SCRIPTS"
+      ],
+      "rule_count": 0,
+      "rules": [],
+      "rule_level_status": "NO_RULE_IDS_REGISTERED_IN_DOMAIN",
+      "gate": "UAES-11-GATE-001",
+      "verification": [
+        "ci-config-review",
+        "verify-all"
+      ]
+    },
+    {
+      "id": "MAP-FOUNDATION-SPEC-INTEGRITY",
+      "domain": "UAES-00",
+      "modules": "*",
+      "rule_count": 0,
+      "rules": [],
+      "rule_level_status": "NO_RULE_IDS_REGISTERED_IN_DOMAIN",
+      "gate": "UAES-00-GATE-001",
+      "verification": [
+        "spec-integrity"
+      ]
+    }
+  ],
+  "domains_without_rule_level_ids": [
+    "UAES-00",
+    "UAES-01",
+    "UAES-03",
+    "UAES-04",
+    "UAES-09",
+    "UAES-10",
+    "UAES-11",
+    "UAES-12"
+  ],
+  "required_new_directories": [
+    {
+      "path": ".uaes/registry/",
+      "repo": "REPO-UAES",
+      "reason": "Modules / standards / mappings / gates registries."
+    },
+    {
+      "path": ".uaes/policies/",
+      "repo": "REPO-UAES",
+      "reason": "Machine-readable execution policy."
+    },
+    {
+      "path": ".uaes/validators/",
+      "repo": "REPO-UAES",
+      "reason": "Validator contracts (executables live in quality/scripts/uaes/)."
+    },
+    {
+      "path": "quality/scripts/uaes/",
+      "repo": "REPO-UAES",
+      "reason": "governance.script_directory compliant executable location."
+    },
+    {
+      "path": "reports/baseline/",
+      "repo": "REPO-UAES",
+      "reason": "Repository Inventory evidence."
+    }
+  ],
+  "ci_integration_targets": [
+    {
+      "path": ".github/workflows/",
+      "repo": "REPO-UTER",
+      "status": "NOT_MODIFIED",
+      "reason": "Phase IX requires separate authorisation."
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "repo": "REPO-UTER",
+      "status": "NOT_MODIFIED",
+      "reason": "Already exists; ownership mapping pending Phase IX."
+    }
+  ],
+  "preserved_directories": [
+    ".agents",
+    ".ai",
+    ".github",
+    ".playwright-cli",
+    ".quality",
+    ".vscode",
+    ".workbuddy",
+    ".workbuddy-ai",
+    "_reports",
+    "assets",
+    "bin",
+    "common",
+    "constant",
+    "controller",
+    "data",
+    "deploy",
+    "docs",
+    "docs-dev",
+    "docs-web",
+    "dto",
+    "e2e",
+    "electron",
+    "i18n",
+    "logger",
+    "logs",
+    "middleware",
+    "model",
+    "oauth",
+    "pkg",
+    "plugins",
+    "relay",
+    "relaykit",
+    "router",
+    "scripts",
+    "service",
+    "setting",
+    "tokenkit",
+    "types",
+    "web"
+  ],
+  "adjustments": [
+    {
+      "path": "(none)",
+      "action": "NO_CHANGE",
+      "reason": "核心原则：先适配现有代码，再逐步规范代码。不为适配 UAES 示意图而移动 backend/、web/、electron/ 等真实目录。"
+    },
+    {
+      "path": "docs-web/",
+      "action": "REGISTER_AS_MODULE",
+      "reason": "参考结构未列出，但真实仓库存在 Next.js/Fumadocs 文档站，登记为 MOD-DOCS-WEB。"
+    },
+    {
+      "path": "tokenkit/tokenkit/",
+      "action": "REGISTER_AS_SEPARATE_MODULE",
+      "reason": "第四个 Go module 真实存在且 module 名为上游标识，按 AGENTS.md 不得改名。"
+    }
+  ],
+  "file_manifest": [
+    {
+      "path": ".uaes/policies/execution-policy.yaml",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": ".uaes/registry/gates.yaml",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": ".uaes/registry/mappings.yaml",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": ".uaes/registry/modules.yaml",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": ".uaes/registry/standards.yaml",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": ".uaes/validators/README.md",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/change-impact.mjs",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/ci/UAES-GOVERNANCE-WORKFLOW.yml.template",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/generate-inventory.mjs",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/paths.mjs",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/quality-gate-runner.mjs",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/README.md",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/uaes.mjs",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "quality/scripts/uaes/validate-registry.mjs",
+      "type": "NEW_IN_GOVERNANCE_REPO"
+    },
+    {
+      "path": "reports/baseline/UAES-P13-REPOSITORY-INVENTORY.json",
+      "type": "GENERATED_EVIDENCE"
+    },
+    {
+      "path": "reports/baseline/UAES-P13-REPOSITORY-INVENTORY.md",
+      "type": "GENERATED_EVIDENCE"
+    },
+    {
+      "path": "reports/quality/UAES-P13-CHANGE-IMPACT.json",
+      "type": "GENERATED_EVIDENCE"
+    },
+    {
+      "path": "reports/quality/UAES-P13-GOVERNANCE-LAYER-IMPLEMENTATION.md",
+      "type": "GENERATED_EVIDENCE"
+    },
+    {
+      "path": "reports/quality/UAES-P13-GOVERNANCE-VERIFICATION.json",
+      "type": "GENERATED_EVIDENCE"
+    },
+    {
+      "path": "reports/quality/UAES-P13-REGISTRY-VALIDATION.json",
+      "type": "GENERATED_EVIDENCE"
+    }
+  ],
+  "implementation_order": [
+    {
+      "phase": "I",
+      "work": "审计当前仓库真实目录和所有代码模块",
+      "deliverable": "Repository Inventory",
+      "status": "DONE"
+    },
+    {
+      "phase": "II",
+      "work": "建立 Module Registry",
+      "deliverable": ".uaes/registry/modules.yaml",
+      "status": "DONE"
+    },
+    {
+      "phase": "III",
+      "work": "建立标准与模块映射",
+      "deliverable": ".uaes/registry/mappings.yaml",
+      "status": "DONE"
+    },
+    {
+      "phase": "IV",
+      "work": "建立统一标准注册表索引",
+      "deliverable": ".uaes/registry/standards.yaml",
+      "status": "DONE"
+    },
+    {
+      "phase": "V",
+      "work": "建立 Schema 和 Registry Validator",
+      "deliverable": ".uaes/schemas/*.schema.json + validate-registry.mjs",
+      "status": "DONE"
+    },
+    {
+      "phase": "VI",
+      "work": "建立变更影响分析",
+      "deliverable": "change-impact.mjs + shared_impact_zones",
+      "status": "DONE"
+    },
+    {
+      "phase": "VII",
+      "work": "建立领域质量门禁",
+      "deliverable": "gates.yaml + quality-gate-runner.mjs (NOT_RUN by default)",
+      "status": "PARTIAL"
+    },
+    {
+      "phase": "VIII",
+      "work": "建立全局质量门禁",
+      "deliverable": "UAES-GLOBAL-GATE-001 aggregation",
+      "status": "PARTIAL"
+    },
+    {
+      "phase": "IX",
+      "work": "接入 GitHub Actions",
+      "deliverable": "requires authorisation to edit product repo .github/",
+      "status": "PENDING"
+    },
+    {
+      "phase": "X",
+      "work": "用真实 Uter 任务进行 AI 实战验收",
+      "deliverable": "Operational Acceptance report",
+      "status": "PENDING"
+    }
+  ],
+  "acceptance_criteria": [
+    "All module paths and manifests resolve against the real repository (validate-registry.mjs PASS).",
+    "Every mapped rule ID exists in standards/**/*.md; no invented IDs.",
+    "Every declared_in artefact and npm script exists (validate-registry.mjs PASS).",
+    "Change Impact Engine expands shared zones and never relies on git diff alone.",
+    "Domain gates and the global gate are NOT_RUN until explicitly authorised; never reported as PASS.",
+    "Machine-readable reports conform to their JSON Schemas (ajv).",
+    "No product-repository file is modified, staged or committed by the governance layer.",
+    "Phase IX CI wiring and Phase X operational acceptance require separate authorisation."
+  ]
+}

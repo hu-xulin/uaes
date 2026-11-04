@@ -1,0 +1,119 @@
+# TEMPLATE ONLY — NOT installed in the product repository.
+# Phase IX (CI integration) requires separate authorisation.
+#
+# Decision still open: the UAES standard library is an INDEPENDENT repository.
+# The workflow below therefore checks out two repositories. Alternatives are
+# (a) adding the standard library as a git submodule, or (b) publishing the
+# registry as a versioned artifact. Do not silently copy governance files into
+# the product tree — that would violate the "independent structures" principle.
+#
+# Copy to <product-repo>/.github/workflows/uaes-governance.yml only after the
+# repository owner approves the two-repository checkout and token scope.
+
+name: UAES Governance Gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------- Layer 1: Governance Validation ----------
+  l1-governance-validation:
+    name: L1 Registry / Schema / Real-ID validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: uter
+      - uses: actions/checkout@v4
+        with:
+          repository: hu-xulin/uter-ai        # adjust to the real governance remote
+          path: uter-ai
+          token: ${{ secrets.UAES_REGISTRY_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate registries
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: node quality/scripts/uaes/uaes.mjs validate
+        working-directory: uter-ai
+
+  # ---------- Layer 2: Module + Change Impact ----------
+  l2-change-impact:
+    name: L2 Resolve affected modules and required gates
+    runs-on: ubuntu-latest
+    needs: l1-governance-validation
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: uter
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          repository: hu-xulin/uter-ai
+          path: uter-ai
+          token: ${{ secrets.UAES_REGISTRY_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compute impact from the PR diff
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: |
+          git -C "$UTER_REPO_ROOT" diff --name-only \
+            "origin/${{ github.base_ref }}...HEAD" > /tmp/changed-files.txt
+          node quality/scripts/uaes/uaes.mjs impact --stdin < /tmp/changed-files.txt
+        working-directory: uter-ai
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uaes-change-impact
+          path: uter-ai/reports/quality/UAES-P13-CHANGE-IMPACT.json
+
+  # ---------- Layer 3: Domain Quality Gates ----------
+  # Run ONLY the verification commands listed by the impact engine, not every
+  # gate in the repository. Shared zones may legitimately expand the scope.
+  l3-domain-gates:
+    name: L3 Domain gates for affected modules
+    runs-on: ubuntu-latest
+    needs: l2-change-impact
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: uter
+      - uses: actions/download-artifact@v4
+        with:
+          name: uaes-change-impact
+      - name: Execute applicable existing tools
+        run: |
+          echo "Read UAES-P13-CHANGE-IMPACT.json:required_verification and invoke"
+          echo "the matching scripts/verify-all.sh / uter-quality.sh / web scripts."
+          echo "Do NOT claim all Go modules PASS from one root go test ./... ."
+          # Implementation intentionally left to the product repo owner.
+
+  # ---------- Layer 4: Global Quality Gate ----------
+  l4-global-gate:
+    name: L4 Aggregate evidence
+    runs-on: ubuntu-latest
+    needs: [l1-governance-validation, l2-change-impact, l3-domain-gates]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: hu-xulin/uter-ai
+          path: uter-ai
+          token: ${{ secrets.UAES_REGISTRY_TOKEN }}
+      - name: Aggregate
+        run: node quality/scripts/uaes/uaes.mjs gate
+        working-directory: uter-ai
+      - name: Fail on any FAIL / BLOCKED result
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          r = json.load(open('reports/quality/UAES-P13-GOVERNANCE-VERIFICATION.json'))
+          sys.exit(0 if r['gate_status'] == 'PASS' else 1)
+          PY
+        working-directory: uter-ai

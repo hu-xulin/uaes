@@ -1,0 +1,228 @@
+version: 1.0.0
+authority: .uaes/STANDARD-REGISTRY.yaml
+registry_version: 1.7.0
+generated_by: quality/scripts/uaes/validate-registry.mjs (derived index)
+global_gate:
+  id: UAES-GLOBAL-GATE-001
+  layer: L4_GLOBAL_QUALITY_GATE
+  runner: quality/scripts/uaes/quality-gate-runner.mjs
+  aggregates:
+  - UAES-00-GATE-001
+  - UAES-01-GATE-001
+  - UAES-03-GATE-001
+  - UAES-02-GATE-001
+  - UAES-04-GATE-001
+  - UAES-05-GATE-001
+  - UAES-07-GATE-001
+  - UAES-08-GATE-001
+  - UAES-06-GATE-001
+  - UAES-09-GATE-001
+  - UAES-10-GATE-001
+  - UAES-11-GATE-001
+  - UAES-12-GATE-001
+  rule: PASS only when every required domain gate has evidence and no FAIL remains.
+  execution: NOT_RUN
+gates:
+- id: UAES-00-GATE-001
+  name: UAES Foundation Gate
+  file: quality/gates/UAES-00-GATE-001-FOUNDATION-GATE.md
+  phase: P0
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - '*'
+  mappings:
+  - MAP-FOUNDATION-SPEC-INTEGRITY
+  verification:
+  - spec-integrity
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-01-GATE-001
+  name: AI Governance Gate
+  file: quality/gates/UAES-01-GATE-001-AI-GOVERNANCE-GATE.md
+  phase: P1
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules: []
+  mappings: []
+  verification: []
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-03-GATE-001
+  name: Knowledge Engineering Gate
+  file: quality/gates/UAES-03-GATE-001-KNOWLEDGE-ENGINEERING-GATE.md
+  phase: P1
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules: []
+  mappings: []
+  verification: []
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-02-GATE-001
+  name: Product Engineering Quality Gate
+  file: quality/gates/UAES-02-GATE-001-PRODUCT-ENGINEERING-GATE.md
+  phase: P2
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - '*'
+  mappings:
+  - MAP-PRODUCT-ENGINEERING
+  verification:
+  - product-review
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-04-GATE-001
+  name: Architecture Gate
+  file: quality/gates/UAES-04-GATE-001-ARCHITECTURE-GATE.md
+  phase: P3
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules: []
+  mappings: []
+  verification: []
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-05-GATE-001
+  name: UAES-05-GATE-001-DESIGN-QUALITY-GATE
+  file: quality/gates/UAES-05-GATE-001-DESIGN-QUALITY-GATE.md
+  phase: P4
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - MOD-DOCS-WEB
+  - MOD-WEB
+  mappings:
+  - MAP-WEB-DESIGN-TOKENS
+  verification:
+  - web-design-tokens
+  - web-test
+  - web-typecheck
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-07-GATE-001
+  name: UAES-07-GATE-001-CROSS-PLATFORM-GATE
+  file: quality/gates/UAES-07-GATE-001-CROSS-PLATFORM-GATE.md
+  phase: P5
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - MOD-DOCS-WEB
+  - MOD-ELECTRON
+  - MOD-WEB
+  mappings:
+  - MAP-WEB-CROSS-PLATFORM
+  verification:
+  - docs-web-build
+  - electron-build
+  - web-build
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-08-GATE-001
+  name: UAES-08-GATE-001-AGENT-ENGINEERING-GATE
+  file: quality/gates/UAES-08-GATE-001-AGENT-ENGINEERING-GATE.md
+  phase: P6
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - '*'
+  mappings:
+  - MAP-AGENT-GOVERNANCE
+  verification:
+  - agent-registry-review
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-06-GATE-001
+  name: UAES-06-GATE-001-SOFTWARE-ENGINEERING-GATE
+  file: quality/gates/UAES-06-GATE-001-SOFTWARE-ENGINEERING-GATE.md
+  phase: P06
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - MOD-GO-ROOT
+  - MOD-RELAYKIT
+  - MOD-TOKENKIT
+  - MOD-TOKENKIT-INNER
+  mappings:
+  - MAP-GO-ENGINEERING
+  verification:
+  - go-test-per-module
+  - go-vet
+  - gofmt
+  - golangci-lint
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-09-GATE-001
+  name: UAES-09-GATE-001-QUALITY-ENGINEERING-GATE
+  file: quality/gates/UAES-09-GATE-001-QUALITY-ENGINEERING-GATE.md
+  phase: P09
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - '*'
+  mappings:
+  - MAP-QUALITY-ENGINEERING
+  verification:
+  - coverage-gate
+  - spec-integrity
+  - uter-quality-test
+  - verify-all
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-10-GATE-001
+  name: UAES-10-GATE-001-SECURITY-RELIABILITY-GATE
+  file: quality/gates/UAES-10-GATE-001-SECURITY-RELIABILITY-GATE.md
+  phase: P10
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - '*'
+  mappings:
+  - MAP-GLOBAL-SECURITY
+  verification:
+  - secret-scan
+  - security-scan
+  - verify-all
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-11-GATE-001
+  name: DevOps & Delivery Quality Gate
+  file: quality/gates/UAES-11-GATE-001-DEVOPS-DELIVERY-GATE.md
+  phase: P11
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules:
+  - MOD-CI
+  - MOD-SCRIPTS
+  mappings:
+  - MAP-DELIVERY
+  verification:
+  - ci-config-review
+  - verify-all
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.
+- id: UAES-12-GATE-001
+  name: UAES-12-GATE-001-LIFECYCLE-EVOLUTION-GATE
+  file: quality/gates/UAES-12-GATE-001-LIFECYCLE-EVOLUTION-GATE.md
+  phase: P12
+  status: DRAFT
+  layer: L3_DOMAIN_QUALITY_GATE
+  mapped_modules: []
+  mappings: []
+  verification: []
+  execution: NOT_RUN
+  execution_note: Requires explicit authorisation to run commands inside the code repository; the governance layer is read-only
+    by default.

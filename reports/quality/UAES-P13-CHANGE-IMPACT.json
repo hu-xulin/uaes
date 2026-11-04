@@ -1,0 +1,274 @@
+{
+  "task_id": "UAES-P13-IMPACT-ANALYSIS",
+  "generated_at": "2026-11-04T17:16:37.727Z",
+  "changed_files": [
+    "service/billing_session.go",
+    "model/user.go",
+    "go.mod",
+    "docs/ai-specs/PRODUCT-REQUIREMENTS-STANDARD.md"
+  ],
+  "files_source": "EXAMPLE_PAYMENT_DOUBLE_ENTRY",
+  "direct_modules": [
+    "MOD-GO-ROOT"
+  ],
+  "expanded_modules": [
+    "MOD-CI",
+    "MOD-DOCS-WEB",
+    "MOD-E2E",
+    "MOD-ELECTRON",
+    "MOD-RELAYKIT",
+    "MOD-SCRIPTS",
+    "MOD-TOKENKIT",
+    "MOD-TOKENKIT-INNER",
+    "MOD-WEB"
+  ],
+  "module_files": {
+    "MOD-GO-ROOT": [
+      "service/billing_session.go",
+      "model/user.go",
+      "go.mod"
+    ]
+  },
+  "impact_zones": [
+    {
+      "id": "SHARED-GO-CORE",
+      "triggered_by": [
+        "model/user.go",
+        "go.mod"
+      ],
+      "expands_to": [
+        "MOD-GO-ROOT",
+        "MOD-RELAYKIT",
+        "MOD-TOKENKIT",
+        "MOD-TOKENKIT-INNER",
+        "MOD-E2E"
+      ],
+      "reason": "Shared domain types, DB models and module manifests; a change can affect every Go module."
+    },
+    {
+      "id": "SHARED-SPECS",
+      "triggered_by": [
+        "docs/ai-specs/PRODUCT-REQUIREMENTS-STANDARD.md"
+      ],
+      "expands_to": [
+        "*"
+      ],
+      "reason": "Rule-source change affects every module's AI execution contract."
+    }
+  ],
+  "domains": [
+    "UAES-03",
+    "UAES-04",
+    "UAES-05",
+    "UAES-06",
+    "UAES-07",
+    "UAES-09",
+    "UAES-10",
+    "UAES-11",
+    "UAES-12"
+  ],
+  "rules": [
+    "UAES-02-001-001",
+    "UAES-02-001-002",
+    "UAES-02-002-001",
+    "UAES-05-001-002",
+    "UAES-05-001-009",
+    "UAES-05-002-001",
+    "UAES-05-002-002",
+    "UAES-05-002-003",
+    "UAES-06-001-001",
+    "UAES-06-001-003",
+    "UAES-06-001-008",
+    "UAES-06-002-001",
+    "UAES-06-002-002",
+    "UAES-07-001-001",
+    "UAES-07-001-002",
+    "UAES-07-001-007",
+    "UAES-08-001-001",
+    "UAES-08-001-002",
+    "UAES-08-001-003",
+    "UAES-08-001-004",
+    "UAES-08-001-005"
+  ],
+  "gates": [
+    "UAES-00-GATE-001",
+    "UAES-02-GATE-001",
+    "UAES-05-GATE-001",
+    "UAES-06-GATE-001",
+    "UAES-07-GATE-001",
+    "UAES-08-GATE-001",
+    "UAES-09-GATE-001",
+    "UAES-10-GATE-001",
+    "UAES-11-GATE-001"
+  ],
+  "required_verification": [
+    {
+      "id": "agent-registry-review",
+      "command": "Review agents/registry.yaml, skills/registry.yaml, workflows/registry.yaml",
+      "cwd": ".",
+      "kind": "manual-review",
+      "execution": "MANUAL",
+      "declared_in": "agents/registry.yaml"
+    },
+    {
+      "id": "ci-config-review",
+      "command": "Review .github/workflows/*.yml against the changed modules",
+      "cwd": ".",
+      "kind": "manual-review",
+      "execution": "MANUAL",
+      "declared_in": ".github/workflows/ci.yml"
+    },
+    {
+      "id": "coverage-gate",
+      "command": "./scripts/coverage-gate.sh",
+      "cwd": ".",
+      "kind": "script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/coverage-gate.sh"
+    },
+    {
+      "id": "docs-web-build",
+      "command": "bun run build",
+      "cwd": "docs-web",
+      "kind": "npm-script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "docs-web/package.json#scripts.build"
+    },
+    {
+      "id": "electron-build",
+      "command": "bun run build",
+      "cwd": "electron",
+      "kind": "npm-script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "electron/package.json#scripts.build"
+    },
+    {
+      "id": "go-test-per-module",
+      "command": "go test ./... -count=1   # separately for each of the 4 Go modules",
+      "cwd": "per-module",
+      "kind": "command",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": ".quality/.state/inventory.txt"
+    },
+    {
+      "id": "go-vet",
+      "command": "go vet ./...",
+      "cwd": ".",
+      "kind": "command",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/verify-all.sh"
+    },
+    {
+      "id": "gofmt",
+      "command": "gofmt -l .",
+      "cwd": ".",
+      "kind": "command",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/verify-all.sh"
+    },
+    {
+      "id": "golangci-lint",
+      "command": "golangci-lint run   # v2.15.0 required",
+      "cwd": ".",
+      "kind": "command",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": ".golangci.yml"
+    },
+    {
+      "id": "product-review",
+      "command": "Requirement / business-rule / acceptance review per UAES-02-GATE-001",
+      "cwd": ".",
+      "kind": "manual-review",
+      "execution": "MANUAL",
+      "declared_in": "AGENTS.md"
+    },
+    {
+      "id": "secret-scan",
+      "command": "gitleaks detect",
+      "cwd": ".",
+      "kind": "command",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/quality/uter-quality.sh"
+    },
+    {
+      "id": "security-scan",
+      "command": "./scripts/quality/uter-quality.sh security   # govulncheck",
+      "cwd": ".",
+      "kind": "script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/quality/uter-quality.sh"
+    },
+    {
+      "id": "spec-integrity",
+      "command": "./scripts/quality/ai-specs-check.sh",
+      "cwd": ".",
+      "kind": "script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/quality/ai-specs-check.sh"
+    },
+    {
+      "id": "uter-quality-test",
+      "command": "./scripts/quality/uter-quality.sh test",
+      "cwd": ".",
+      "kind": "script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/quality/uter-quality.sh"
+    },
+    {
+      "id": "verify-all",
+      "command": "./scripts/verify-all.sh",
+      "cwd": ".",
+      "kind": "script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "scripts/verify-all.sh"
+    },
+    {
+      "id": "web-build",
+      "command": "bun run build:check",
+      "cwd": "web",
+      "kind": "npm-script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "web/package.json#scripts.build:check"
+    },
+    {
+      "id": "web-design-tokens",
+      "command": "bun run lint:design:strict",
+      "cwd": "web",
+      "kind": "npm-script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "web/package.json#scripts.lint:design:strict"
+    },
+    {
+      "id": "web-test",
+      "command": "bun run test",
+      "cwd": "web",
+      "kind": "npm-script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "web/package.json#scripts.test"
+    },
+    {
+      "id": "web-typecheck",
+      "command": "bun run typecheck",
+      "cwd": "web",
+      "kind": "npm-script",
+      "execution": "DELEGATED_TO_EXISTING_TOOL",
+      "declared_in": "web/package.json#scripts.typecheck"
+    }
+  ],
+  "applicable_mappings": [
+    "MAP-WEB-DESIGN-TOKENS",
+    "MAP-WEB-CROSS-PLATFORM",
+    "MAP-GO-ENGINEERING",
+    "MAP-QUALITY-ENGINEERING",
+    "MAP-GLOBAL-SECURITY",
+    "MAP-PRODUCT-ENGINEERING",
+    "MAP-AGENT-GOVERNANCE",
+    "MAP-DELIVERY",
+    "MAP-FOUNDATION-SPEC-INTEGRITY"
+  ],
+  "rule_source_files": [
+    "docs/ai-specs/PRODUCT-REQUIREMENTS-STANDARD.md"
+  ],
+  "unmatched_files": [],
+  "note": "Git diff alone is insufficient; shared impact zones expand the scope per execution-policy.yaml."
+}

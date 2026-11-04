@@ -1,0 +1,108 @@
+{
+  "report_id": "UAES-P13-GOVERNANCE-VERIFICATION",
+  "task_id": "UAES-P13-REPOSITORY-INTEGRATION",
+  "repository": "https://github.com/hu-xulin/uter",
+  "branch": "main",
+  "base_commit_sha": null,
+  "commit_sha": "e4cbd007934be4825bde4cbc0345b1cbeebd0aa5",
+  "risk_level": "R2",
+  "review_status": "NOT_VERIFIED",
+  "gate_status": "BLOCKED",
+  "tests": [
+    "node quality/scripts/uaes/validate-registry.mjs -> 18 checks, FAIL=0",
+    "node quality/scripts/uaes/change-impact.mjs -> 4 changed file(s), source=EXAMPLE_PAYMENT_DOUBLE_ENTRY",
+    "node quality/scripts/uaes/quality-gate-runner.mjs -> 13 domain gates aggregated",
+    "ajv schema validation of module/mapping/gate registries",
+    "real rule-ID extraction from standards/**/*.md"
+  ],
+  "findings": [
+    "MOD-TOKENKIT-INNER: the 4th Go module is absent from .quality/.state/inventory.txt; UAES-06/09 gates forbid claiming all modules PASS from one root go test.",
+    "Domains 00/01/03/04/09/10/11/12 have no rule-level IDs registered; their mappings are domain-level only (no fabricated IDs)."
+  ],
+  "unresolved_risks": [
+    "L3/L4 gates require explicit authorisation to run commands inside the product repository.",
+    "4th Go module coverage gap in the existing quality inventory.",
+    "P05 acceptance remains BLOCKED: component contract fields, brand colour approval, visual regression / axe.",
+    "CI integration (Layer 3/4 wiring into .github/workflows) is not performed without authorisation."
+  ],
+  "not_run_checks": [
+    "UAES-00-GATE-001 (UAES Foundation Gate): NOT_RUN",
+    "UAES-01-GATE-001 (AI Governance Gate): NOT_RUN",
+    "UAES-03-GATE-001 (Knowledge Engineering Gate): NOT_RUN",
+    "UAES-02-GATE-001 (Product Engineering Quality Gate): NOT_RUN",
+    "UAES-04-GATE-001 (Architecture Gate): NOT_RUN",
+    "UAES-05-GATE-001 (UAES-05-GATE-001-DESIGN-QUALITY-GATE): NOT_RUN",
+    "UAES-07-GATE-001 (UAES-07-GATE-001-CROSS-PLATFORM-GATE): NOT_RUN",
+    "UAES-08-GATE-001 (UAES-08-GATE-001-AGENT-ENGINEERING-GATE): NOT_RUN",
+    "UAES-06-GATE-001 (UAES-06-GATE-001-SOFTWARE-ENGINEERING-GATE): NOT_RUN",
+    "UAES-09-GATE-001 (UAES-09-GATE-001-QUALITY-ENGINEERING-GATE): NOT_RUN",
+    "UAES-10-GATE-001 (UAES-10-GATE-001-SECURITY-RELIABILITY-GATE): NOT_RUN",
+    "UAES-11-GATE-001 (DevOps & Delivery Quality Gate): NOT_RUN",
+    "UAES-12-GATE-001 (UAES-12-GATE-001-LIFECYCLE-EVOLUTION-GATE): NOT_RUN",
+    "coverage-gate: ./scripts/coverage-gate.sh",
+    "docs-web-build: bun run build",
+    "electron-build: bun run build",
+    "go-test-per-module: go test ./... -count=1   # separately for each of the 4 Go modules",
+    "go-vet: go vet ./...",
+    "gofmt: gofmt -l .",
+    "golangci-lint: golangci-lint run   # v2.15.0 required",
+    "secret-scan: gitleaks detect",
+    "security-scan: ./scripts/quality/uter-quality.sh security   # govulncheck",
+    "spec-integrity: ./scripts/quality/ai-specs-check.sh",
+    "uter-quality-test: ./scripts/quality/uter-quality.sh test",
+    "verify-all: ./scripts/verify-all.sh",
+    "web-build: bun run build:check",
+    "web-design-tokens: bun run lint:design:strict",
+    "web-test: bun run test",
+    "web-typecheck: bun run typecheck",
+    "agent-registry-review: MANUAL review",
+    "ci-config-review: MANUAL review",
+    "product-review: MANUAL review"
+  ],
+  "blocked_checks": [
+    "UAES-GLOBAL-GATE-001",
+    "UAES-05-GATE-001"
+  ],
+  "security_summary": "Security gates (UAES-10) not executed; secret-scan and govulncheck delegated to existing tooling.",
+  "regression_summary": "No visual regression, axe or keyboard-focus evidence produced in this governance-only run.",
+  "evidence": [
+    {
+      "evidence_type": "REGISTRY_VALIDATION",
+      "location": "reports/quality/UAES-P13-REGISTRY-VALIDATION.json",
+      "sha256": "f21e224b6603be32ac0c0cf509503ce6ca25e2d5ee720f0ab13c3cd1212c3c8b"
+    },
+    {
+      "evidence_type": "MODULE_REGISTRY",
+      "location": ".uaes/registry/modules.yaml",
+      "sha256": "a47574bf2ee3a41f8cc21892463be2e492aadcf8e830edb4b716662bc91501c6"
+    },
+    {
+      "evidence_type": "RULE_MAPPING",
+      "location": ".uaes/registry/mappings.yaml",
+      "sha256": "013d37454ba249357472811d450966aed980cbe1cb8532b7b2276dba2e1be077"
+    },
+    {
+      "evidence_type": "GATE_REGISTRY",
+      "location": ".uaes/registry/gates.yaml",
+      "sha256": "27abc68890e7b86247a19bc5940ef9da544df7ecf9e4be16fbc02d46ce2987a5"
+    },
+    {
+      "evidence_type": "STANDARD_INDEX",
+      "location": ".uaes/registry/standards.yaml",
+      "sha256": "63da68808a69cb6d02d6f686309d381dfb741a857782d1f8a41152797aea882e"
+    },
+    {
+      "evidence_type": "EXECUTION_POLICY",
+      "location": ".uaes/policies/execution-policy.yaml",
+      "sha256": "358765fd5fa296531d04066211b1beb0b44ccfb3c6b3821411e3b3f374f829ad"
+    },
+    {
+      "evidence_type": "REPOSITORY_INVENTORY",
+      "location": "reports/baseline/UAES-P13-REPOSITORY-INVENTORY.json",
+      "sha256": "88c2b73dcdbfd3da7398830bdaa232e131c87f075054423b9c421283140293bb"
+    }
+  ],
+  "generated_at": "2026-11-04T17:16:38.380Z",
+  "generated_by": "quality/scripts/uaes/quality-gate-runner.mjs",
+  "conclusion": "Layer 1 (governance validation) and Layer 2 (module/impact resolution) executed with real evidence. Layer 3 domain gates and Layer 4 global gate remain NOT_RUN because the governance layer is read-only against the product repository. Global gate is BLOCKED, not PASS."
+}

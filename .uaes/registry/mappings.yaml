@@ -1,0 +1,284 @@
+# Rule-level mapping between UAES standards and real code modules.
+# THREE layers, as required by the governance design:
+#   1. Domain Mapping      -> modules.yaml `standards` (domain scope)
+#   2. Rule Mapping        -> mappings[].rules (real rule IDs only)
+#   3. Verification Mapping-> mappings[].verification -> verification_catalog
+#
+# RULE ID POLICY: every ID below was extracted from standards/**/*.md on
+# 2026-11-05. Domains 00/01/03/04/09/10/11/12 have NO rule-level IDs registered;
+# their mappings deliberately carry `rules: []` plus a status note. No example
+# or invented ID (e.g. "UAES-06-GO-ENGINEERING") is used anywhere.
+
+version: "1.0.0"
+repository: REPO-UTER
+rule_id_policy:
+  authoritative_source: "standards/**/*.md"
+  validator: "quality/scripts/uaes/validate-registry.mjs"
+  forbid_invented_ids: true
+  domains_without_rule_level_ids:
+    - UAES-00
+    - UAES-01
+    - UAES-03
+    - UAES-04
+    - UAES-09
+    - UAES-10
+    - UAES-11
+    - UAES-12
+  note: >-
+    A domain with no rule-level IDs is still enforced at DOMAIN level through
+    its gate document. Do not fabricate IDs to make a mapping look complete.
+
+mappings:
+  - id: MAP-WEB-DESIGN-TOKENS
+    domain: UAES-05
+    modules: [MOD-WEB, MOD-DOCS-WEB]
+    applies_when: "changed path matches web/src/design-system/**, web/src/styles/**, web/src/components/**, docs-web/**"
+    rules:
+      - UAES-05-001-002   # unique IDs for tokens / component contracts
+      - UAES-05-001-009   # manual review for high-impact brand / a11y changes
+      - UAES-05-002-001   # single authoritative token source
+      - UAES-05-002-002   # stable machine-readable format
+      - UAES-05-002-003   # name / type / value / purpose declared
+    rule_level_status: REGISTERED
+    verification: [web-design-tokens, web-typecheck, web-test]
+    gate: UAES-05-GATE-001
+
+  - id: MAP-WEB-CROSS-PLATFORM
+    domain: UAES-07
+    modules: [MOD-WEB, MOD-ELECTRON, MOD-DOCS-WEB]
+    applies_when: "UI surface, platform adapter or responsive behaviour changed"
+    rules:
+      - UAES-07-001-001
+      - UAES-07-001-002
+      - UAES-07-001-007
+    rule_level_status: REGISTERED
+    verification: [web-build, electron-build, docs-web-build]
+    gate: UAES-07-GATE-001
+    note: "UAES-05-001-007 requires platform differences to be explicit variants."
+
+  - id: MAP-GO-ENGINEERING
+    domain: UAES-06
+    modules: [MOD-GO-ROOT, MOD-RELAYKIT, MOD-TOKENKIT, MOD-TOKENKIT-INNER]
+    applies_when: "any .go / go.mod / go.sum change"
+    rules:
+      - UAES-06-001-001   # meaningful naming
+      - UAES-06-001-003   # explicit error handling
+      - UAES-06-001-008   # consistent style
+      - UAES-06-002-001   # unique module identity and responsibility
+      - UAES-06-002-002   # explicit public interface
+    rule_level_status: REGISTERED
+    verification: [gofmt, go-vet, go-test-per-module, golangci-lint]
+    gate: UAES-06-GATE-001
+    note: >-
+      UAES-06-GATE-001 §SE-006 and UAES-09-GATE-001 explicitly forbid claiming
+      all Go modules PASS from a single root `go test ./...`. Four modules exist,
+      so verification is registered per module.
+
+  - id: MAP-QUALITY-ENGINEERING
+    domain: UAES-09
+    modules: "*"
+    applies_when: "any code change"
+    rules: []
+    rule_level_status: NO_RULE_IDS_REGISTERED_IN_DOMAIN
+    verification: [verify-all, uter-quality-test, coverage-gate, spec-integrity]
+    gate: UAES-09-GATE-001
+
+  - id: MAP-GLOBAL-SECURITY
+    domain: UAES-10
+    modules: "*"
+    applies_when: "any code, dependency, secret-bearing or payment-related change"
+    rules: []
+    rule_level_status: NO_RULE_IDS_REGISTERED_IN_DOMAIN
+    verification: [security-scan, secret-scan, verify-all]
+    gate: UAES-10-GATE-001
+
+  - id: MAP-PRODUCT-ENGINEERING
+    domain: UAES-02
+    modules: "*"
+    applies_when: "requirement, business rule, payment, billing or acceptance change"
+    rules:
+      - UAES-02-001-001
+      - UAES-02-001-002
+      - UAES-02-002-001
+    rule_level_status: REGISTERED
+    verification: [product-review]
+    gate: UAES-02-GATE-001
+    note: "product-review is a documented human/AI review, not an automated PASS."
+
+  - id: MAP-AGENT-GOVERNANCE
+    domain: UAES-08
+    modules: "*"
+    applies_when: "agent / skill / workflow / MCP tool definition changed"
+    rules:
+      - UAES-08-001-001   # stable unique Agent ID
+      - UAES-08-001-002   # definition vs instance
+      - UAES-08-001-003   # role, responsibility, allowed task types
+      - UAES-08-001-004   # owner recorded
+      - UAES-08-001-005   # model / provider recorded
+    rule_level_status: REGISTERED
+    verification: [agent-registry-review]
+    gate: UAES-08-GATE-001
+
+  - id: MAP-DELIVERY
+    domain: UAES-11
+    modules: [MOD-CI, MOD-SCRIPTS]
+    applies_when: "CI workflow, release, build or automation script changed"
+    rules: []
+    rule_level_status: NO_RULE_IDS_REGISTERED_IN_DOMAIN
+    verification: [ci-config-review, verify-all]
+    gate: UAES-11-GATE-001
+
+  - id: MAP-FOUNDATION-SPEC-INTEGRITY
+    domain: UAES-00
+    modules: "*"
+    applies_when: "AGENTS.md / CLAUDE.md / .ai/** / docs/ai-specs/** changed"
+    rules: []
+    rule_level_status: NO_RULE_IDS_REGISTERED_IN_DOMAIN
+    verification: [spec-integrity]
+    gate: UAES-00-GATE-001
+    note: "Maps to the code repo's existing AGENTS.md Task-based spec routing table."
+
+# Verification catalog: every command / runner below was verified to exist in
+# the real repository. `declared_in` is checked by validate-registry.mjs.
+verification_catalog:
+  - id: gofmt
+    kind: command
+    command: "gofmt -l ."
+    cwd: "."
+    declared_in: "scripts/verify-all.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: go-vet
+    kind: command
+    command: "go vet ./..."
+    cwd: "."
+    declared_in: "scripts/verify-all.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: go-test-per-module
+    kind: command
+    command: "go test ./... -count=1   # separately for each of the 4 Go modules"
+    cwd: "per-module"
+    declared_in: ".quality/.state/inventory.txt"
+    execution: DELEGATED_TO_EXISTING_TOOL
+    note: "inventory currently covers only 3 of 4 Go modules; see MOD-TOKENKIT-INNER audit_note."
+
+  - id: golangci-lint
+    kind: command
+    command: "golangci-lint run   # v2.15.0 required"
+    cwd: "."
+    declared_in: ".golangci.yml"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: web-design-tokens
+    kind: npm-script
+    command: "bun run lint:design:strict"
+    cwd: "web"
+    declared_in: "web/package.json#scripts.lint:design:strict"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: web-typecheck
+    kind: npm-script
+    command: "bun run typecheck"
+    cwd: "web"
+    declared_in: "web/package.json#scripts.typecheck"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: web-lint
+    kind: npm-script
+    command: "bun run lint"
+    cwd: "web"
+    declared_in: "web/package.json#scripts.lint"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: web-test
+    kind: npm-script
+    command: "bun run test"
+    cwd: "web"
+    declared_in: "web/package.json#scripts.test"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: web-build
+    kind: npm-script
+    command: "bun run build:check"
+    cwd: "web"
+    declared_in: "web/package.json#scripts.build:check"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: docs-web-build
+    kind: npm-script
+    command: "bun run build"
+    cwd: "docs-web"
+    declared_in: "docs-web/package.json#scripts.build"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: electron-build
+    kind: npm-script
+    command: "bun run build"
+    cwd: "electron"
+    declared_in: "electron/package.json#scripts.build"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: verify-all
+    kind: script
+    command: "./scripts/verify-all.sh"
+    cwd: "."
+    declared_in: "scripts/verify-all.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: uter-quality-test
+    kind: script
+    command: "./scripts/quality/uter-quality.sh test"
+    cwd: "."
+    declared_in: "scripts/quality/uter-quality.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: coverage-gate
+    kind: script
+    command: "./scripts/coverage-gate.sh"
+    cwd: "."
+    declared_in: "scripts/coverage-gate.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: spec-integrity
+    kind: script
+    command: "./scripts/quality/ai-specs-check.sh"
+    cwd: "."
+    declared_in: "scripts/quality/ai-specs-check.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: security-scan
+    kind: script
+    command: "./scripts/quality/uter-quality.sh security   # govulncheck"
+    cwd: "."
+    declared_in: "scripts/quality/uter-quality.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: secret-scan
+    kind: command
+    command: "gitleaks detect"
+    cwd: "."
+    declared_in: "scripts/quality/uter-quality.sh"
+    execution: DELEGATED_TO_EXISTING_TOOL
+
+  - id: ci-config-review
+    kind: manual-review
+    command: "Review .github/workflows/*.yml against the changed modules"
+    cwd: "."
+    declared_in: ".github/workflows/ci.yml"
+    execution: MANUAL
+
+  - id: product-review
+    kind: manual-review
+    command: "Requirement / business-rule / acceptance review per UAES-02-GATE-001"
+    cwd: "."
+    declared_in: "AGENTS.md"
+    execution: MANUAL
+
+  - id: agent-registry-review
+    kind: manual-review
+    command: "Review agents/registry.yaml, skills/registry.yaml, workflows/registry.yaml"
+    cwd: "."
+    declared_in_repo: GOVERNANCE
+    declared_in: "agents/registry.yaml"
+    execution: MANUAL

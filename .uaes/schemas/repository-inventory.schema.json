@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/repository-inventory.schema.json",
+  "title": "UAES Repository Inventory",
+  "type": "object",
+  "required": [
+    "report_id",
+    "generated_at",
+    "repository",
+    "top_level_directories",
+    "code_modules",
+    "governance_systems",
+    "required_new_directories",
+    "preserved_directories",
+    "file_manifest",
+    "implementation_order"
+  ],
+  "properties": {
+    "report_id": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "object"
+    },
+    "top_level_directories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "code_modules": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "governance_systems": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "domain_rule_mapping": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "required_new_directories": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "preserved_directories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "adjustments": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "file_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "implementation_order": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
