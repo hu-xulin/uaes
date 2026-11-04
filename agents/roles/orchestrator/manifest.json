@@ -1,0 +1,21 @@
+{
+  "agentId": "AGENT-ORCHESTRATOR-MAIN",
+  "name": "Main Task Orchestrator",
+  "version": "1.0.0",
+  "role": "ORCHESTRATOR",
+  "owner": "UAES Engineering Governance",
+  "status": "DRAFT",
+  "runtime": "tool-adapter-selected",
+  "skillRefs": [
+    "SKILL-UAES-COMPLIANCE-AUDIT",
+    "SKILL-UAES-UTER-INTEGRATION"
+  ],
+  "toolRefs": [],
+  "inputContract": ".uaes/schemas/agent-task.schema.json",
+  "outputContract": ".uaes/schemas/agent-result.schema.json",
+  "authorizationRefs": [
+    "agents/policies/default-permission-policy.yaml"
+  ],
+  "evaluationProfile": "agents/evaluation-profiles/default.yaml",
+  "dependencies": []
+}
