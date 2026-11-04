@@ -29,8 +29,8 @@ Current registered skill contracts (8 total):
 - `uaes-code-review` — evidence-based, read-only code review.
 - `uaes-test-engineering` — design and execute deterministic tests, including race, security, visual, and regression testing.
 - `uaes-auto-fix` — authorized, isolated, reversible defect repair.
-
-Security audit and design-system audit are future candidates, not registered skills, until their contracts and manifests are added to the registry.
+- `uaes-security-audit` — read-only application security and supply-chain audit.
+- `uaes-design-system-audit` — read-only token, component-contract, and accessibility audit.
 
 ## Runtime adapters
 
