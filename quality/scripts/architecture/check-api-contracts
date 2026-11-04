@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Fail-closed placeholder. This is NOT an implemented architecture check.
+set -euo pipefail
+cat >&2 <<'EOF'
+BLOCKED: API contract validation is not implemented as an executable architecture control.
+Reason: No generated API contract inventory or contract compatibility validator has been approved.
+Do not report this check as PASS. Keep UAES-04-GATE-001 in DRAFT until the
+required project inputs, implementation, positive tests, and negative tests
+are available and independently verified.
+EOF
+exit 2
