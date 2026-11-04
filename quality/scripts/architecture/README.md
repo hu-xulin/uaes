@@ -9,6 +9,7 @@ The architecture gate remains **DRAFT**. A check is considered accepted only whe
 | check-dependency-rules | IMPLEMENTED FOR FOUR GO MODULES; CI PASS | Compares actual Go package imports against `.uaes/registry/module-dependencies.yaml`; resolves overlapping module paths by longest prefix and fails closed on missing modules or `go list` errors. |
 | check-api-contracts | IMPLEMENTED FOR TWO OPENAPI DOCS; CI PASS | Validates OpenAPI 3.x structure, local references, security scheme references, operationId uniqueness, responses, and compatibility against the pinned baseline (operation removals, operationId changes, new required parameters/body fields, response removals, schema/property/type/enum breaks). |
 | check-database-migrations | INVENTORY VALIDATION IMPLEMENTED; SAFETY NOT_VERIFIED | Validates pinned source identity, every registered custom migration source/function, unique IDs/order, and manual SQL files. It explicitly does not claim cross-dialect compatibility or rollback safety; those remain blocked. |
+| check-frontend-module-inventory | INVENTORY ONLY; BOUNDARIES NOT_VERIFIED | Resolves alias/relative TypeScript/JavaScript imports and reports observed top-level module edges. It does not yet enforce allowed dependency directions; those require review of the measured graph. |
 
 ## Source requirements
 
@@ -20,6 +21,8 @@ UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-mo
 ruby quality/scripts/architecture/test-module-boundaries.rb
 ruby quality/scripts/architecture/check-dependency-rules
 ruby quality/scripts/architecture/test-dependency-rules.rb
+UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-frontend-module-inventory
+ruby quality/scripts/architecture/test-frontend-module-inventory.rb
 ```
 
 ## CI evidence
