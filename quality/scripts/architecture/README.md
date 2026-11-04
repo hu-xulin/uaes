@@ -9,7 +9,7 @@ The architecture gate remains **DRAFT**. A check is considered accepted only whe
 | check-dependency-rules | IMPLEMENTED FOR FOUR GO MODULES; CI PASS | Compares actual Go package imports against `.uaes/registry/module-dependencies.yaml`; resolves overlapping module paths by longest prefix and fails closed on missing modules or `go list` errors. |
 | check-api-contracts | IMPLEMENTED FOR TWO OPENAPI DOCS; CI PASS | Validates OpenAPI 3.x structure, local references, security scheme references, operationId uniqueness, responses, and compatibility against the pinned baseline (operation removals, operationId changes, new required parameters/body fields, response removals, schema/property/type/enum breaks). |
 | check-database-migrations | INVENTORY VALIDATION IMPLEMENTED; SAFETY NOT_VERIFIED | Validates pinned source identity, every registered custom migration source/function, unique IDs/order, and manual SQL files. It explicitly does not claim cross-dialect compatibility or rollback safety; those remain blocked. |
-| check-frontend-module-inventory | INVENTORY ONLY; BOUNDARIES NOT_VERIFIED | Resolves alias/relative TypeScript/JavaScript imports and reports observed top-level module edges. It does not yet enforce allowed dependency directions; those require review of the measured graph. |
+| check-frontend-module-inventory | PRODUCTION/TEST GRAPH INVENTORY; BOUNDARIES NOT_VERIFIED | Resolves alias/relative TypeScript/JavaScript imports, separates production imports from test-only imports, excludes generated route-tree modules from boundary edges, and reports evidence samples. It does not yet enforce allowed dependency directions; those require review of the measured production graph. |
 | check-router-openapi-drift | RUNTIME CAPTURE IMPLEMENTED; TWO CONTRACT MISMATCHES FOUND | Captures 450 static Gin routes plus the active built-in task-plugin generation (34 plugin routes), then verifies documented OpenAPI operations against runtime route patterns. The latest completed runtime capture reduced 7 mismatches to 2: `POST /api/oauth/wechat/bind` and `GET /api/verify/status`. |
 | check-router-openapi-drift | IMPLEMENTED; RUNTIME DRIFT FOUND; RECHECK PENDING | Captures static Gin routes plus the active built-in task-plugin generation, then checks documented OpenAPI operations against actual route patterns. First run exposed 7 mismatches; 5 are built-in dynamic plugin routes now added to inventory, while 2 management operations remain undocumented by runtime Gin routes. |
 
@@ -23,7 +23,7 @@ UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-mo
 ruby quality/scripts/architecture/test-module-boundaries.rb
 ruby quality/scripts/architecture/check-dependency-rules
 ruby quality/scripts/architecture/test-dependency-rules.rb
-UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-frontend-module-inventory
+UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-frontend-module-inventory # separates production/test edges; excludes generated route-tree imports
 ruby quality/scripts/architecture/test-frontend-module-inventory.rb
 UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-router-openapi-drift
 ruby quality/scripts/architecture/test-router-openapi-drift.rb
