@@ -60,3 +60,11 @@ jobs:
         env:
           UTER_REPO_ROOT: ${{ github.workspace }}/uter
         run: ruby quality/scripts/architecture/check-database-migrations
+      - name: Inventory frontend module import graph (boundary policy not yet accepted)
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-frontend-module-inventory
+      - name: Run frontend import inventory positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-frontend-module-inventory.rb
