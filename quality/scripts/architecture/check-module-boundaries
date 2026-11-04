@@ -36,7 +36,7 @@ out.each_line do |line|
   pkg, imports = line.strip.split(" ", 2)
   next unless imports
   imports.split.each do |item|
-    if blocked.any? { |prefix| item == prefix || item.start_with?(prefix) }
+    if blocked.any? { |prefix| item == prefix || item.start_with?(prefix) } || (item.start_with?(host_prefix + "/") && !item.start_with?(host_prefix + "/relaykit"))
       findings << "#{pkg} imports prohibited host dependency #{item}"
     end
   end
