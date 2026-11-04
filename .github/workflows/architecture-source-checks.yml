@@ -44,3 +44,6 @@ jobs:
         env:
           UTER_REPO_ROOT: ${{ github.workspace }}/uter
         run: ruby quality/scripts/architecture/check-dependency-rules
+      - name: Run dependency allowlist positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-dependency-rules.rb
