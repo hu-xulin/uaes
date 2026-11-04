@@ -1,11 +1,91 @@
-#!/usr/bin/env bash
-# Fail-closed placeholder. This is NOT an implemented architecture check.
-set -euo pipefail
-cat >&2 <<'EOF'
-BLOCKED: database migration validation is not implemented as an executable architecture control.
-Reason: No complete migration inventory, compatibility policy, or rollback test harness has been validated.
-Do not report this check as PASS. Keep UAES-04-GATE-001 in DRAFT until the
-required project inputs, implementation, positive tests, and negative tests
-are available and independently verified.
-EOF
-exit 2
+#!/usr/bin/env ruby
+require "yaml"
+
+def stop(message, code = 2)
+  warn "DATABASE MIGRATION INVENTORY: #{message}"
+  exit code
+end
+
+uaes_root = File.expand_path("../../..", __dir__)
+inventory_path = File.join(uaes_root, ".uaes/registry/database-migration-inventory.yaml")
+stop("inventory missing: #{inventory_path}") unless File.file?(inventory_path)
+
+root = ENV["UTER_REPO_ROOT"]
+stop("UTER_REPO_ROOT is required") if root.nil? || root.empty?
+root = File.realpath(root)
+inventory = YAML.safe_load_file(inventory_path, permitted_classes: [], aliases: false)
+stop("inventory root must be a mapping") unless inventory.is_a?(Hash)
+
+expected_source = inventory.fetch("source_repository", nil)
+stop("source_repository must be hu-xulin/uter") unless expected_source == "hu-xulin/uter"
+source_commit = inventory.fetch("source_commit", nil)
+stop("source_commit must be a pinned 40-character SHA") unless source_commit.is_a?(String) && source_commit.match?(/\\A[0-9a-f]{40}\\z/)
+
+main = inventory.fetch("migration_system", {})
+stop("migration_system must declare rollback_harness") unless main.key?("rollback_harness")
+stop("migration_system must declare cross_database_migration_matrix") unless main.key?("cross_database_migration_matrix")
+
+errors = []
+ids = []
+orders = Hash.new { |hash, key| hash[key] = [] }
+
+Array(inventory["custom_steps"]).each do |step|
+  unless step.is_a?(Hash)
+    errors << "custom_steps contains a non-mapping entry"
+    next
+  end
+  id = step["id"]
+  ids << id
+  %w[scope source function invoked_from phase order failure_mode rollback_status recovery].each do |field|
+    errors << "#{id || "unknown"}: missing #{field}" if step[field].nil? || step[field].to_s.empty?
+  end
+  source = step["source"].to_s
+  if source.empty? || source.start_with?("/") || source.split("/").include?("..")
+    errors << "#{id || "unknown"}: unsafe source path #{source.inspect}"
+    next
+  end
+  source_path = File.join(root, source)
+  unless File.file?(source_path)
+    errors << "#{id || "unknown"}: source file missing: #{source}"
+    next
+  end
+  function = step["function"].to_s
+  unless function == "AutoMigrate" || File.read(source_path).include?(function)
+    errors << "#{id || "unknown"}: function/symbol #{function.inspect} not found in #{source}"
+  end
+  order = step["order"]
+  orders[step["scope"]] << order if order.is_a?(Integer)
+end
+
+duplicates = ids.compact.group_by(&:itself).select { |_id, values| values.length > 1 }.keys
+errors << "duplicate migration IDs: #{duplicates.join(", ")}" unless duplicates.empty?
+orders.each do |scope, values|
+  errors << "#{scope}: custom step order values must be unique" unless values.uniq.length == values.length
+end
+
+Array(inventory["manual_sql"]).each do |entry|
+  path = entry.is_a?(Hash) ? entry["path"].to_s : ""
+  if path.empty? || path.start_with?("/") || path.split("/").include?("..")
+    errors << "manual_sql contains an unsafe or missing path"
+    next
+  end
+  errors << "manual SQL file missing: #{path}" unless File.file?(File.join(root, path))
+end
+
+if errors.any?
+  warn "DATABASE MIGRATION INVENTORY: FAIL (#{errors.length} finding(s))"
+  errors.each { |error| warn " - #{error}" }
+  exit 1
+end
+
+steps = Array(inventory["custom_steps"]).length
+manual = Array(inventory["manual_sql"]).length
+puts "DATABASE MIGRATION INVENTORY: PASS (#{steps} custom steps; #{manual} manual SQL files; source #{source_commit})"
+
+rollback = main["rollback_harness"].to_s
+matrix = main["cross_database_migration_matrix"].to_s
+if rollback == "NOT_PROVIDED" || matrix == "NOT_VERIFIED"
+  puts "DATABASE MIGRATION SAFETY: NOT_VERIFIED (inventory integrity is not rollback or cross-dialect safety evidence)"
+else
+  puts "DATABASE MIGRATION SAFETY: REVIEW_REQUIRED (declared evidence must be independently verified)"
+end
