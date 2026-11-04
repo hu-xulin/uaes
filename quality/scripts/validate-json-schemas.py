@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+import yaml
 from pathlib import Path
 
 from jsonschema.validators import validator_for
@@ -61,7 +62,66 @@ except SchemaError:
 else:
     errors.append("negative control failed: invalid schema was accepted")
 
-print(f"JSON Schema meta-validation: {checked} schema(s) checked")
+
+# Validate the global registry and registered manifest instances against their
+# schemas, in addition to checking each schema against its declared meta-schema.
+def load_yaml_instance(relative: str):
+    try:
+        return yaml.safe_load((ROOT / relative).read_text(encoding="utf-8"))
+    except Exception as exc:
+        errors.append(f"{relative}: invalid YAML: {exc}")
+        return {}
+
+def validate_instance(schema_name: str, instance: dict, label: str):
+    schema_path = ROOT / ".uaes" / "schemas" / schema_name
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        validator_cls = validator_for(schema)
+        validator = validator_cls(schema)
+        instance_errors = sorted(validator.iter_errors(instance), key=lambda e: list(e.path))
+        if instance_errors:
+            for error in instance_errors:
+                location = ".".join(str(part) for part in error.path) or "<root>"
+                errors.append(f"{label} at {location}: {error.message}")
+        else:
+            print(f"PASS: schema instance {label}")
+    except Exception as exc:
+        errors.append(f"{label}: schema validation could not run: {exc}")
+
+registry = load_yaml_instance(".uaes/STANDARD-REGISTRY.yaml")
+validate_instance("standard-registry.schema.json", registry, ".uaes/STANDARD-REGISTRY.yaml")
+
+agents_registry = load_yaml_instance("agents/registry.yaml")
+for agent in agents_registry.get("agents", []):
+    manifest_path = agent.get("manifest")
+    if not manifest_path:
+        errors.append(f"agent {agent.get('id', '(unknown)')}: manifest path missing")
+        continue
+    try:
+        manifest = json.loads((ROOT / manifest_path).read_text(encoding="utf-8"))
+    except Exception as exc:
+        errors.append(f"{manifest_path}: invalid JSON: {exc}")
+        continue
+    validate_instance("agent-manifest.schema.json", manifest, manifest_path)
+
+skills_registry = load_yaml_instance("skills/registry.yaml")
+for skill in skills_registry.get("skills", []):
+    manifest_path = skill.get("manifest")
+    if not manifest_path:
+        errors.append(f"skill {skill.get('id', '(unknown)')}: manifest path missing")
+        continue
+    try:
+        manifest = json.loads((ROOT / manifest_path).read_text(encoding="utf-8"))
+    except Exception as exc:
+        errors.append(f"{manifest_path}: invalid JSON: {exc}")
+        continue
+    validate_instance("skill-manifest.schema.json", manifest, manifest_path)
+    for key in ("inputSchema", "outputSchema"):
+        reference = manifest.get(key)
+        if not reference or not (ROOT / reference).is_file():
+            errors.append(f"{manifest_path}: missing referenced {key}: {reference}")
+
+print(f"JSON Schema meta-validation: {checked} schema(s) checked; registered instances validated")
 if errors:
     for error in errors:
         print(f"FAIL: {error}", file=sys.stderr)
