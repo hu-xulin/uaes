@@ -60,8 +60,10 @@ files = SOURCE_GLOBS.flat_map { |glob| Dir.glob(File.join(src, glob)) }.uniq.sor
 stop("no frontend source files discovered") if files.empty?
 
 production_edges = Hash.new(0)
+production_edge_kinds = Hash.new(0)
 production_samples = Hash.new { |hash, key| hash[key] = [] }
 test_edges = Hash.new(0)
+test_edge_kinds = Hash.new(0)
 production_import_kinds = Hash.new(0)
 test_import_kinds = Hash.new(0)
 unresolved = []
@@ -111,8 +113,10 @@ files.each do |file|
 
     if is_test
       test_edges[edge_key] += 1
+      test_edge_kinds[[from, to, kind]] += 1
     else
       production_edges[edge_key] += 1
+      production_edge_kinds[[from, to, kind]] += 1
       if from != to && production_samples[edge_key].length < 64
         production_samples[edge_key] << "#{relative_importer} -> #{specifier} => #{target_relative}"
       end
@@ -136,6 +140,10 @@ production_samples.sort.each do |(from, to), samples|
 end
 puts "FRONTEND MODULE TEST-ONLY EDGES:"
 test_edges.sort.each { |(from, to), count| puts "  #{from} -> #{to}: #{count}" }
+puts "FRONTEND MODULE PRODUCTION EDGE KINDS:"
+production_edge_kinds.sort.each { |(from, to, kind), count| puts "  #{from} -> #{to} [#{kind}]: #{count}" }
+puts "FRONTEND MODULE TEST EDGE KINDS:"
+test_edge_kinds.sort.each { |(from, to, kind), count| puts "  #{from} -> #{to} [#{kind}]: #{count}" }
 puts "FRONTEND MODULE PRODUCTION IMPORT KINDS:"
 production_import_kinds.sort.each { |kind, count| puts "  #{kind}: #{count}" }
 puts "FRONTEND MODULE TEST IMPORT KINDS:"
