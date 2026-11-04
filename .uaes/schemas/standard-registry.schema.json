@@ -82,7 +82,24 @@
           }
         },
         "provenance": {
-          "type": "string"
+          "type": "object",
+          "properties": {
+            "historical": {
+              "type": "string"
+            },
+            "reconstructed": {
+              "type": "string"
+            },
+            "new": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "historical",
+            "reconstructed",
+            "new"
+          ],
+          "additionalProperties": false
         }
       }
     },
