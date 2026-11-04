@@ -15,7 +15,7 @@ stop("web/src directory missing") unless File.directory?(src)
 
 EXTENSIONS = %w[.ts .tsx .js .jsx .mts .cts .mjs .cjs].freeze
 SOURCE_GLOBS = %w[**/*.ts **/*.tsx **/*.js **/*.jsx **/*.mts **/*.cts **/*.mjs **/*.cjs].freeze
-IMPORT_PATTERN = /(?:\bimport\s+(?:type\s+)?(?:[^'";]*?\s+from\s+)?|\bexport\s+(?:type\s+)?[^'";]*?\s+from\s+|\bimport\s*\()\s*['"]([^'"]+)['"]/m
+IMPORT_PATTERN = /(?<statement>\bimport\s+(?:type\s+)?(?:[^'";]*?\s+from\s+)?|\bexport\s+(?:type\s+)?[^'";]*?\s+from\s+|\bimport\s*\()\s*['"](?<specifier>[^'"]+)['"]/m
 
 def test_source?(relative)
   relative.split("/").include?("__tests__") || File.basename(relative).match?(/\.(?:test|spec)\.[^.]+\z/)
@@ -27,14 +27,14 @@ end
 
 
 def import_kind(statement)
-  return :dynamic if statement.match?(/\\bimport\\s*\\(\\s*\\z/)
+  return :dynamic if statement.match?(/\bimport\s*\(\s*\z/)
 
-  return :type_only if statement.match?(/\\b(?:import|export)\\s+type\\b/)
+  return :type_only if statement.match?(/\b(?:import|export)\s+type\b/)
 
-  named_clause = statement.match(/\\b(?:import|export)\\s+\\{([^}]*)\\}\\s+from\\s*\\z/m)
+  named_clause = statement.match(/\b(?:import|export)\s+\{([^}]*)\}\s+from\s*\z/m)
   if named_clause
     specifiers = named_clause[1].split(",").map(&:strip)
-    return :type_only if !specifiers.empty? && specifiers.all? { |item| item.match?(/\\Atype\\s+/) }
+    return :type_only if !specifiers.empty? && specifiers.all? { |item| item.match?(/\Atype\s+/) }
   end
 
   :runtime
@@ -80,8 +80,12 @@ files.each do |file|
   is_test = test_source?(relative_importer)
   is_test ? test_file_count += 1 : production_file_count += 1
   content = File.read(file)
-  content.scan(IMPORT_PATTERN).flatten.each do |specifier|
+  content.to_enum(:scan, IMPORT_PATTERN).each do
+    match = Regexp.last_match
+    specifier = match[:specifier]
     next unless specifier.start_with?("@/", "./", "../")
+    kind = import_kind(match[:statement])
+    (is_test ? test_import_kinds : production_import_kinds)[kind] += 1
     target = resolve_local(src, file, specifier)
     unless target
       unresolved << "#{relative_importer} -> #{specifier}"
