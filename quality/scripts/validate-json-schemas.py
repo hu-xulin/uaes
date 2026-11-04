@@ -9,6 +9,7 @@ from pathlib import Path
 
 from jsonschema.validators import validator_for
 from jsonschema.exceptions import SchemaError
+import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_DIRS = (ROOT / ".uaes" / "schemas", ROOT / "design-system" / "tokens" / "source")
@@ -50,6 +51,83 @@ for directory in SCHEMA_DIRS:
             else:
                 seen_ids[schema_id] = path
         checked += 1
+
+
+# Validate real agent and skill manifest instances, not just schema syntax.
+def load_registry(path: Path) -> dict:
+    try:
+        value = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if not isinstance(value, dict):
+            raise ValueError("registry root must be a mapping")
+        return value
+    except Exception as exc:
+        errors.append(f"{path.relative_to(ROOT)}: invalid YAML registry: {exc}")
+        return {}
+
+def validate_manifest(instance_path: Path, schema_path: Path, expected_id: str | None = None) -> dict:
+    try:
+        instance = json.loads(instance_path.read_text(encoding="utf-8"))
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        validator = validator_for(schema)(schema)
+        issues = sorted(validator.iter_errors(instance), key=lambda e: list(e.path))
+        for issue in issues:
+            errors.append(
+                f"{instance_path.relative_to(ROOT)}: {list(issue.path)}: {issue.message}"
+            )
+        if expected_id and instance.get("skillId") != expected_id:
+            errors.append(
+                f"{instance_path.relative_to(ROOT)}: skillId does not match registry ID {expected_id}"
+            )
+        return instance
+    except Exception as exc:
+        errors.append(f"{instance_path.relative_to(ROOT)}: manifest validation error: {exc}")
+        return {}
+
+skill_registry = load_registry(ROOT / "skills" / "registry.yaml")
+skill_entries = skill_registry.get("skills", [])
+skill_ids = [entry.get("id") for entry in skill_entries]
+skill_names = [entry.get("name") for entry in skill_entries]
+if len(skill_ids) != len(set(skill_ids)):
+    errors.append("skills/registry.yaml: duplicate skill IDs")
+if len(skill_names) != len(set(skill_names)):
+    errors.append("skills/registry.yaml: duplicate skill names")
+known_skill_ids = set(skill_ids)
+
+skill_schema = ROOT / ".uaes" / "schemas" / "skill-manifest.schema.json"
+for entry in skill_entries:
+    manifest_path = ROOT / entry.get("manifest", "")
+    contract_path = ROOT / entry.get("skill", "")
+    if not manifest_path.is_file():
+        errors.append(f"skills/registry.yaml: missing manifest {entry.get('manifest')}")
+        continue
+    if not contract_path.is_file():
+        errors.append(f"skills/registry.yaml: missing skill contract {entry.get('skill')}")
+    manifest = validate_manifest(manifest_path, skill_schema, entry.get("id"))
+    if manifest and manifest.get("name") != entry.get("name"):
+        errors.append(f"{entry.get('manifest')}: name does not match skill registry")
+    if manifest and manifest.get("sideEffects") != entry.get("sideEffects"):
+        errors.append(f"{entry.get('manifest')}: sideEffects does not match skill registry")
+    for field in ("inputSchema", "outputSchema"):
+        schema_ref = manifest.get(field)
+        if schema_ref and not (ROOT / schema_ref).is_file():
+            errors.append(f"{entry.get('manifest')}: missing {field} reference {schema_ref}")
+
+agent_registry = load_registry(ROOT / "agents" / "registry.yaml")
+agent_schema = ROOT / ".uaes" / "schemas" / "agent-manifest.schema.json"
+for entry in agent_registry.get("agents", []):
+    manifest_path = ROOT / entry.get("manifest", "")
+    if not manifest_path.is_file():
+        errors.append(f"agents/registry.yaml: missing manifest {entry.get('manifest')}")
+        continue
+    manifest = validate_manifest(manifest_path, agent_schema)
+    for skill_id in manifest.get("skillRefs", []):
+        if skill_id not in known_skill_ids:
+            errors.append(f"{entry.get('manifest')}: unregistered skillRef {skill_id}")
+
+print(
+    f"Manifest instance validation: {len(skill_entries)} skill(s), "
+    f"{len(agent_registry.get('agents', []))} agent(s)"
+)
 
 # Negative control: prove that the installed meta-schema validator rejects an
 # invalid schema, rather than merely accepting every input.
