@@ -51,7 +51,7 @@ registry:
     script_directory: "quality/scripts/"
     acceptance_directory: "quality/acceptance/"
     report_directory: "reports/"
-    skill_registry: "skills/REGISTRY.yaml"
+    skill_registry: "skills/registry.yaml"
     decision_directory: "architecture/decisions/"
 
     rules:
