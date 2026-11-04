@@ -19,6 +19,8 @@ class FrontendModuleInventoryTest < Minitest::Test
     File.write(File.join(src, "lib/shared.ts"), "export const shared = true\n")
     File.write(File.join(src, "routes/root.tsx"), "import '@/features/auth/sign-in'\n")
     File.write(File.join(src, "features/auth/sign-in.tsx"), "import '@/lib/shared'\n")
+    File.write(File.join(src, "features/auth/sign-in.test.ts"), "import '@/routes/root'\n")
+    File.write(File.join(src, "routeTree.gen.ts"), "export const generated = true\n")
     root
   end
 
@@ -28,10 +30,15 @@ class FrontendModuleInventoryTest < Minitest::Test
     assert status.success?, err
     assert_match(/FRONTEND MODULE INVENTORY: PASS/, out)
     assert_match(/main.tsx -> routes: 1/, out)
+    assert_match(/FRONTEND MODULE PRODUCTION EDGES:/, out)
     assert_match(/routes -> features: 1/, out)
     assert_match(/features -> lib: 1/, out)
-    assert_match(/FRONTEND MODULE EDGE SAMPLES:/, out)
+    assert_match(/FRONTEND MODULE PRODUCTION EDGE SAMPLES:/, out)
     assert_match(/features\/auth\/sign-in.tsx -> @\/lib\/shared/, out)
+    assert_match(/FRONTEND MODULE TEST-ONLY EDGES:/, out)
+    assert_match(/features -> routes: 1/, out)
+    assert_match(/FRONTEND MODULE GENERATED IMPORTS EXCLUDED: 0/, out)
+    refute_match(/sign-in\.test\.ts -> @\/routes\/root/, out)
     assert_match(/FRONTEND MODULE BOUNDARIES: NOT_VERIFIED/, out)
   ensure
     FileUtils.remove_entry(root) if root && File.exist?(root)
