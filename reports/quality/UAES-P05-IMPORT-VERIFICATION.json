@@ -1,0 +1,84 @@
+{
+  "report_id": "UAES-P05-IMPORT-VERIFICATION",
+  "task_id": "UAES-P4-BRANCH-IMPORT",
+  "repository": "https://github.com/hu-xulin/uter",
+  "branch": "uaes/p4-design-token-engine",
+  "base_commit_sha": null,
+  "commit_sha": "4bdea45bcff54f6bd8db39b52667b2ac39dd78bc",
+  "risk_level": "R2",
+  "review_status": "NOT_VERIFIED",
+  "gate_status": "BLOCKED",
+  "tests": [
+    "node quality/scripts/design-system/generate-design-tokens.mjs --check",
+    "node quality/scripts/design-system/verify-contrast.mjs",
+    "node quality/scripts/design-system/check-component-registry.mjs",
+    "node quality/scripts/design-system/check-design-tokens.mjs --strict",
+    "node quality/scripts/design-system/verify-import.mjs",
+    "DQ-002 token source schema: PASS — 2 top-level keys validated against design-system/tokens/source/brand.tokens.schema.json",
+    "DQ-002 UAES design-token schema: PASS — 3 top-level keys validated against .uaes/schemas/design-token.schema.json",
+    "DQ-009 registry container schema: PASS — 7 top-level keys validated against design-system/components/contracts/component-registry.schema.json",
+    "DQ-024 generated artifacts: PASS — generate-design-tokens.mjs --check: in sync",
+    "DQ-006 contrast: PASS — negative test=true, remediated navigation pair=true",
+    "DQ-009 component contract conformance: NOT_VERIFIED — 9 required field(s) absent across 65 components: {\"componentId\":65,\"version\":65,\"purpose\":65,\"platforms\":65,\"props\":65,\"variants\":65,\"states\":65,\"accessibility\":65,\"tests\":65}",
+    "UAES report envelope: PASS — 6 reports use the library table envelope with current authority refs",
+    "authority reference integrity: PASS — 6 authority paths resolve",
+    "existing assets untouched: PASS — baseline=435 files, modified=0, deleted=0",
+    "DQ-024 generated provenance: PASS — generator, generator version, source and source version declared"
+  ],
+  "findings": [
+    "DQ-009 component contract conformance: 9 required field(s) absent across 65 components: {\"componentId\":65,\"version\":65,\"purpose\":65,\"platforms\":65,\"props\":65,\"variants\":65,\"states\":65,\"accessibility\":65,\"tests\":65}",
+    "Imported registry does not satisfy .uaes/schemas/component-contract.schema.json; gap recorded as NOT_VERIFIED, not PASS.",
+    "Brand primary colour #5B5EE6 matches UAES-05-003 §6 baseline but approval is NOT_VERIFIED (UAES-05-001-009).",
+    "Conflicting/duplicate branch files were skipped in favour of the standard library versions."
+  ],
+  "evidence": [
+    {
+      "evidence_type": "PRE_IMPORT_HASH_BASELINE",
+      "location": "reports/quality/UAES-P05-PRE-IMPORT-BASELINE.sha256",
+      "sha256": "33df7526987acf0084343c312ef18627d9cda895dd7939ec433c2d6ea9d39731"
+    },
+    {
+      "evidence_type": "TOKEN_SOURCE",
+      "location": "design-system/tokens/source/brand.tokens.json",
+      "sha256": "33e944fafab9e56ff63666a8bc50bb927603e32126e4a66f269254d4a4a26da7"
+    },
+    {
+      "evidence_type": "GENERATED_CSS",
+      "location": "design-system/tokens/generated/brand.css",
+      "sha256": "455ac2f510e03169779c26e93dd38825e29dd01d17e9e2f52d0978f3e2917f29"
+    },
+    {
+      "evidence_type": "SCHEMA_PROJECTION",
+      "location": "design-system/tokens/source/uaes-tokens.projected.json",
+      "sha256": "3cf66fad69ee9c428c996e37008e5bdfac661997c0bbcd5f40992dbba92f418d"
+    },
+    {
+      "evidence_type": "COMPONENT_REGISTRY",
+      "location": "design-system/components/registry/component-registry.json",
+      "sha256": "5c0c83ceef36da2105b6ef0b859da05315ac01470730aefb4dfb95d7517f7341"
+    },
+    {
+      "evidence_type": "CONTRACT_GAP",
+      "location": "design-system/components/contracts/UAES-COMPONENT-CONTRACT-GAP.md",
+      "sha256": null
+    }
+  ],
+  "generated_at": "2026-11-04T16:49:23.112Z",
+  "generated_by": "quality/scripts/design-system/verify-import.mjs",
+  "conclusion": "Import is structurally complete and existing UAES assets are byte-identical. P05 acceptance stays BLOCKED: component contracts, visual regression, accessibility, CI execution in the product repository and formal brand-colour approval remain open.",
+  "unresolved_risks": [
+    "UAES-05-001-009: high-impact brand colour change has no Exception ID / approver / approval date.",
+    "UAES-05-006: 65 component contracts lack props, variants, tests, purpose, platforms and version.",
+    "UAES-05-GATE-001: DQ-004/012/013/021/022 cannot be executed without the product repository and a browser."
+  ],
+  "not_run_checks": [
+    "DQ-009/DQ-010 full component contract validation: imported registry does not carry props/variants/purpose/platforms/tests; see UAES-COMPONENT-CONTRACT-GAP.md",
+    "DQ-004 hard-coded style scan: product source tree is not part of this import; run check-design-tokens.mjs --root <product-web-root>/src",
+    "DQ-021/DQ-022 visual regression and baseline approval, DQ-012/DQ-013 keyboard and focus, axe scan: require product repository and browser",
+    "Brand primary colour change approval (UAES-05-001-009): Exception ID, approver and approval date are absent"
+  ],
+  "blocked_checks": [
+    "DQ-009 component contract conformance",
+    "P05 final acceptance"
+  ]
+}

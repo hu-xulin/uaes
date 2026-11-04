@@ -1,0 +1,84 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/module-manifest.schema.json",
+  "title": "UAES Module Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_id",
+    "name",
+    "path",
+    "type",
+    "responsibility",
+    "dependencies",
+    "ownership"
+  ],
+  "properties": {
+    "module_id": {
+      "type": "string",
+      "pattern": "^UTER-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "GO_PACKAGE",
+        "GO_MODULE",
+        "FRONTEND_FEATURE",
+        "FRONTEND_SHARED",
+        "ELECTRON_MAIN",
+        "ELECTRON_PRELOAD",
+        "ELECTRON_RENDERER",
+        "SERVICE",
+        "OTHER"
+      ]
+    },
+    "responsibility": {
+      "type": "string",
+      "minLength": 10
+    },
+    "public_interfaces": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "dependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    },
+    "forbidden_dependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    },
+    "ownership": {
+      "type": "object",
+      "required": ["data_entities"],
+      "properties": {
+        "data_entities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "write_authority": {
+          "type": "boolean"
+        }
+      }
+    },
+    "criticality": {
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "test_commands": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "status": {
+      "enum": ["ACTIVE", "DEPRECATED", "PLANNED", "ARCHIVED"]
+    }
+  }
+}

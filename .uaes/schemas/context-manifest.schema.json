@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/context-manifest.schema.json",
+  "title": "UAES Context Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context_id",
+    "task_id",
+    "project_id",
+    "agent_id",
+    "created_at",
+    "loaded_knowledge_ids",
+    "source_refs",
+    "conflicts",
+    "restrictions"
+  ],
+  "properties": {
+    "context_id": {
+      "type": "string",
+      "pattern": "^CTX-[A-Z0-9-]+$"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "loaded_knowledge_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "excluded_knowledge": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["knowledge_id", "reason"],
+        "properties": {
+          "knowledge_id": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "restrictions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "token_budget": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "compression_summary": {
+      "type": "string"
+    }
+  }
+}

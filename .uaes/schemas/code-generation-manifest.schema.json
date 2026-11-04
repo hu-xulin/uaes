@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/code-generation-manifest.schema.json",
+  "title": "UAES Code Generation Manifest",
+  "type": "object",
+  "required": [
+    "generationId",
+    "generator",
+    "generatorVersion",
+    "sourceContracts",
+    "outputs",
+    "status"
+  ],
+  "properties": {
+    "generationId": {
+      "type": "string",
+      "pattern": "^GEN-[A-Z0-9-]+$"
+    },
+    "generator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatorVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "configuration": {
+      "type": "string"
+    },
+    "sourceContracts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "revision"],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "ownership"],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "ownership": {
+            "enum": [
+              "GENERATED",
+              "GENERATED_EDITABLE",
+              "HANDWRITTEN"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "ACTIVE",
+        "DEPRECATED",
+        "RETIRED"
+      ]
+    },
+    "lastGeneratedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

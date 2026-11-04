@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/improvement-record.schema.json",
+  "title": "UAES Continuous Improvement Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "improvementId",
+    "title",
+    "source",
+    "owner",
+    "baseline",
+    "target",
+    "measurement",
+    "status",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "improvementId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "incident",
+        "user_feedback",
+        "quality",
+        "security",
+        "performance",
+        "technical_debt",
+        "audit",
+        "architecture",
+        "operations",
+        "other"
+      ]
+    },
+    "sourceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "owner": {
+      "type": "string"
+    },
+    "baseline": {
+      "type": "object",
+      "required": ["value", "unit", "measuredAt"],
+      "properties": {
+        "value": {
+          "type": ["number", "string"]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "measuredAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {
+          "type": ["number", "string"]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "dueAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "measurement": {
+      "type": "object",
+      "required": ["method", "window"],
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "window": {
+          "type": "string"
+        },
+        "result": {
+          "type": ["number", "string", "null"]
+        },
+        "measuredAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "proposed",
+        "approved",
+        "planned",
+        "in_progress",
+        "measuring",
+        "achieved",
+        "not_achieved",
+        "blocked",
+        "cancelled",
+        "closed"
+      ]
+    },
+    "resultEvidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "followUpDecision": {
+      "type": ["string", "null"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "closedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

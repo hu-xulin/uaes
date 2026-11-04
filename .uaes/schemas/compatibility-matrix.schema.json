@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/compatibility-matrix.schema.json",
+  "title": "UAES Compatibility Matrix",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "matrixVersion",
+    "platforms",
+    "features"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "matrixVersion": {
+      "type": "string"
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "platform",
+          "minimumVersion",
+          "supportStatus"
+        ],
+        "properties": {
+          "platform": {
+            "enum": [
+              "pc-web",
+              "h5",
+              "electron",
+              "android",
+              "ios",
+              "harmonyos"
+            ]
+          },
+          "minimumVersion": {
+            "type": "string"
+          },
+          "supportStatus": {
+            "enum": [
+              "supported",
+              "limited",
+              "planned",
+              "unsupported"
+            ]
+          },
+          "testedVersions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "testedDevices": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "featureId",
+          "criticality",
+          "platformResults"
+        ],
+        "properties": {
+          "featureId": {
+            "type": "string"
+          },
+          "criticality": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "P3"
+            ]
+          },
+          "platformResults": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "platform",
+                "result",
+                "evidence"
+              ],
+              "properties": {
+                "platform": {
+                  "enum": [
+                    "pc-web",
+                    "h5",
+                    "electron",
+                    "android",
+                    "ios",
+                    "harmonyos"
+                  ]
+                },
+                "result": {
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "blocked",
+                    "not-tested",
+                    "not-applicable"
+                  ]
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "notes": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

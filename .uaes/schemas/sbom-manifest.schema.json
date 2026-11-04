@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/sbom-manifest.schema.json",
+  "title": "UAES SBOM Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sbom_id",
+    "format",
+    "format_version",
+    "artifact",
+    "commit_sha",
+    "generated_at",
+    "generator",
+    "components"
+  ],
+  "properties": {
+    "sbom_id": {
+      "type": "string"
+    },
+    "format": {
+      "enum": [
+        "SPDX",
+        "CYCLONEDX"
+      ]
+    },
+    "format_version": {
+      "type": "string"
+    },
+    "artifact": {
+      "type": "string"
+    },
+    "artifact_digest": {
+      "type": "string"
+    },
+    "commit_sha": {
+      "type": "string",
+      "minLength": 7
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generator": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "generation_context": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "version"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "supplier": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "purl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hashes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "license": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "direct": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "dependency_relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "relationship"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "relationship": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

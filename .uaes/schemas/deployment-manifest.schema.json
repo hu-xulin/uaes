@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/deployment-manifest.schema.json",
+  "title": "UAES Deployment Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "deploymentId",
+    "environment",
+    "releaseId",
+    "artifactDigest",
+    "authorization",
+    "execution",
+    "verification",
+    "status"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "deploymentId": { "type": "string" },
+    "environment": {
+      "enum": ["development", "test", "staging", "production"]
+    },
+    "releaseId": { "type": "string" },
+    "artifactDigest": {
+      "type": "object",
+      "required": ["algorithm", "digest"],
+      "properties": {
+        "algorithm": { "enum": ["sha256", "sha384", "sha512"] },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]+$" }
+      },
+      "additionalProperties": false
+    },
+    "authorization": {
+      "type": "object",
+      "required": ["decision", "policyId"],
+      "properties": {
+        "decision": {
+          "enum": ["approved", "denied", "pending", "not_required", "not_verified"]
+        },
+        "policyId": { "type": "string" },
+        "approvalId": { "type": ["string", "null"] },
+        "approver": { "type": ["string", "null"] },
+        "approvedAt": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "required": ["actor", "startedAt", "status"],
+      "properties": {
+        "actor": { "type": "string" },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": ["string", "null"], "format": "date-time" },
+        "status": {
+          "enum": ["pending", "running", "success", "failure", "cancelled", "rolled_back"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["healthCheck", "smokeTest", "result"],
+      "properties": {
+        "healthCheck": { "enum": ["pass", "fail", "not_run", "not_applicable"] },
+        "smokeTest": { "enum": ["pass", "fail", "not_run", "not_applicable"] },
+        "businessChecks": { "type": "array", "items": { "type": "string" } },
+        "result": {
+          "enum": ["pass", "fail", "blocked", "not_run", "not_verified"]
+        },
+        "evidenceRefs": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "rollback": {
+      "type": ["object", "null"],
+      "properties": {
+        "triggered": { "type": "boolean" },
+        "reason": { "type": ["string", "null"] },
+        "recoveryDeploymentId": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": ["pending", "deploying", "succeeded", "failed", "rolled_back", "blocked", "not_verified"]
+    }
+  }
+}

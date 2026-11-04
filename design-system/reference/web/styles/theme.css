@@ -1,0 +1,761 @@
+/*
+Copyright (C) 2023-2026 Uter.ai
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+For commercial licensing, please contact support@uter.ai
+*/
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* ── Typeface ─────────────────────────────────────────────────────────
+   * The product is locked to ONE UI typeface: Inter, paired with Noto
+   * Sans SC for Chinese.
+   *
+   * ⚠️ Inter has NO CJK glyphs (Latin / Greek / Cyrillic only). Chinese
+   * therefore always renders from the next family in the stack that does
+   * cover it — 思源黑体 (Source Han Sans), bundled as the `noto-sans-sc`
+   * webfont (101 `unicode-range` slices, so the browser fetches only the
+   * blocks a page actually needs) rather than whatever the OS happens to
+   * ship. That is what makes 中文 identical on macOS (PingFang) and
+   * Windows (YaHei) instead of drifting per platform. PingFang / YaHei
+   * stay as last-resort fallbacks in case the webfont fails to load.
+   *
+   * The literal lives ONCE, in `--font-ui` on `:root`, because `@theme
+   * inline` bakes values straight into utilities and is NOT readable as a
+   * custom property at runtime — `--font-ui` is what VChart reads (canvas
+   * text does not inherit CSS). Keep them in sync when editing.
+   *
+   * The font axis (Sans / Serif switcher) has been removed; `font-sans`
+   * and `font-manrope` survive only because components and the legacy
+   * FontProvider still reference them, and now alias the same stack so
+   * nothing can fall back to an OS face. */
+  --font-inter: var(--font-ui);
+  --font-sans: var(--font-ui);
+  --font-manrope: var(--font-ui);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  /* ── 品牌色阶（规范 1.1.1）───────────────────────────────────────────
+   * 主按钮要「白字 + 满足对比度」，链接/选中态要「品牌色但可读」，按下态
+   * 要与悬停态区分 —— 三者取值不同，因此拆成 6 条语义出口：
+   *   primary         品牌主色：链接、选中态、图标强调
+   *   primary-strong  实心控件底（主按钮），与 primary 同值但语义是「配白字」
+   *   primary-hover   悬停（同色相压暗 12%）
+   *   primary-active  按下（再压暗到 24%，与悬停可区分）
+   *   primary-subtle  浅底（选中行、轻强调背景）
+   *   primary-border  品牌描边（选中控件边框）
+   *
+   * 此前这里是 `--color-primary: #6467f0` 的**硬编码**，与 `--primary`
+   * 脱钩：改 `--primary` 不会影响任何 `bg-primary` 工具类。现已改回
+   * `var(--primary)`，品牌色只有一个来源。 */
+  --color-primary-strong: var(--primary-strong, var(--primary));
+  --color-primary-hover: var(--hover-primary, var(--primary));
+  --color-primary-active: var(--primary-active, var(--primary));
+  --color-primary-subtle: var(--primary-subtle, var(--accent));
+  --color-primary-subtle-hover: var(--primary-subtle-hover, var(--accent));
+  /* 浅底上的可读前景色（3.0 §2.2 brand-soft-foreground：#5558D8 on
+   * #F0F0FF = 4.93:1，脚本实算见 scripts/verify-contrast.mjs）。 */
+  --color-primary-subtle-foreground: var(--primary-subtle-foreground);
+  --color-primary-border: var(--primary-border, var(--border));
+  /* 危险色的浅底与浅底悬停：`hover:bg-destructive/20` 这类透明度凑法在
+   * 深色底上会失焦，改用派生 Token。 */
+  --color-destructive-subtle: var(--destructive-subtle, transparent);
+  --color-destructive-subtle-hover: var(
+    --destructive-subtle-hover,
+    var(--destructive)
+  );
+  --color-primary-foreground: var(--primary-foreground);
+  /* 次级/危险/成功的悬停态。此前只有 `hover:bg-destructive/90` 这种靠
+   * 透明度凑出来的悬停，在深色底上会发灰、在浅色底上会泛白。 */
+  --color-secondary-hover: var(--hover-secondary, var(--secondary));
+  --color-destructive-hover: var(--hover-destructive, var(--destructive));
+  --color-success-hover: var(--hover-success, var(--success));
+  --color-border-destructive-subtle: var(
+    --border-destructive-subtle,
+    var(--destructive)
+  );
+  /* 少量装饰强调（规范 1.1 Accent）。只做点缀，不替代品牌色。 */
+  --color-neon-green: var(--neon-green, #adfa1d);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  /* ── 三级文字色（tertiary）─────────────────────────────────────────
+   * 比 `--muted-foreground` 再浅一档，只给**非阅读主体**的辅助文字：
+   * 页脚法规行、版权行这类「存在即可、不该抢注意力」的小字。
+   *
+   * 这里写的是 `color-mix()` 表达式本身，**不是** `var(--tertiary-foreground)`：
+   * 主题预设把调色板挂在 `<body data-theme-preset>` 上，而 `:root` 里声明的
+   * 派生变量在 html 上就完成替换了，永远拿不到 body 的覆盖值 —— 暖灰预设里
+   * 会冒出一个冷灰。写成表达式后，替换发生在**用到它的那个元素**上，
+   * 预设与深色模式都能正确跟随。
+   *
+   * 对比度（浅色实算 ≈#69788E / 深色 #a2a2a2）：≈4.6:1 / 6.6:1 —— 满足
+   * 4.5:1 下限（2026-11-03 审计 AUDIT-001 修复：88% 派生在 muted-foreground
+   * 改 slate 后跌至 3.81:1，提高占比至 97% 并纳入 verify-contrast 常规配对）。 */
+  --color-tertiary-foreground: color-mix(
+    in oklch,
+    var(--muted-foreground) 98%,
+    var(--background)
+  );
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  /* 禁用态文字：`--ds-color-text-disabled`（muted-foreground 55%）。
+   * 此前分页的禁用按钮借 `text-tertiary-foreground` 表达禁用 —— 那是
+   * 「辅助小字」的档位，语义不对，而且 tertiary 的允许清单里没有禁用态。
+   * 没有这个工具类时 `disabled:text-disabled` 会被静默丢弃（Tailwind 不报错）。 */
+  --color-disabled: var(--ds-color-text-disabled);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  /* ── 柔和态（soft）状态色 ──────────────────────────────────────────
+   * 用于「浅色底 + 深色文字」的徽标/提示条（如原 bg-amber-50 +
+   * text-amber-900）。直接换成 bg-warning/10 + text-warning 会把
+   * 8.77:1 打到 2.7:1（见 UTER-DESIGN-SYSTEM-3.0.md §2.7，旧 D6），是
+   * 不折不扣的可访问性回归。所以单独提供 soft 背景 / soft 前景，
+   * 取值等于现状渲染值（浅色底≈*-50、深色文字≈*-900；暗色底≈*-950、
+   * 前景≈*-100），迁移零视觉变化。 */
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-foreground: var(--success-soft-foreground);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-destructive-soft-foreground: var(--destructive-soft-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
+  --color-info-soft: var(--info-soft);
+  --color-info-soft-foreground: var(--info-soft-foreground);
+  --color-neutral: var(--neutral);
+  --color-neutral-foreground: var(--neutral-foreground);
+  /* ── 彩色底上的文字（on-emphasis）─────────────────────────────────
+   * 品牌色/成功色等**饱和填充**上的文字恒为白色（深色模式同理），
+   * 与正文的 `foreground` 无关。此前这类地方直接写 `text-white`，
+   * 属于「手写白字」（规范 C-03 禁止项）；这里给一个语义出口，
+   * 让「彩色底反白」和「忘了用 Token」在代码上可区分。 */
+  --color-on-emphasis: var(--ds-color-text-on-emphasis);
+  /* ── 遮罩与纯白表面（surface-overlay / surface-pure）───────────────
+   * 规范 colors.md 禁止「组件里写死色值」，但这两类表面以前只能写
+   * `bg-black/10`（弹窗遮罩）与 `bg-white`（二维码底、滑块手柄）——
+   * 它们既不是 `--background` 也不是 `--card`，没有语义出口。
+   * 现在由 `--ds-color-surface-*` 提供，透明度修饰仍写在类上。 */
+  --color-surface-overlay: var(--ds-color-surface-overlay);
+  --color-surface-pure: var(--ds-color-surface-pure);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-subtle: var(--subtle);
+  --color-success-border: var(--success-border);
+  --color-warning-border: var(--warning-border);
+  --color-info-border: var(--info-border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  /* ── 文本语义阶梯（规范 1.1.2）──────────────────────────────────────
+   * 规范把文字色叫 `text-primary` / `text-secondary` / …，但 Tailwind 的
+   * `text-*` 前缀已经被「颜色」占用（`text-primary` 指的是品牌色文字），
+   * 直接照抄会与品牌色撞车。因此统一用 `fg-` 前缀落地：
+   *   text-fg-secondary    二级文字 #334155：描述、辅助说明、次级信息
+   *   text-fg-tertiary     三级文字 #64748B：时间戳、元信息、次要标签
+   *   text-fg-disabled     禁用文字 #94A3B8
+   *   text-fg-link         链接 #5B5EE6
+   *   text-fg-placeholder  输入框占位符 #64748B
+   *   text-fg-inverse      深色/品牌实心底上的反色文字
+   * 一级文字直接用既有的 `text-foreground`，说明文字用
+   * `text-muted-foreground`（同为 #64748B），不再另开一个名字。 */
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-tertiary: var(--fg-tertiary);
+  --color-fg-disabled: var(--fg-disabled);
+  --color-fg-link: var(--fg-link);
+  --color-fg-placeholder: var(--fg-placeholder);
+  --color-fg-inverse: var(--fg-inverse);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  /* ── 代码语法高亮（syntax）──────────────────────────────────────────
+   * 代码高亮的配色由**语言语法**决定，不是界面状态：关键字、字符串、
+   * 数字、函数名、属性名必须彼此可区分，且要符合读者对编辑器配色的既有
+   * 预期。用 success / warning / destructive 这类状态语义去染代码是错的
+   * ——「字符串」不是「成功」。
+   *
+   * 但它们同样不该以 `text-purple-700` 这类调色板类名散落在组件里：
+   * 那样深色模式要每个类各写一遍 `dark:`，换主题也完全不跟随。因此单列
+   * 一组语法 Token，深浅主题各给一次值，组件只写 `text-syntax-keyword`。 */
+  --color-syntax-keyword: var(--syntax-keyword);
+  --color-syntax-string: var(--syntax-string);
+  --color-syntax-number: var(--syntax-number);
+  --color-syntax-function: var(--syntax-function);
+  --color-syntax-property: var(--syntax-property);
+  /* ── 首屏终端演示卡（term）───────────────────────────────────────────
+   * 与上面的 `syntax-*` 是**两套**，不要合并、也不要互相改值：
+   *   · `syntax-*` 服务通用代码查看语境（Shiki、JSON 查看器）；
+   *   · `term-*` 服务首页那张 curl 演示卡，取色锚定上游 new-api 的渲染
+   *     效果，必须跨主题预设恒定（规范 §11.5）。
+   * 组件只写 `text-term-command` 这类语义类，不允许再出现调色板类名。 */
+  --color-term-command: var(--term-command);
+  --color-term-flag: var(--term-flag);
+  --color-term-background: var(--term-background);
+  --color-term-property: var(--term-property);
+  --color-term-string: var(--term-string);
+  --color-term-number: var(--term-number);
+  --color-term-dim-1: var(--term-dim-1);
+  --color-term-dim-2: var(--term-dim-2);
+  --color-term-dim-3: var(--term-dim-3);
+  --color-term-dim-4: var(--term-dim-4);
+  --color-term-accent-emerald: var(--term-accent-emerald);
+  --color-term-accent-amber: var(--term-accent-amber);
+  --color-term-accent-blue: var(--term-accent-blue);
+  --color-term-accent-violet: var(--term-accent-violet);
+  --color-term-accent-emerald-soft: var(--term-accent-emerald-soft);
+  --color-term-accent-amber-soft: var(--term-accent-amber-soft);
+  --color-term-accent-blue-soft: var(--term-accent-blue-soft);
+  --color-term-accent-violet-soft: var(--term-accent-violet-soft);
+  --color-term-accent-emerald-line: var(--term-accent-emerald-line);
+  --color-term-accent-amber-line: var(--term-accent-amber-line);
+  --color-term-accent-blue-line: var(--term-accent-blue-line);
+  --color-term-accent-violet-line: var(--term-accent-violet-line);
+  --color-term-online: var(--term-online);
+  --color-term-dot: var(--term-dot);
+  --color-overview-accent-1: var(--overview-accent-1);
+  --color-overview-accent-2: var(--overview-accent-2);
+  --color-overview-accent-3: var(--overview-accent-3);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  /* 导航选中态专用前景色（规范 §2.3）。组件写 `text-sidebar-active-foreground`，
+   * 不要退回 `text-primary` —— 那个组合在浅底上是 4.44:1，不达 AA。 */
+  --color-sidebar-active-foreground: var(--sidebar-active-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ── Radius ladder（UTER-DESIGN-SYSTEM-3.0 §5，2026-11-03 圆角七档定版）──
+   * 基准 --radius = 0.625rem（10px）= 默认控件档 r-md，其余档位按系数推导：
+   *   xs×0.6 / sm×0.8 / md×1 / lg×1.2 / xl×1.4 / 2xl×1.6 / 3xl×1.8 / 4xl×2
+   * →  6 / 8 / 10 / 12 / 14 / 16 / 18 / 20 px。
+   * 档位用途：md=输入框/按钮/标签页触发器（默认控件档）、lg=卡片/弹窗/
+   * 标签页容器/图标按钮、xl=强调容器、2xl=展示型卡片。
+   * `data-theme-radius` 预设改基准就能整体缩放，不需要逐档改值。 */
+  --radius-xs: calc(var(--radius) * 0.6);
+  --radius-sm: calc(var(--radius) * 0.8);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.2);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.6);
+}
+
+:root {
+  /* 圆角基准：10px = 默认控件档 r-md（UTER-DESIGN-SYSTEM-3.0 §5）。 */
+  --radius: 0.625rem;
+  --app-header-height: 3rem;
+  /* Static build-channel fallback consumed when JS hasn't booted yet. */
+  --app-rev: '2k6e8r7p';
+  /* ── The one UI typeface ──────────────────────────────────────────────
+   * Single source of truth for the font stack. Declared on `:root` (NOT
+   * inside `@theme inline`) so it is readable as a custom property at
+   * runtime — VChart reads it to draw canvas text, which does not inherit
+   * CSS. Everything else references this variable.
+   *
+   * Order matters and is deliberate:
+   *   1. Inter first — Latin letters and digits always render in it.
+   *   2. Source Han Sans (思源黑体) next — Inter has no CJK glyphs, so
+   *      every Chinese codepoint lands here. The locally installed
+   *      families are named before the webfont so a machine that already
+   *      has 思源黑体 uses it; everyone else gets the bundled
+   *      `noto-sans-sc` webfont, which is the *same* typeface (Adobe and
+   *      Google ship one shared source — Source Han Sans / Noto Sans CJK
+   *      are glyph-identical), so 中文 renders identically on macOS and
+   *      Windows instead of drifting to PingFang / YaHei per platform.
+   *   3. OS CJK faces last as a safety net if the webfont fails.
+   *   4. Emoji faces at the very end so only emoji codepoints land there.
+   *
+   * Monospace is NOT part of this stack: `font-mono` / `--font-mono`
+   * keeps the platform monospace face so code, keys and IDs stay aligned. */
+  --font-ui:
+    'Inter Variable', 'Inter', 'Source Han Sans SC', 'Source Han Sans CN',
+    '思源黑体', 'Noto Sans SC Variable', 'Noto Sans SC', 'Noto Sans CJK SC',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  /* Active body font. The font axis (Sans / Serif) has been removed — the
+   * product is locked to Inter — so this is a fixed alias, kept as a
+   * variable only so the existing `body` rule and the `[font-family:
+   * var(--font-body)]` call sites keep working. */
+  --font-body: var(--font-ui);
+  /* ── Monospace ────────────────────────────────────────────────────────
+   * Code, API keys, model IDs, JSON and paths keep the platform monospace
+   * face — that is what makes columns line up and keeps 0/O and 1/l
+   * distinguishable, and it is deliberately left alone.
+   *
+   * The CJK families are appended AFTER the generic `monospace` keyword:
+   * the mono faces carry no Chinese glyphs, so without them Chinese inside
+   * a mono context (a code comment, a quoted error, a Chinese model name)
+   * resolved to whatever CJK face the OS happened to pick. Because CJK
+   * fonts do ship Latin glyphs, they must come last — Latin/digits still
+   * resolve at `monospace` and stay monospaced; only the missing CJK
+   * codepoints fall through to 思源黑体. */
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace, 'Source Han Sans SC',
+    'Source Han Sans CN', '思源黑体', 'Noto Sans SC Variable', 'Noto Sans SC',
+    'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* ── Type scale ───────────────────────────────────────────────────
+   * 字号阶梯已经迁到 `design-system/tokens/typography.css`，并且**只**
+   * 在那边声明。
+   *
+   * 这里原本有一份 `:root { --text-xs … }`，是个陷阱：Tailwind v4 只
+   * 从 `@theme` 读取主题值，写在 `:root` 的字号不会进入 `text-*`
+   * 工具类，`text-3xl` 会静默退回内置默认值 —— 于是「改了刻度、页面
+   * 一点没变」。现在阶梯声明在 `@theme` 里，既生成工具类，也把变量
+   * 输出到 `:root`，`var(--text-sm)` 之类的写法仍然可用。
+   *
+   * 需要改字号，去改那一个文件，不要再在这里加一份。 */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: var(--uaes-brand-primary);
+  --primary-foreground: var(--uaes-brand-primary-foreground);
+  --secondary: #f1f5f9;
+  /* 次级按钮文字：规范 §1.1 是 #0F172A（近黑）。此前是 oklch(0.42 0.16 250)
+   * 深蓝，次级按钮在灰底上呈现品牌蓝字，被误读成链接。 */
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #dc2626;
+  --destructive-foreground: #f8fafc;
+  --success: #16a34a;
+  --success-foreground: #f8fafc;
+  --warning: oklch(0.681 0.162 75.834);
+  --warning-foreground: oklch(0.145 0 0);
+  --info: oklch(0.588 0.158 241.966);
+  --info-foreground: oklch(0.985 0 0);
+  /* ── 柔和态取值（浅色主题）：底≈*-50、前景≈*-900 ─────────────────── */
+  --success-soft: oklch(0.979 0.021 166);
+  --success-soft-foreground: oklch(0.391 0.094 167);
+  --destructive-soft: oklch(0.971 0.013 17);
+  --destructive-soft-foreground: oklch(0.441 0.119 27);
+  --warning-soft: oklch(0.985 0.02 80);
+  --warning-soft-foreground: oklch(0.414 0.112 78);
+  --info-soft: oklch(0.97 0.019 235);
+  --info-soft-foreground: oklch(0.379 0.146 265);
+  --neutral: oklch(0.708 0 0);
+  --neutral-foreground: oklch(0.145 0 0);
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1; /* 3.0 §2.6 强调边界 */
+  --subtle: #fafbfc; /* 3.0 §2.5 极浅表面 */
+  --input: #d1d5e5;
+  --ring: var(--uaes-brand-primary);
+  --chart-1: oklch(0.72 0.18 250);
+  --chart-2: oklch(0.65 0.15 200);
+  --chart-3: oklch(0.7 0.12 280);
+  --chart-4: oklch(0.68 0.19 325);
+  --chart-5: oklch(0.68 0.16 155);
+  --chart-6: oklch(0.7 0.15 30); /* 3.0 §2.8 第六系列色 */
+  /* ── 状态边框（3.0 §2.7：{status}-border 全套）─────────────────────
+   * 用 color-mix 从状态色与背景派生，主题预设与深色模式自动跟随；
+   * destructive 已有 --border-destructive-subtle，保持不动。 */
+  --success-border: color-mix(in oklch, var(--success) 32%, var(--background));
+  --warning-border: color-mix(in oklch, var(--warning) 40%, var(--background));
+  --info-border: color-mix(in oklch, var(--info) 32%, var(--background));
+  /* ── 语法高亮（浅色）：对应原调色板 -700/-800 档，保证正文对比度 ──── */
+  --syntax-keyword: oklch(0.496 0.265 301.9); /* purple-700 */
+  --syntax-string: oklch(0.448 0.119 151.3); /* green-800 */
+  --syntax-number: oklch(0.47 0.157 37.3); /* orange-800 */
+  --syntax-function: oklch(0.488 0.243 264.4); /* blue-700 */
+  --syntax-property: oklch(0.437 0.078 188.2); /* teal-800 */
+  /* ── 首屏终端演示卡 · 语法角色（浅色）───────────────────────────────
+   * 取值 = 上游 new-api 首屏代码卡的渲染值，再叠加 2026-10-30 拍板的
+   * AA 补偿（emerald → emerald-700、amber → amber-700）。这里把**效果**
+   * 定档成 Token，而不是把上游的类名照抄一遍：类名怎么变不要紧，渲染
+   * 出来必须稳定，且在任何主题预设下都不漂移（详见规范 §11.5）。 */
+  --term-command: #047857; /* emerald-700 · AA 补偿，上游原值 emerald-600 */
+  --term-flag: #2563eb; /* blue-600 */
+  --term-property: #0369a1; /* sky-700 */
+  --term-string: #b45309; /* amber-700 */
+  --term-number: #7c3aed; /* violet-600 */
+  /* 弱层级四档：等价于原先的 `text-foreground/{75,55,40,30}`，但换成实色。
+   * 透明度会随底下那层表面漂移（卡底部、`bg-muted/20` 上各不相同），实色
+   * 不会；而且实色可以静态验证对比度，透明度不行。
+   * ⚠️ 2026-10-30 AA 补偿：dim-3 / dim-4 由 40% / 30% 提亮到 55%，与
+   * dim-2 同档 —— 弱层级梯度从四档收成两档，是拍板换 AA 的已知代价。 */
+  --term-dim-1: color-mix(in srgb, var(--foreground) 75%, var(--card));
+  --term-dim-2: color-mix(in srgb, var(--foreground) 55%, var(--card));
+  --term-dim-3: color-mix(in srgb, var(--foreground) 55%, var(--card));
+  --term-dim-4: color-mix(in srgb, var(--foreground) 55%, var(--card));
+  /* 四个 demo 的分类强调色：Tab 激活态文字 / 激活描边 / 方法徽标文字。
+   * emerald / amber 浅色为 AA 补偿值（emerald-700 / amber-700），深色维持
+   * 上游原值（本就达标）。 */
+  --term-accent-emerald: #047857;
+  --term-accent-amber: #b45309;
+  --term-accent-blue: #2563eb;
+  --term-accent-violet: #7c3aed;
+  /* 描边档：Tab 激活态那道 2px 下划线。上游原为亮一档的饱和档（-500），
+   * AA 补偿后浅色改为与文字档同值（emerald-700 / amber-700）—— 1px 线里
+   * 亮度略降，但换来了文字与描边的取色统一；深色维持上游原值。 */
+  --term-accent-emerald-line: #047857;
+  --term-accent-amber-line: #b45309;
+  --term-accent-blue-line: #3b82f6;
+  --term-accent-violet-line: #8b5cf6;
+  /* 方法徽标浅底：描边档 10% 混 card。写成 mix 而不是固定值，是为了让它
+   * 跟着卡面走；写成实色而不是不透明度，是为了让对比度可静态验证。 */
+  --term-accent-emerald-soft: color-mix(
+    in srgb,
+    var(--term-accent-emerald-line) 10%,
+    var(--card)
+  );
+  --term-accent-amber-soft: color-mix(
+    in srgb,
+    var(--term-accent-amber-line) 10%,
+    var(--card)
+  );
+  --term-accent-blue-soft: color-mix(
+    in srgb,
+    var(--term-accent-blue-line) 10%,
+    var(--card)
+  );
+  --term-accent-violet-soft: color-mix(
+    in srgb,
+    var(--term-accent-violet-line) 10%,
+    var(--card)
+  );
+  /* 在线指示点 + 辉光：状态语义（亮着 = 在线），深浅主题同一个值 —— 它
+   * 就是那颗绿点，跟着主题变深就不像「在线」了（取值恰与 emerald 描边档
+   * 相同，但两者语义无关，不要互相引用）。配套的辉光走 `--ds-glow-online`，
+   * 不要在组件里写裸的 rgba。 */
+  /* 卡尾指标之间的分隔圆点：整张卡里唯一保留的装饰性透明度，写成 Token
+   * 是为了让「这里允许一点点透明」这件事可扫描、可登记，而不是藏在组件里。 */
+  --term-dot: color-mix(in srgb, var(--foreground) 15%, transparent);
+  --term-online: #10b981;
+  /* 媒体信箱底（3.0 §2.10 审计整改）：视频 letterbox / 终端类媒体容器底色。
+   * 取值深浅主题同为纯黑 —— 视频内容在黑底上对比最稳，这是媒体信箱的行业
+   * 惯例（YouTube / B 站同理）；登记成 Token 而不是在组件里写 bg-black，
+   * 是为了让「这里允许一块实黑」可扫描、可跟随未来媒体主题调整。 */
+  --term-background: #000000;
+  /* ── 首屏背景装饰层（hero / CTA）────────────────────────────────
+   * 三团光晕 + CTA 两团的取值 = 首屏现在渲染的 oklch 实值，一次性收进
+   * Token；光晕形状（ellipse 尺寸/圆心）与网格遮罩是**形状**不是颜色，
+   * 收在 foundations/decoration.css 的 `ds-decor-*` utility 里，两者配合
+   * 使用（规范 §11.5「背景装饰层」）。透明度深浅主题各一档，见 .dark。 */
+  --ds-decor-glow-1: oklch(0.72 0.18 250 / 80%); /* hero 主光 · 品牌蓝 */
+  --ds-decor-glow-2: oklch(0.65 0.15 200 / 60%); /* hero 次光 · 青 */
+  --ds-decor-glow-3: oklch(0.7 0.12 280 / 40%); /* hero 补光 · 紫 */
+  --ds-decor-glow-1-soft: oklch(0.7 0.15 250 / 70%); /* CTA 主光（弱一档） */
+  --ds-decor-glow-2-soft: oklch(0.65 0.12 200 / 50%); /* CTA 次光（弱一档） */
+  --ds-decor-mesh-opacity-hero: 0.25;
+  --ds-decor-mesh-opacity-cta: 0.2;
+  --ds-decor-grid-size: 4rem;
+  --ds-decor-grid-opacity: 0.08;
+  --overview-accent-1: oklch(0.72 0.18 250);
+  --overview-accent-2: oklch(0.65 0.15 200);
+  --overview-accent-3: oklch(0.7 0.12 280);
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #6366f1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  /* 左侧导航选中态专用前景色（规范 2.0 §17）。
+   *
+   * 取值为独立的可读前景色 #5558D8（on #F0F0FF = 4.93:1），满足 WCAG AA。
+   * 它不与品牌主色完全相同：主色为 #5B5EE6，Soft 前景单独加深以保持对比度。
+   * 主按钮、链接和焦点环使用品牌主色 #5B5EE6。
+   *
+   * 只与 `primary-subtle` 浅底配对使用，不要拿它当通用强调色。 */
+  --sidebar-active-foreground: var(--uaes-brand-soft-foreground);
+  /* 品牌浅底上的**通用**可读前景色（与导航选中态同值同源）。
+   *
+   * 规范 §2.3 的验收条款要求：非导航组件里仍在使用
+   * `bg-primary-subtle text-primary` 的胶囊徽标必须单独检查对比度，
+   * 12–14px 文字不得用未达标组合（实算门槛 4.5:1）。
+   * 这里补一个通用档，供徽标 / 胶囊 / 轻强调块使用；导航仍用
+   * `sidebar-active-foreground`，两者取值相同但语义分工不同。 */
+  --primary-subtle-foreground: var(--uaes-brand-soft-foreground);
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: var(--uaes-brand-primary);
+  --skeleton-base: oklch(0.97 0 0);
+  --skeleton-highlight: oklch(0.985 0 0);
+  --table-row: var(--background);
+  --table-header: color-mix(
+    in oklch,
+    var(--foreground) 1.5%,
+    var(--background)
+  );
+  --table-header-hover: color-mix(
+    in oklch,
+    var(--foreground) 3%,
+    var(--background)
+  );
+  /* Disabled rows: kept subtle so they read as "quiet", not as a colored
+     alert state. */
+  --table-disabled: color-mix(
+    in oklch,
+    var(--foreground) 3%,
+    var(--background)
+  );
+  --table-disabled-hover: color-mix(
+    in oklch,
+    var(--foreground) 4.5%,
+    var(--background)
+  );
+  --table-disabled-border: color-mix(
+    in oklch,
+    var(--foreground) 16%,
+    var(--background)
+  );
+  /* ── 新规范 1.1 / 1.1.1 补充的色阶 ─────────────────────────────── */
+  /* 文字色用 `--fg-*` 前缀，**不能**叫 `--text-*`：
+   *   · Tailwind v4 把 `--text-*` 映射为字号工具类（`text-sm`），
+   *     叫 `--text-primary` 会生成一个 `text-primary` 字号类，与颜色撞车；
+   *   · `scripts/check-design-tokens.mjs` 的 T1 规则把 `--text-*`
+   *     视为字号阶梯声明，只允许出现在 typography.css。
+   * 对应工具类前缀同为 `fg-`（`text-fg-secondary` 等），一级文字沿用
+   * `text-foreground`。 */
+  --fg-primary: #0f172a;
+  --fg-secondary: #334155;
+  --fg-tertiary: #64748b;
+  --fg-disabled: #94a3b8;
+  --fg-inverse: #ffffff;
+  --fg-link: var(--uaes-brand-primary);
+  --fg-placeholder: #64748b;
+  /* ── 品牌动作梯（UTER-DESIGN-SYSTEM-3.0 §2.2 品牌色阶）────────────────
+   * 2026-11-04 起采用用户确认的主色 #5B5EE6；Hover #4F52D1 / Active #4A4DC5，逐态对比度见
+   * scripts/verify-contrast.mjs 输出；不得以 Default 结果替代 Hover/Active）。
+   * brand-soft = --primary-subtle #F0F0FF、brand-border = #D9DAFF。 */
+  --primary-strong: var(--uaes-brand-primary);
+  --hover-primary: var(--uaes-brand-hover);
+  --primary-active: var(--uaes-brand-active);
+  --primary-subtle: var(--uaes-brand-soft);
+  --primary-border: var(--uaes-brand-border);
+  --hover-secondary: #e2e8f0;
+  --hover-destructive: #ef4444;
+  --hover-success: #15803d;
+  --border-destructive-subtle: #fecaca;
+  --neon-green: #adfa1d;
+  /* 浅底色的悬停一档。用 color-mix 从 `--primary` / `--destructive` 与
+   * `--background` 派生：浅色与深色主题共用一套声明（`--background`
+   * 翻转时自动跟随），主题预设换品牌色时也自动跟随。 */
+  --primary-subtle-hover: color-mix(
+    in oklch,
+    var(--primary) 12%,
+    var(--background)
+  );
+  --destructive-subtle: color-mix(
+    in oklch,
+    var(--destructive) 10%,
+    var(--background)
+  );
+  --destructive-subtle-hover: color-mix(
+    in oklch,
+    var(--destructive) 18%,
+    var(--background)
+  );
+}
+.dark {
+  /* Native controls follow the theme; Dark Reader also reads this to detect
+     the built-in dark theme. */
+  color-scheme: dark;
+  /* OpenAI-like dark mode with a crisp charcoal canvas. */
+  --background: #020617;
+  --foreground: #f8fafc;
+  --card: #020617;
+  --card-foreground: #f8fafc;
+  --popover: #020617;
+  --popover-foreground: #f8fafc;
+  /* 品牌动作梯（UTER-DESIGN-SYSTEM-3.0 §2.2 Dark，2026-11-03 起唯一标准）：
+   * 基底 #A1A3F7 + 深色前景 #020617（深色模式主按钮不再用白字），
+   * hover #B1B3FF / active #9294F7。文字类出口：链接 --fg-link（#A1A3F7）、
+   * 品牌浅底文字 --primary-subtle-foreground（#B1B3FF，on #25264A）。
+   * 逐态对比度以 scripts/verify-contrast.mjs 实算为准。 */
+  --primary: var(--uaes-brand-primary);
+  --primary-foreground: var(--uaes-brand-primary-foreground);
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #f8fafc;
+  --success: #22c55e;
+  --success-foreground: #f8fafc;
+  --warning: oklch(0.769 0.188 70.08);
+  --warning-foreground: oklch(0.145 0 0);
+  --info: oklch(0.613 0.14 239.919);
+  --info-foreground: oklch(0.145 0 0);
+  /* ── 柔和态取值（暗色主题）：底≈*-950、前景≈*-100 ─────────────────── */
+  --success-soft: oklch(0.23 0.06 166);
+  --success-soft-foreground: oklch(0.93 0.04 167);
+  --destructive-soft: oklch(0.26 0.09 27);
+  --destructive-soft-foreground: oklch(0.94 0.03 27);
+  --warning-soft: oklch(0.27 0.08 80);
+  --warning-soft-foreground: oklch(0.95 0.05 78);
+  --info-soft: oklch(0.25 0.07 235);
+  --info-soft-foreground: oklch(0.93 0.05 265);
+  --neutral: oklch(0.76 0 0);
+  --neutral-foreground: oklch(0.155 0 0);
+  --border: #334155;
+  --border-strong: #475569; /* 3.0 §2.6 强调边界 */
+  --subtle: #111c30; /* 3.0 §2.5 极浅表面 */
+  --input: #45465f;
+  /* 焦点环跟品牌（3.0 §15.1）：#A1A3F7 on 深底 ≥ 3:1 非文本线。 */
+  --ring: var(--uaes-brand-primary);
+  --chart-1: oklch(0.76 0.14 250);
+  --chart-2: oklch(0.76 0.13 200);
+  --chart-3: oklch(0.76 0.13 285);
+  --chart-4: oklch(0.75 0.16 325);
+  --chart-5: oklch(0.76 0.14 155);
+  --chart-6: oklch(0.75 0.13 30); /* 3.0 §2.8 第六系列色 */
+  /* 审计 AUDIT-005：dark 配对补齐 —— 跟随 dark 图表色阶 */
+  --overview-accent-1: var(--chart-1);
+  --overview-accent-2: var(--chart-2);
+  --overview-accent-3: var(--chart-3);
+  --term-online: #34d399;
+  /* 媒体信箱底（3.0 §2.10）：与浅色同值纯黑，见 :root 侧注释。 */
+  --term-background: #000000;
+  /* 状态边框（3.0 §2.7）：color-mix 派生，与浅色同一表达式自动跟随 */
+  --success-border: color-mix(in oklch, var(--success) 32%, var(--background));
+  --warning-border: color-mix(in oklch, var(--warning) 40%, var(--background));
+  --info-border: color-mix(in oklch, var(--info) 32%, var(--background));
+  /* ── 语法高亮（深色）：对应原调色板 -300 档，深底上保持可读 ────────── */
+  --syntax-keyword: oklch(0.827 0.119 306.4); /* purple-300 */
+  --syntax-string: oklch(0.871 0.15 154.4); /* green-300 */
+  --syntax-number: oklch(0.837 0.128 66.3); /* orange-300 */
+  --syntax-function: oklch(0.809 0.105 251.8); /* blue-300 */
+  --syntax-property: oklch(0.855 0.138 181.1); /* teal-300 */
+  /* ── 首屏终端演示卡 · 语法角色（深色）───────────────────────────────
+   * 与浅色同一套语义、不同取色：深底上要亮一档才不闷。弱层级不需要重写，
+   * `color-mix` 里的 `var(--foreground)` / `var(--card)` 在深色作用域下
+   * 自动取深色值。 */
+  --term-command: #34d399; /* emerald-400 */
+  --term-flag: #60a5fa; /* blue-400 */
+  --term-property: #7dd3fc; /* sky-300 */
+  --term-string: #fcd34d; /* amber-300 */
+  --term-number: #c4b5fd; /* violet-300 */
+  --term-dim-1: color-mix(in srgb, var(--foreground) 75%, var(--card));
+  --term-dim-2: color-mix(in srgb, var(--foreground) 55%, var(--card));
+  /* AA 补偿（2026-10-30）：深色 dim-3 / dim-4 同样提到 55%，与浅色对齐。 */
+  --term-dim-3: color-mix(in srgb, var(--foreground) 55%, var(--card));
+  --term-dim-4: color-mix(in srgb, var(--foreground) 55%, var(--card));
+  --term-accent-emerald: #34d399;
+  --term-accent-amber: #fbbf24;
+  --term-accent-blue: #60a5fa;
+  --term-accent-violet: #a78bfa;
+  /* 深色没有 600/500 之分：饱和档就是文字档，两者取值相同。 */
+  --term-accent-emerald-line: #34d399;
+  --term-accent-amber-line: #fbbf24;
+  --term-accent-blue-line: #60a5fa;
+  --term-accent-violet-line: #a78bfa;
+  --term-accent-emerald-soft: color-mix(
+    in srgb,
+    var(--term-accent-emerald-line) 10%,
+    var(--card)
+  );
+  --term-accent-amber-soft: color-mix(
+    in srgb,
+    var(--term-accent-amber-line) 10%,
+    var(--card)
+  );
+  --term-accent-blue-soft: color-mix(
+    in srgb,
+    var(--term-accent-blue-line) 10%,
+    var(--card)
+  );
+  --term-accent-violet-soft: color-mix(
+    in srgb,
+    var(--term-accent-violet-line) 10%,
+    var(--card)
+  );
+  --term-dot: color-mix(in srgb, var(--foreground) 15%, transparent);
+  /* 深色下装饰层只调透明度：深底上同样的光晕会更「晃」，压低一档。 */
+  --ds-decor-mesh-opacity-hero: 0.12;
+  --ds-decor-mesh-opacity-cta: 0.08;
+  --sidebar: #0f172a;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #6366f1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f1f5f9;
+  /* 深色主题的选中态前景色（3.0 §14.3）：#B1B3FF on #25264A =
+   * 4.97:1，达 AA。动作梯（按钮填充）为实色基底 + 提亮 hover/active，
+   * 但选中态文字是文字出口，不跟动作梯走 —— 与 --fg-link 同理。 */
+  --sidebar-active-foreground: var(--uaes-brand-soft-foreground);
+  /* 品牌浅底通用前景色（深色档，3.0 §2.2 brand-soft-foreground）。 */
+  --primary-subtle-foreground: var(--uaes-brand-soft-foreground);
+  --sidebar-border: #1e293b;
+  --sidebar-ring: var(--uaes-brand-primary);
+  --skeleton-base: oklch(0.335 0 0);
+  --skeleton-highlight: oklch(0.44 0 0);
+  --table-row: var(--background);
+  --table-header: color-mix(in oklch, var(--foreground) 6%, var(--background));
+  --table-header-hover: color-mix(
+    in oklch,
+    var(--foreground) 9%,
+    var(--background)
+  );
+  --table-disabled: color-mix(
+    in oklch,
+    var(--foreground) 7%,
+    var(--background)
+  );
+  --table-disabled-hover: color-mix(
+    in oklch,
+    var(--foreground) 9.5%,
+    var(--background)
+  );
+  --table-disabled-border: color-mix(
+    in oklch,
+    var(--foreground) 24%,
+    var(--background)
+  );
+
+  /* ── 新规范 1.1 / 1.1.1 补充的色阶 ─────────────────────────────── */
+  --fg-primary: #f8fafc;
+  --fg-secondary: #cbd5e1;
+  --fg-tertiary: #94a3b8;
+  --fg-disabled: #64748b;
+  --fg-inverse: #0f172a;
+  --fg-link: var(--uaes-brand-primary);
+  --fg-placeholder: #94a3b8;
+  /* 品牌动作梯（UTER-DESIGN-SYSTEM-3.0 §2.2 Dark，2026-11-03 起唯一标准）：
+   * 基底 #A1A3F7（on #020617 ≥ 7:1），hover #B1B3FF / active #9294F7；
+   * 前景改深色 #020617（3.0 §10.4：Dark 主按钮不得默认白字）。
+   * 浅底 #25264A、brand-border #45466F；文字出口 --fg-link 同为 #A1A3F7。 */
+  --primary-strong: var(--uaes-brand-primary);
+  --hover-primary: var(--uaes-brand-hover);
+  --primary-active: var(--uaes-brand-active);
+  --primary-subtle: var(--uaes-brand-soft);
+  --primary-border: var(--uaes-brand-border);
+  --hover-secondary: #334155;
+  --hover-destructive: #991b1b;
+  --hover-success: #16a34a;
+  --border-destructive-subtle: #7f1d1d;
+  --neon-green: #adfa1d;
+}

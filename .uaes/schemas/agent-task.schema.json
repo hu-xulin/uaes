@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/agent-task.schema.json",
+  "title": "UAES Agent Task",
+  "type": "object",
+  "required": [
+    "taskId",
+    "agentId",
+    "objective",
+    "status",
+    "scope",
+    "acceptanceCriteria",
+    "createdAt"
+  ],
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "pattern": "^TASK-[A-Z0-9-]+$"
+    },
+    "parentTaskId": {
+      "type": "string"
+    },
+    "agentId": {
+      "type": "string"
+    },
+    "parentAgentId": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "CREATED",
+        "QUEUED",
+        "PLANNING",
+        "AUTHORIZATION_PENDING",
+        "READY",
+        "RUNNING",
+        "WAITING",
+        "BLOCKED",
+        "VERIFYING",
+        "SUCCEEDED",
+        "FAILED",
+        "CANCEL_REQUESTED",
+        "CANCELLED",
+        "EXPIRED"
+      ]
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "authorizationRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contextRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "workspaceRef": {
+      "type": "string"
+    },
+    "subtaskRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,214 @@
+{
+  "$schemaVersion": "1.0.0",
+  "tokenSet": "UTER-BRAND-3.0",
+  "tokens": {
+    "brand.light.primary": {
+      "id": "brand.light.primary",
+      "type": "color",
+      "value": "#5B5EE6",
+      "description": "User-confirmed Uter brand primary.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.light.primaryForeground": {
+      "id": "brand.light.primaryForeground",
+      "type": "color",
+      "value": "#FFFFFF",
+      "description": "Foreground on the filled Light primary control.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.light.hover": {
+      "id": "brand.light.hover",
+      "type": "color",
+      "value": "#4F52D1",
+      "description": "Hover state of the filled Light primary control.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.light.active": {
+      "id": "brand.light.active",
+      "type": "color",
+      "value": "#4A4DC5",
+      "description": "Active state of the filled Light primary control.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.light.soft": {
+      "id": "brand.light.soft",
+      "type": "color",
+      "value": "#F0F0FF",
+      "description": "Soft Light brand surface.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.light.softForeground": {
+      "id": "brand.light.softForeground",
+      "type": "color",
+      "value": "#5558D8",
+      "description": "Contrast-safe foreground on the Light soft brand surface.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.light.border": {
+      "id": "brand.light.border",
+      "type": "color",
+      "value": "#D9DAFF",
+      "description": "Light brand border.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.light.subtleSurface": {
+      "id": "brand.light.subtleSurface",
+      "type": "color",
+      "value": "#FAFBFC",
+      "description": "Light subtle surface used for contrast verification.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.primary": {
+      "id": "brand.dark.primary",
+      "type": "color",
+      "value": "#A1A3F7",
+      "description": "Existing Dark primary value migrated from UTER Design System 3.0.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.primaryForeground": {
+      "id": "brand.dark.primaryForeground",
+      "type": "color",
+      "value": "#020617",
+      "description": "Foreground on the filled Dark primary control.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.hover": {
+      "id": "brand.dark.hover",
+      "type": "color",
+      "value": "#B1B3FF",
+      "description": "Hover state of the filled Dark primary control.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.active": {
+      "id": "brand.dark.active",
+      "type": "color",
+      "value": "#9294F7",
+      "description": "Active state of the filled Dark primary control.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.soft": {
+      "id": "brand.dark.soft",
+      "type": "color",
+      "value": "#25264A",
+      "description": "Soft Dark brand surface.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.softForeground": {
+      "id": "brand.dark.softForeground",
+      "type": "color",
+      "value": "#B1B3FF",
+      "description": "Foreground on the Dark soft brand surface.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.border": {
+      "id": "brand.dark.border",
+      "type": "color",
+      "value": "#45466F",
+      "description": "Dark brand border.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    },
+    "brand.dark.subtleSurface": {
+      "id": "brand.dark.subtleSurface",
+      "type": "color",
+      "value": "#0F172A",
+      "description": "Dark subtle surface used for contrast verification.",
+      "status": "DRAFT",
+      "platforms": [
+        "web",
+        "h5",
+        "electron"
+      ],
+      "owner": "Design System Owner"
+    }
+  }
+}

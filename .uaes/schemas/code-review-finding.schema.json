@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/code-review-finding.schema.json",
+  "title": "UAES Code Review Finding",
+  "type": "object",
+  "required": [
+    "findingId",
+    "taskId",
+    "severity",
+    "category",
+    "status",
+    "location",
+    "evidence",
+    "description",
+    "verification"
+  ],
+  "properties": {
+    "findingId": {
+      "type": "string",
+      "pattern": "^CRF-[A-Z0-9-]+$"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "CRITICAL",
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ]
+    },
+    "category": {
+      "enum": [
+        "CORRECTNESS",
+        "ARCHITECTURE",
+        "MAINTAINABILITY",
+        "TYPE_SAFETY",
+        "ERROR_HANDLING",
+        "CONCURRENCY",
+        "PERFORMANCE",
+        "DEPENDENCY",
+        "API_COMPATIBILITY",
+        "DOCUMENTATION",
+        "OTHER"
+      ]
+    },
+    "status": {
+      "enum": [
+        "OPEN",
+        "ACKNOWLEDGED",
+        "IN_PROGRESS",
+        "FIXED",
+        "VERIFIED",
+        "WONT_FIX",
+        "DEFERRED"
+      ]
+    },
+    "location": {
+      "type": "object",
+      "required": ["file", "lineStart"],
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "lineStart": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "lineEnd": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reproduction": {
+      "type": "string"
+    },
+    "impact": {
+      "type": "string"
+    },
+    "recommendation": {
+      "type": "string"
+    },
+    "verification": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "assignee": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

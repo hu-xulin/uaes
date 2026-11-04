@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/platform-capability.schema.json",
+  "title": "UAES Platform Capability",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "platform",
+    "capabilities"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "platform": {
+      "enum": [
+        "pc-web",
+        "h5",
+        "electron",
+        "android",
+        "ios",
+        "harmonyos"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "detection",
+          "fallback",
+          "minimumVersion",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_-]+$"
+          },
+          "status": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "conditional",
+              "unknown"
+            ]
+          },
+          "detection": {
+            "type": "string"
+          },
+          "fallback": {
+            "type": "string"
+          },
+          "minimumVersion": {
+            "type": ["string", "null"]
+          },
+          "permissionRequired": {
+            "type": "boolean"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

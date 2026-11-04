@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/threat-model.schema.json",
+  "title": "UAES Threat Model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "threat_model_id",
+    "system",
+    "version",
+    "owner",
+    "scope",
+    "assets",
+    "trust_boundaries",
+    "data_flows",
+    "threats",
+    "status",
+    "created_at",
+    "reviewed_at"
+  ],
+  "properties": {
+    "threat_model_id": {
+      "type": "string",
+      "pattern": "^TM-[0-9]{4,}-[a-z0-9-]+$"
+    },
+    "system": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "trust_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "data_flows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "destination",
+          "data_classification"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "data_classification": {
+            "enum": [
+              "PUBLIC",
+              "INTERNAL",
+              "CONFIDENTIAL",
+              "RESTRICTED"
+            ]
+          },
+          "crosses_trust_boundary": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "threats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "threat_id",
+          "category",
+          "description",
+          "severity",
+          "status",
+          "owner"
+        ],
+        "properties": {
+          "threat_id": {
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "SPOOFING",
+              "TAMPERING",
+              "REPUDIATION",
+              "INFORMATION_DISCLOSURE",
+              "DENIAL_OF_SERVICE",
+              "ELEVATION_OF_PRIVILEGE",
+              "OTHER"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "attack_path": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "S0",
+              "S1",
+              "S2",
+              "S3",
+              "S4"
+            ]
+          },
+          "status": {
+            "enum": [
+              "IDENTIFIED",
+              "MITIGATING",
+              "MITIGATED",
+              "ACCEPTED",
+              "CLOSED"
+            ]
+          },
+          "owner": {
+            "type": "string"
+          },
+          "controls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "test_cases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "residual_risk": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "IN_REVIEW",
+        "APPROVED",
+        "STALE",
+        "ARCHIVED"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

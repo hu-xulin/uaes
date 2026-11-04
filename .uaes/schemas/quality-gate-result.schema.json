@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/quality-gate-result.schema.json",
+  "title": "UAES Quality Gate Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "gate_result_id",
+    "gate_id",
+    "task_id",
+    "commit_sha",
+    "status",
+    "checks",
+    "summary",
+    "evaluated_at"
+  ],
+  "properties": {
+    "gate_result_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate_id": {
+      "const": "UAES-09-GATE-001"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{40,64}$"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "NOT_RUN",
+        "NOT_VERIFIED"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "check_id",
+          "status",
+          "mandatory"
+        ],
+        "properties": {
+          "check_id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "BLOCKED",
+              "NOT_RUN",
+              "NOT_APPLICABLE",
+              "NOT_VERIFIED"
+            ]
+          },
+          "mandatory": {
+            "type": "boolean"
+          },
+          "evidence": {
+            "type": ["string", "null"]
+          },
+          "reason": {
+            "type": ["string", "null"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "total",
+        "passed",
+        "failed",
+        "blocked",
+        "not_run",
+        "not_applicable",
+        "not_verified"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_run": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_applicable": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_verified": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evaluator": {
+      "type": ["string", "null"]
+    },
+    "report_ref": {
+      "type": ["string", "null"]
+    }
+  }
+}

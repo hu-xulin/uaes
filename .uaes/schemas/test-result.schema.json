@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/test-result.schema.json",
+  "title": "UAES Test Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "test_result_id",
+    "task_id",
+    "test_plan_id",
+    "commit_sha",
+    "test_type",
+    "status",
+    "started_at",
+    "completed_at",
+    "environment",
+    "evidence"
+  ],
+  "properties": {
+    "test_result_id": {
+      "type": "string",
+      "pattern": "^TR-[A-Z0-9-]+$"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "test_plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{40,64}$"
+    },
+    "test_type": {
+      "enum": [
+        "STATIC",
+        "UNIT",
+        "COMPONENT",
+        "INTEGRATION",
+        "CONTRACT",
+        "E2E",
+        "VISUAL",
+        "ACCESSIBILITY",
+        "PERFORMANCE",
+        "RELIABILITY",
+        "SECURITY",
+        "REGRESSION",
+        "MANUAL"
+      ]
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "NOT_RUN",
+        "NOT_APPLICABLE",
+        "NOT_VERIFIED"
+      ]
+    },
+    "command": {
+      "type": ["string", "null"]
+    },
+    "tool": {
+      "type": ["string", "null"]
+    },
+    "tool_version": {
+      "type": ["string", "null"]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "environment": {
+      "type": "object",
+      "required": ["environment_id", "environment_type"],
+      "properties": {
+        "environment_id": {
+          "type": "string"
+        },
+        "environment_type": {
+          "enum": [
+            "LOCAL",
+            "CI",
+            "TEST",
+            "STAGING",
+            "PRODUCTION"
+          ]
+        },
+        "runtime": {
+          "type": ["string", "null"]
+        },
+        "platform": {
+          "type": ["string", "null"]
+        },
+        "database": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "summary": {
+      "type": ["string", "null"]
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "location"],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": ["string", "null"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "failure_reason": {
+      "type": ["string", "null"]
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    }
+  }
+}

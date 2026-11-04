@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/migration-release-manifest.schema.json",
+  "title": "UAES Migration Release Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "migrationId",
+    "database",
+    "fromVersion",
+    "toVersion",
+    "risk",
+    "approval",
+    "backup",
+    "execution",
+    "verification"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "migrationId": { "type": "string" },
+    "database": {
+      "type": "object",
+      "required": ["engine", "environment", "logicalName"],
+      "properties": {
+        "engine": { "enum": ["sqlite", "mysql", "postgresql", "other"] },
+        "environment": { "enum": ["development", "test", "staging", "production"] },
+        "logicalName": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "fromVersion": { "type": "string" },
+    "toVersion": { "type": "string" },
+    "risk": { "enum": ["low", "medium", "high", "critical"] },
+    "approval": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["pending", "approved", "rejected", "not_required", "not_verified"] },
+        "approvalId": { "type": ["string", "null"] },
+        "approver": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "backup": {
+      "type": "object",
+      "required": ["required", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "status": { "enum": ["completed", "not_required", "failed", "not_run", "not_verified"] },
+        "reference": { "type": ["string", "null"] },
+        "integrityVerified": { "type": ["boolean", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["pending", "running", "success", "failed", "cancelled", "not_run"] },
+        "startedAt": { "type": ["string", "null"], "format": "date-time" },
+        "completedAt": { "type": ["string", "null"], "format": "date-time" },
+        "executor": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["schemaCheck", "dataCheck", "result"],
+      "properties": {
+        "schemaCheck": { "enum": ["pass", "fail", "not_run", "not_applicable"] },
+        "dataCheck": { "enum": ["pass", "fail", "not_run", "not_applicable"] },
+        "result": { "enum": ["pass", "fail", "blocked", "not_run", "not_verified"] },
+        "evidenceRefs": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "recoveryPlanRef": { "type": ["string", "null"] },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}

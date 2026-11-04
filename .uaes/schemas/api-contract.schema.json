@@ -1,0 +1,86 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/api-contract.schema.json",
+  "title": "UAES API Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "method",
+    "path",
+    "owner",
+    "authentication",
+    "request",
+    "response",
+    "errors",
+    "idempotency"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "method": {
+      "enum": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ]
+    },
+    "path": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "authentication": {
+      "enum": [
+        "PUBLIC",
+        "USER",
+        "ADMIN",
+        "SERVICE",
+        "CUSTOM"
+      ]
+    },
+    "request": {
+      "type": "object"
+    },
+    "response": {
+      "type": "object"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "meaning"],
+        "properties": {
+          "code": { "type": "string" },
+          "meaning": { "type": "string" },
+          "http_status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          }
+        }
+      }
+    },
+    "idempotency": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "scope": { "type": "string" },
+        "retention": { "type": "string" }
+      }
+    },
+    "deprecated": {
+      "type": "boolean",
+      "default": false
+    },
+    "replacement": {
+      "type": ["string", "null"]
+    }
+  }
+}

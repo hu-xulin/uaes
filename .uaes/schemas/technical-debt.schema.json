@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/technical-debt.schema.json",
+  "title": "UAES Technical Debt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "debtId",
+    "title",
+    "description",
+    "origin",
+    "affectedAssets",
+    "impact",
+    "priority",
+    "owner",
+    "status",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "debtId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "origin": {
+      "enum": [
+        "architecture",
+        "code",
+        "dependency",
+        "testing",
+        "security",
+        "performance",
+        "operations",
+        "documentation",
+        "migration",
+        "other"
+      ]
+    },
+    "affectedAssets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "impact": {
+      "type": "object",
+      "required": [
+        "business",
+        "engineering",
+        "security",
+        "reliability"
+      ],
+      "properties": {
+        "business": {
+          "enum": ["low", "medium", "high", "critical", "unknown"]
+        },
+        "engineering": {
+          "enum": ["low", "medium", "high", "critical", "unknown"]
+        },
+        "security": {
+          "enum": ["low", "medium", "high", "critical", "unknown"]
+        },
+        "reliability": {
+          "enum": ["low", "medium", "high", "critical", "unknown"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "priority": {
+      "enum": ["P0", "P1", "P2", "P3", "P4"]
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "identified",
+        "triaged",
+        "accepted",
+        "planned",
+        "in_progress",
+        "resolved",
+        "verified",
+        "closed",
+        "rejected",
+        "deferred",
+        "reopened",
+        "blocked"
+      ]
+    },
+    "remediationCost": {
+      "enum": ["low", "medium", "high", "unknown"]
+    },
+    "targetDate": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "deferralReason": {
+      "type": ["string", "null"]
+    },
+    "decisionRef": {
+      "type": ["string", "null"]
+    },
+    "verificationEvidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

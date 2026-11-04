@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/knowledge-source.schema.json",
+  "title": "UAES Knowledge Source",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "locator",
+    "collected_at",
+    "collected_by",
+    "trust_level"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^SRC-[A-Z0-9-]+$"
+    },
+    "type": {
+      "enum": [
+        "USER",
+        "REPOSITORY",
+        "STANDARD",
+        "OFFICIAL",
+        "EXTERNAL",
+        "TOOL",
+        "TEST",
+        "GENERATED"
+      ]
+    },
+    "locator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository": {
+      "type": ["string", "null"]
+    },
+    "commit_sha": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{7,64}$"
+    },
+    "version": {
+      "type": ["string", "null"]
+    },
+    "accessed_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "collected_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trust_level": {
+      "enum": [
+        "AUTHORITATIVE",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNVERIFIED"
+      ]
+    },
+    "content_hash": {
+      "type": ["string", "null"]
+    },
+    "upstream_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

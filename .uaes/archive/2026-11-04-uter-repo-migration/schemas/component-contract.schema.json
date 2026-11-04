@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.cc/uaes/schemas/component-contract.schema.json",
+  "title": "UAES Component Contract",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "category",
+    "version",
+    "status",
+    "variants",
+    "states",
+    "accessibility",
+    "tests"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^COMP-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "enum": [
+        "primitive",
+        "form",
+        "feedback",
+        "overlay",
+        "data",
+        "product"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "approved",
+        "deprecated"
+      ]
+    },
+    "source": {
+      "type": "string"
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "sizes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "states": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "default",
+          "hover",
+          "active",
+          "focus-visible",
+          "disabled",
+          "loading",
+          "selected",
+          "expanded",
+          "collapsed",
+          "invalid",
+          "success",
+          "readonly"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "token_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "accessibility": {
+      "type": "object",
+      "required": [
+        "keyboard",
+        "accessible_name_required"
+      ],
+      "properties": {
+        "keyboard": {
+          "type": "boolean"
+        },
+        "semantic_element": {
+          "type": "string"
+        },
+        "accessible_name_required": {
+          "type": "boolean"
+        },
+        "focus_management": {
+          "type": "boolean"
+        },
+        "screen_reader_test": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "tests": {
+      "type": "object",
+      "required": [
+        "unit",
+        "interaction",
+        "accessibility",
+        "visual"
+      ],
+      "properties": {
+        "unit": { "type": "boolean" },
+        "interaction": { "type": "boolean" },
+        "accessibility": { "type": "boolean" },
+        "visual": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

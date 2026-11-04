@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/design-asset.schema.json",
+  "title": "UAES Design Asset",
+  "type": "object",
+  "required": [
+    "assetId",
+    "name",
+    "assetType",
+    "source",
+    "version",
+    "status",
+    "owner",
+    "license"
+  ],
+  "properties": {
+    "assetId": {
+      "type": "string",
+      "pattern": "^UTER-ASSET-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "assetType": {
+      "enum": [
+        "FIGMA_FILE",
+        "COMPONENT",
+        "ICON",
+        "IMAGE",
+        "FONT",
+        "ILLUSTRATION",
+        "DESIGN_DOCUMENT",
+        "VISUAL_BASELINE"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": ["type", "reference"],
+      "properties": {
+        "type": {
+          "enum": [
+            "FIGMA",
+            "GIT",
+            "LOCAL",
+            "EXTERNAL",
+            "GENERATED"
+          ]
+        },
+        "reference": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "ACTIVE",
+        "DEPRECATED",
+        "RETIRED"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "license": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": [
+            "OWNED",
+            "LICENSED",
+            "OPEN_SOURCE",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "reference": {
+          "type": "string"
+        },
+        "attribution": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeMappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["platform", "reference"],
+        "properties": {
+          "platform": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "componentId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

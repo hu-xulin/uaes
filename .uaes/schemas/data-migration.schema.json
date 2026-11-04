@@ -1,0 +1,69 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/data-migration.schema.json",
+  "title": "UAES Database Migration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "migration_id",
+    "description",
+    "risk",
+    "preconditions",
+    "operations",
+    "verification",
+    "rollback"
+  ],
+  "properties": {
+    "migration_id": {
+      "type": "string",
+      "pattern": "^[0-9]{14}_[a-z0-9_]+$"
+    },
+    "description": {
+      "type": "string"
+    },
+    "risk": {
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "preconditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["description", "reversible"],
+        "properties": {
+          "description": { "type": "string" },
+          "reversible": { "type": "boolean" }
+        }
+      }
+    },
+    "verification": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "rollback": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "affected_databases": {
+      "type": "array",
+      "items": {
+        "enum": ["SQLITE", "MYSQL", "POSTGRESQL"]
+      }
+    },
+    "requires_backup": {
+      "type": "boolean",
+      "default": true
+    },
+    "destructive": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

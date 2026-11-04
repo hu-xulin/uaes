@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/ai-risk-assessment.schema.json",
+  "title": "UAES AI Risk Assessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "assessment_id",
+    "task_id",
+    "assessor",
+    "scope",
+    "likelihood",
+    "impact",
+    "initial_risk",
+    "controls",
+    "residual_risk",
+    "status"
+  ],
+  "properties": {
+    "assessment_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "assessor": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "FINANCIAL",
+          "PRODUCTION",
+          "SECURITY",
+          "PRIVACY",
+          "DATA_INTEGRITY",
+          "AVAILABILITY",
+          "LEGAL",
+          "REPUTATION",
+          "THIRD_PARTY",
+          "IRREVERSIBILITY",
+          "UNCERTAINTY"
+        ]
+      }
+    },
+    "likelihood": {
+      "enum": [
+        "RARE",
+        "UNLIKELY",
+        "POSSIBLE",
+        "LIKELY",
+        "ALMOST_CERTAIN"
+      ]
+    },
+    "impact": {
+      "enum": [
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "initial_risk": {
+      "enum": ["R0", "R1", "R2", "R3", "R4"]
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["control_id", "description", "status"],
+        "properties": {
+          "control_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "IMPLEMENTED",
+              "VERIFIED",
+              "FAILED"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "residual_risk": {
+      "enum": ["R0", "R1", "R2", "R3", "R4"]
+    },
+    "risk_owner": {
+      "type": "string"
+    },
+    "approval_required": {
+      "type": "boolean"
+    },
+    "approval_reference": {
+      "type": ["string", "null"]
+    },
+    "review_date": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "ASSESSED",
+        "APPROVED",
+        "MITIGATING",
+        "ACCEPTED",
+        "REJECTED",
+        "CLOSED"
+      ]
+    }
+  }
+}

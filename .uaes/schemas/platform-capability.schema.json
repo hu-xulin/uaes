@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/platform-capability.schema.json",
+  "title": "UAES Platform Capability",
+  "type": "object",
+  "required": [
+    "capabilityId",
+    "platformId",
+    "capability",
+    "availability",
+    "fallback"
+  ],
+  "properties": {
+    "capabilityId": {
+      "type": "string",
+      "pattern": "^CAP-[A-Z0-9-]+$"
+    },
+    "platformId": {
+      "type": "string",
+      "pattern": "^PLATFORM-[A-Z0-9-]+$"
+    },
+    "capability": {
+      "type": "string",
+      "minLength": 1
+    },
+    "availability": {
+      "enum": [
+        "AVAILABLE",
+        "UNAVAILABLE",
+        "PERMISSION_REQUIRED",
+        "PERMISSION_DENIED",
+        "RESTRICTED",
+        "TEMPORARILY_UNAVAILABLE",
+        "UNKNOWN"
+      ]
+    },
+    "permissionRequired": {
+      "type": "boolean"
+    },
+    "permissionName": {
+      "type": "string"
+    },
+    "fallback": {
+      "type": "string"
+    },
+    "verificationStatus": {
+      "enum": [
+        "VERIFIED",
+        "NOT_VERIFIED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

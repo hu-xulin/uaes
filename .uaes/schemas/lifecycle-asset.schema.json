@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/lifecycle-asset.schema.json",
+  "title": "UAES Lifecycle Asset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "assetId",
+    "assetType",
+    "name",
+    "owner",
+    "version",
+    "status",
+    "createdAt",
+    "lastReviewedAt",
+    "risk"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "assetId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assetType": {
+      "enum": [
+        "product",
+        "service",
+        "module",
+        "library",
+        "api",
+        "database",
+        "platform",
+        "infrastructure",
+        "agent",
+        "skill",
+        "standard",
+        "document",
+        "feature",
+        "other"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": {
+          "enum": ["human", "team", "system"]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "version": {
+      "type": ["string", "null"]
+    },
+    "status": {
+      "enum": [
+        "proposed",
+        "active",
+        "maintenance",
+        "deprecated",
+        "sunsetting",
+        "retired",
+        "archived"
+      ]
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "consumers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "risk": {
+      "enum": ["low", "medium", "high", "critical", "unknown"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lastReviewedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "nextReviewAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "replacementAssetId": {
+      "type": ["string", "null"]
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

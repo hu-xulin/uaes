@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/platform-manifest.schema.json",
+  "title": "UAES Platform Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "project",
+    "platform",
+    "status",
+    "runtime",
+    "support",
+    "build",
+    "verification"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1
+    },
+    "platform": {
+      "enum": [
+        "pc-web",
+        "h5",
+        "electron",
+        "android",
+        "ios",
+        "harmonyos"
+      ]
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "in-development",
+        "implemented",
+        "supported",
+        "deprecated",
+        "not-supported"
+      ]
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "minimumOsVersion": {
+          "type": ["string", "null"]
+        },
+        "sdkVersion": {
+          "type": ["string", "null"]
+        },
+        "browserSupport": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deviceForms",
+        "architectures",
+        "releaseChannels"
+      ],
+      "properties": {
+        "deviceForms": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "desktop",
+              "mobile",
+              "tablet",
+              "foldable",
+              "large-screen",
+              "embedded-webview"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "architectures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "releaseChannels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "artifactType",
+        "ciRequired"
+      ],
+      "properties": {
+        "command": {
+          "type": "string"
+        },
+        "artifactType": {
+          "type": "string"
+        },
+        "ciRequired": {
+          "type": "boolean"
+        },
+        "signingRequired": {
+          "type": "boolean"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "integration",
+        "e2e",
+        "device"
+      ],
+      "properties": {
+        "unit": {
+          "type": "boolean"
+        },
+        "integration": {
+          "type": "boolean"
+        },
+        "e2e": {
+          "type": "boolean"
+        },
+        "device": {
+          "enum": [
+            "not-tested",
+            "simulator-only",
+            "real-device-tested",
+            "mixed"
+          ]
+        },
+        "lastVerifiedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "owner": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

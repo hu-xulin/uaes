@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/skill-manifest.schema.json",
+  "title": "UAES Skill Manifest",
+  "type": "object",
+  "required": [
+    "skillId",
+    "name",
+    "version",
+    "owner",
+    "inputSchema",
+    "outputSchema",
+    "sideEffects",
+    "execution"
+  ],
+  "properties": {
+    "skillId": {
+      "type": "string",
+      "pattern": "^SKILL-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "ACTIVE",
+        "DEPRECATED",
+        "RETIRED"
+      ]
+    },
+    "inputSchema": {
+      "type": "string"
+    },
+    "outputSchema": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "toolRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sideEffects": {
+      "enum": [
+        "NONE",
+        "READ_ONLY",
+        "REVERSIBLE_WRITE",
+        "EXTERNAL_WRITE",
+        "IRREVERSIBLE"
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "timeoutSeconds",
+        "retryLimit"
+      ],
+      "properties": {
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "retryLimit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotent": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "authorizationRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

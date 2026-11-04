@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/quality-report.schema.json",
+  "title": "UAES Quality Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_id",
+    "task_id",
+    "repository",
+    "commit_sha",
+    "risk_level",
+    "review_status",
+    "gate_status",
+    "tests",
+    "findings",
+    "evidence",
+    "generated_at"
+  ],
+  "properties": {
+    "report_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "branch": {
+      "type": ["string", "null"]
+    },
+    "base_commit_sha": {
+      "type": ["string", "null"]
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{40,64}$"
+    },
+    "risk_level": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "UNKNOWN"
+      ]
+    },
+    "review_status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "NOT_RUN",
+        "NOT_VERIFIED"
+      ]
+    },
+    "gate_status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "NOT_RUN",
+        "NOT_VERIFIED"
+      ]
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "defects": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "coverage_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "security_summary": {
+      "type": ["string", "null"]
+    },
+    "regression_summary": {
+      "type": ["string", "null"]
+    },
+    "unresolved_risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "not_run_checks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocked_checks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_type",
+          "location"
+        ],
+        "properties": {
+          "evidence_type": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": ["string", "null"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generated_by": {
+      "type": ["string", "null"]
+    },
+    "conclusion": {
+      "type": ["string", "null"]
+    }
+  }
+}

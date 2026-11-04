@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/knowledge-conflict.schema.json",
+  "title": "UAES Knowledge Conflict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "status",
+    "knowledge_refs",
+    "impact",
+    "detected_at",
+    "owner"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^CONFLICT-[A-Z0-9-]+$"
+    },
+    "type": {
+      "enum": [
+        "FACT_CONFLICT",
+        "VERSION_CONFLICT",
+        "REQUIREMENT_CONFLICT",
+        "POLICY_CONFLICT",
+        "ARCHITECTURE_CONFLICT",
+        "DESIGN_CONFLICT",
+        "SOURCE_CONFLICT",
+        "TEMPORAL_CONFLICT",
+        "SCOPE_CONFLICT"
+      ]
+    },
+    "status": {
+      "enum": [
+        "DETECTED",
+        "CLASSIFIED",
+        "IMPACT_ASSESSED",
+        "OWNER_ASSIGNED",
+        "RESOLUTION_PROPOSED",
+        "APPROVED",
+        "RESOLVED",
+        "VERIFIED",
+        "DEFERRED"
+      ]
+    },
+    "knowledge_refs": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "impact": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "resolution": {
+      "type": ["string", "null"]
+    },
+    "approved_by": {
+      "type": ["string", "null"]
+    },
+    "resolved_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

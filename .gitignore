@@ -1,0 +1,23 @@
+# macOS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local runtime artifacts (never commit generated or machine-local state)
+*.log
+*.tmp
+.tmp/
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+*.db
+*.db-wal
+*.db-shm
+
+# Keep intentional placeholders and evidence files tracked:
+#   .gitkeep            -> preserves the governance directory layout
+#   reports/**/*.sha256 -> import baseline evidence
+#   reports/**/*.json   -> machine-readable quality reports

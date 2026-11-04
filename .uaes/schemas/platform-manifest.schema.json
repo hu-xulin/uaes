@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/platform-manifest.schema.json",
+  "title": "UAES Platform Manifest",
+  "type": "object",
+  "required": [
+    "platformId",
+    "name",
+    "platformType",
+    "supportStatus",
+    "capabilityRefs"
+  ],
+  "properties": {
+    "platformId": {
+      "type": "string",
+      "pattern": "^PLATFORM-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "platformType": {
+      "enum": [
+        "WEB",
+        "MOBILE_WEB",
+        "DESKTOP",
+        "ANDROID",
+        "IOS",
+        "HARMONYOS"
+      ]
+    },
+    "supportStatus": {
+      "enum": [
+        "SUPPORTED",
+        "PLANNED",
+        "EXPERIMENTAL",
+        "DEPRECATED",
+        "UNSUPPORTED"
+      ]
+    },
+    "minimumVersion": {
+      "type": "string"
+    },
+    "verifiedVersions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "runtime": {
+      "type": "string"
+    },
+    "entrypoint": {
+      "type": "string"
+    },
+    "capabilityRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "knownLimitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

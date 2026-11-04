@@ -1,0 +1,79 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/change.schema.json",
+  "title": "UAES Requirement Change",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "status",
+    "title",
+    "reason",
+    "affected_requirements",
+    "approval_required"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^CHG-[0-9]{4,}$"
+    },
+    "type": {
+      "enum": [
+        "CLARIFICATION",
+        "ADDITION",
+        "MODIFICATION",
+        "REMOVAL",
+        "DEPRECATION",
+        "BREAKING",
+        "EMERGENCY"
+      ]
+    },
+    "status": {
+      "enum": [
+        "PROPOSED",
+        "APPROVED",
+        "REJECTED",
+        "IN_PROGRESS",
+        "COMPLETED"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "affected_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^REQ-[0-9]{4,}$"
+      }
+    },
+    "affected_modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "migration_required": {
+      "type": "boolean"
+    },
+    "rollback_plan": {
+      "type": ["string", "null"]
+    },
+    "approval_required": {
+      "type": "boolean"
+    },
+    "approval_status": {
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED",
+        "NOT_REQUIRED"
+      ]
+    }
+  }
+}

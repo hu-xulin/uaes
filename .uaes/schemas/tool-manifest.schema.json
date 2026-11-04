@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/tool-manifest.schema.json",
+  "title": "UAES Tool Manifest",
+  "type": "object",
+  "required": [
+    "toolId",
+    "name",
+    "version",
+    "owner",
+    "inputSchema",
+    "outputSchema",
+    "sideEffectLevel",
+    "source",
+    "status"
+  ],
+  "properties": {
+    "toolId": {
+      "type": "string",
+      "pattern": "^TOOL-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "inputSchema": {
+      "type": "string"
+    },
+    "outputSchema": {
+      "type": "string"
+    },
+    "sideEffectLevel": {
+      "enum": [
+        "S0",
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "type",
+        "identifier"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "BUILT_IN",
+            "LOCAL",
+            "MCP",
+            "PLUGIN",
+            "REMOTE_API"
+          ]
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "requiredAuthorization": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "timeoutSeconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "retryLimit": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "idempotent": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "DISABLED",
+        "DEPRECATED",
+        "REVOKED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

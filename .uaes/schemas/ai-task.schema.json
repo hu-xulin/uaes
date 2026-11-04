@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/ai-task.schema.json",
+  "title": "UAES AI Task",
+  "description": "Reconstructed (provenance: RECONSTRUCTED, status: DRAFT) machine-readable contract for an AI-executed engineering task record, per UAES-01 (AI Governance) and UAES-08 (Agent Engineering).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "title",
+    "taskType",
+    "status",
+    "riskLevel",
+    "assignedAgent",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "taskId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,}$"
+    },
+    "title": { "type": "string", "minLength": 3 },
+    "description": { "type": "string" },
+    "taskType": {
+      "enum": [
+        "REQUIREMENT_ANALYSIS",
+        "ARCHITECTURE_DESIGN",
+        "IMPLEMENTATION",
+        "TESTING",
+        "CODE_REVIEW",
+        "AUTO_FIX",
+        "DOCUMENTATION",
+        "RELEASE",
+        "INCIDENT_RESPONSE",
+        "OTHER"
+      ]
+    },
+    "status": {
+      "enum": [
+        "PLANNED",
+        "IN_PROGRESS",
+        "BLOCKED",
+        "IN_REVIEW",
+        "COMPLETED",
+        "CANCELLED"
+      ]
+    },
+    "priority": {
+      "enum": ["P0", "P1", "P2", "P3"]
+    },
+    "riskLevel": {
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "assignedAgent": {
+      "type": "string",
+      "minLength": 2
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^UAES-(00|0[1-9]|1[0-2])$"
+    },
+    "requiresHumanApproval": { "type": "boolean" },
+    "approvedBy": { "type": "string" },
+    "inputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 3 }
+    },
+    "verificationEvidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

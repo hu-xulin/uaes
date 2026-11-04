@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/standard-metadata.schema.json",
+  "title": "UAES Standard Metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "domain",
+    "type",
+    "version",
+    "status",
+    "path",
+    "priority",
+    "owner",
+    "dependencies",
+    "verification"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^UAES-(00|0[1-9]|1[0-2])(-[0-9]{3})?$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^UAES-(00|0[1-9]|1[0-2])$"
+    },
+    "type": {
+      "enum": [
+        "DOMAIN_STANDARD",
+        "STANDARD",
+        "POLICY",
+        "GUIDELINE",
+        "SPECIFICATION"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "status": {
+      "enum": [
+        "PROPOSED",
+        "DRAFT",
+        "IN_REVIEW",
+        "NEEDS_REVISION",
+        "APPROVED",
+        "ACTIVE",
+        "REJECTED",
+        "DEPRECATED",
+        "SUPERSEDED",
+        "RETIRED"
+      ]
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "priority": {
+      "enum": ["P0", "P1", "P2", "P3"]
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^UAES-(00|0[1-9]|1[0-2])(-[0-9]{3})?$"
+      }
+    },
+    "verification": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "STATIC",
+          "SCHEMA",
+          "UNIT",
+          "INTEGRATION",
+          "E2E",
+          "SECURITY",
+          "MANUAL",
+          "AGENT-TEST",
+          "EVIDENCE"
+        ]
+      }
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  }
+}

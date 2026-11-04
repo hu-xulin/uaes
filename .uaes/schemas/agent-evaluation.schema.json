@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/agent-evaluation.schema.json",
+  "title": "UAES Agent Evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evaluationId",
+    "agentId",
+    "agentVersion",
+    "taskId",
+    "datasetVersion",
+    "status",
+    "metrics",
+    "findings",
+    "decision"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "evaluationId": {
+      "type": "string"
+    },
+    "agentId": {
+      "type": "string"
+    },
+    "agentVersion": {
+      "type": "string"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "datasetVersion": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed",
+        "blocked",
+        "not-run",
+        "not-applicable"
+      ]
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "value",
+          "unit"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "threshold": {
+            "type": ["number", "null"]
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "findingId",
+          "severity",
+          "description"
+        ],
+        "properties": {
+          "findingId": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "blocker",
+              "critical",
+              "major",
+              "minor",
+              "info"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "decision": {
+      "enum": [
+        "accept",
+        "reject",
+        "conditional-accept",
+        "re-evaluate"
+      ]
+    },
+    "traceReference": {
+      "type": ["string", "null"]
+    },
+    "evaluatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

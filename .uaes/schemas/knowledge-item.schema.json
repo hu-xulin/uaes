@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/knowledge-item.schema.json",
+  "title": "UAES Knowledge Item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "project_id",
+    "type",
+    "title",
+    "status",
+    "confidence",
+    "sensitivity",
+    "sources",
+    "owner",
+    "created_at",
+    "last_verified_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^KNOW-[A-Z0-9-]+$"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "enum": [
+        "PROJECT_FACT",
+        "USER_REQUIREMENT",
+        "BUSINESS_RULE",
+        "ARCHITECTURE_DECISION",
+        "DESIGN_SPECIFICATION",
+        "ENGINEERING_STANDARD",
+        "CODE_REFERENCE",
+        "API_CONTRACT",
+        "TEST_EVIDENCE",
+        "SECURITY_CONTROL",
+        "OPERATIONAL_RECORD",
+        "EXTERNAL_REFERENCE",
+        "AI_ANALYSIS",
+        "TASK_CONTEXT"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "CANDIDATE",
+        "REVIEWED",
+        "ACTIVE",
+        "STALE",
+        "REVIEW_REQUIRED",
+        "DEPRECATED",
+        "ARCHIVED",
+        "REJECTED"
+      ]
+    },
+    "confidence": {
+      "enum": [
+        "VERIFIED",
+        "CORROBORATED",
+        "SOURCE_ASSERTED",
+        "INFERRED",
+        "ASSUMED",
+        "UNKNOWN"
+      ]
+    },
+    "sensitivity": {
+      "enum": [
+        "PUBLIC",
+        "INTERNAL",
+        "CONFIDENTIAL",
+        "RESTRICTED"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_verified_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "review_due_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "related_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  }
+}

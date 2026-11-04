@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/agent-handoff.schema.json",
+  "title": "UAES Agent Handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "handoffId",
+    "taskId",
+    "runId",
+    "fromAgent",
+    "toAgent",
+    "status",
+    "objective",
+    "scope",
+    "authorizationReference",
+    "completedWork",
+    "remainingWork",
+    "evidence",
+    "risks",
+    "acceptanceCriteria"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "handoffId": {
+      "type": "string"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "fromAgent": {
+      "type": "string"
+    },
+    "toAgent": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "created",
+        "pending",
+        "accepted",
+        "rejected",
+        "in-progress",
+        "completed",
+        "failed",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "objective": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "included",
+        "excluded"
+      ],
+      "properties": {
+        "included": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excluded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "authorizationReference": {
+      "type": "string"
+    },
+    "completedWork": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "remainingWork": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "changedFiles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "testResults": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expiresAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

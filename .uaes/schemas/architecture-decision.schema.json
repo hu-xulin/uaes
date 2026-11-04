@@ -1,0 +1,125 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/architecture-decision.schema.json",
+  "title": "UAES Architecture Decision Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "status",
+    "decision_class",
+    "date",
+    "context",
+    "decision",
+    "consequences",
+    "verification"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ADR-[0-9]{4,}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5
+    },
+    "status": {
+      "enum": [
+        "PROPOSED",
+        "UNDER_REVIEW",
+        "ACCEPTED",
+        "REJECTED",
+        "SUPERSEDED",
+        "DEPRECATED"
+      ]
+    },
+    "decision_class": {
+      "enum": ["A0", "A1", "A2", "A3", "A4"]
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "related_requirements": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "related_modules": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": ["string", "null"]
+    },
+    "context": {
+      "type": "string",
+      "minLength": 20
+    },
+    "problem": {
+      "type": "string"
+    },
+    "options_considered": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "description", "tradeoffs"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "tradeoffs": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "string",
+      "minLength": 10
+    },
+    "consequences": {
+      "type": "object",
+      "required": ["positive", "negative", "risks"],
+      "properties": {
+        "positive": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "negative": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "risks": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "migration_plan": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "rollback_plan": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "verification": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "implementation_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

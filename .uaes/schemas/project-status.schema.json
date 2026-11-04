@@ -1,0 +1,84 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/project-status.schema.json",
+  "title": "UAES Project Status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project",
+    "baseline",
+    "platforms",
+    "engineering"
+  ],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["name", "status"],
+      "properties": {
+        "name": {
+          "const": "Uter"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "PAUSED",
+            "MAINTENANCE",
+            "ARCHIVED"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "baseline": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "type": "string"
+        },
+        "commit_sha": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "platforms": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "PLANNED",
+              "DEPRECATED",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    },
+    "engineering": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": {
+            "enum": [
+              "VERIFIED",
+              "PARTIAL",
+              "PLANNED",
+              "FAILED",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

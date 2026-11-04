@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.cc/uaes/schemas/visual-regression.schema.json",
+  "title": "UAES Visual Regression Report",
+  "type": "object",
+  "required": [
+    "run_id",
+    "commit_sha",
+    "environment",
+    "captures",
+    "result"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{7,64}$"
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "browser",
+        "viewport",
+        "device_scale_factor",
+        "theme"
+      ],
+      "properties": {
+        "browser": { "type": "string" },
+        "runtime": { "type": "string" },
+        "viewport": {
+          "type": "object",
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "integer", "minimum": 1 },
+            "height": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        },
+        "device_scale_factor": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "theme": {
+          "enum": ["light", "dark", "other"]
+        },
+        "locale": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "captures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "route",
+          "baseline",
+          "actual",
+          "diff",
+          "status"
+        ],
+        "properties": {
+          "route": { "type": "string" },
+          "baseline": { "type": "string" },
+          "actual": { "type": "string" },
+          "diff": { "type": "string" },
+          "difference_ratio": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "failed",
+              "approved_change",
+              "blocked"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "result": {
+      "enum": [
+        "passed",
+        "failed",
+        "blocked",
+        "not_run"
+      ]
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "approved_by": { "type": "string" },
+        "approved_at": { "type": "string", "format": "date-time" },
+        "reason": { "type": "string" }
+      },
+      "required": ["approved_by", "approved_at", "reason"],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

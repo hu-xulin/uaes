@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/agent-permission-policy.schema.json",
+  "title": "UAES Agent Permission Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "policyId",
+    "version",
+    "defaultEffect",
+    "rules"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "policyId": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "defaultEffect": {
+      "const": "deny"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ruleId",
+          "agent",
+          "action",
+          "resource",
+          "environment",
+          "effect",
+          "risk"
+        ],
+        "properties": {
+          "ruleId": {
+            "type": "string"
+          },
+          "agent": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "environment": {
+            "enum": [
+              "local",
+              "development",
+              "test",
+              "staging",
+              "production",
+              "all"
+            ]
+          },
+          "effect": {
+            "enum": [
+              "allow",
+              "deny",
+              "require-approval"
+            ]
+          },
+          "risk": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "approvalRole": {
+            "type": ["string", "null"]
+          },
+          "expiresAt": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

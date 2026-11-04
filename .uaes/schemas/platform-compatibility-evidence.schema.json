@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/platform-compatibility-evidence.schema.json",
+  "title": "UAES Platform Compatibility Evidence",
+  "type": "object",
+  "required": [
+    "evidenceId",
+    "platformId",
+    "environment",
+    "testScope",
+    "result",
+    "commitSha",
+    "executedAt"
+  ],
+  "properties": {
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^PCE-[A-Z0-9-]+$"
+    },
+    "platformId": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "runtime",
+        "version"
+      ],
+      "properties": {
+        "runtime": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string"
+        },
+        "browser": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "testScope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "NOT_RUN",
+        "NOT_VERIFIED"
+      ]
+    },
+    "commitSha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "executedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reportRef": {
+      "type": "string"
+    },
+    "knownIssues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,63 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/decision.schema.json",
+  "title": "UAES Architecture Decision Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "title",
+    "status",
+    "context",
+    "decision",
+    "consequences",
+    "owner"
+  ],
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "pattern": "^ADR-[0-9]{4,}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "PROPOSED",
+        "ACCEPTED",
+        "REJECTED",
+        "DEPRECATED",
+        "SUPERSEDED"
+      ]
+    },
+    "context": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "consequences": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "owner": {
+      "type": "string"
+    },
+    "related_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^ADR-[0-9]{4,}$"
+      }
+    },
+    "supersedes": {
+      "type": ["string", "null"]
+    }
+  }
+}

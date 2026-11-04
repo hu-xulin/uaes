@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/recovery-test.schema.json",
+  "title": "UAES Recovery Test",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "recovery_test_id",
+    "system",
+    "scope",
+    "target_rpo_seconds",
+    "target_rto_seconds",
+    "started_at",
+    "status",
+    "owner"
+  ],
+  "properties": {
+    "recovery_test_id": {
+      "type": "string",
+      "pattern": "^REC-[0-9]{4,}$"
+    },
+    "system": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_rpo_seconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "target_rto_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "actual_rpo_seconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "actual_rto_seconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "PLANNED",
+        "RUNNING",
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "CANCELLED"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "integrity_verified": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "business_validation": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

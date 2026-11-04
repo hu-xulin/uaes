@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.cc/uaes/schemas/design-token.schema.json",
+  "title": "UAES Design Token Schema",
+  "description": "DTCG 2025.10-oriented design token validation with Uter governance metadata.",
+  "type": "object",
+  "patternProperties": {
+    "^[a-zA-Z][a-zA-Z0-9_-]*$": {
+      "$ref": "#/$defs/tokenOrGroup"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "tokenOrGroup": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "$description": { "type": "string" },
+            "$type": { "type": "string" }
+          },
+          "patternProperties": {
+            "^[a-zA-Z][a-zA-Z0-9_-]*$": {
+              "$ref": "#/$defs/tokenOrGroup"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "token": {
+      "type": "object",
+      "required": ["$value"],
+      "properties": {
+        "$type": {
+          "type": "string",
+          "enum": [
+            "color",
+            "dimension",
+            "fontFamily",
+            "fontWeight",
+            "fontSize",
+            "duration",
+            "cubicBezier",
+            "number",
+            "strokeStyle",
+            "shadow",
+            "border",
+            "typography",
+            "transition"
+          ]
+        },
+        "$value": {},
+        "$description": { "type": "string" },
+        "$extensions": {
+          "type": "object",
+          "properties": {
+            "com.uter.uaes": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "layer": {
+                  "enum": [
+                    "primitive",
+                    "semantic",
+                    "component"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "active",
+                    "deprecated",
+                    "experimental"
+                  ]
+                },
+                "owner": { "type": "string" }
+              },
+              "required": ["layer"],
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

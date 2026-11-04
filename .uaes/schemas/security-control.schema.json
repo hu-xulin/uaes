@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/security-control.schema.json",
+  "title": "UAES Security Control",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "control_id",
+    "title",
+    "requirement",
+    "severity",
+    "owner",
+    "verification_method",
+    "status"
+  ],
+  "properties": {
+    "control_id": {
+      "type": "string",
+      "pattern": "^SEC-[A-Z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requirement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "severity": {
+      "enum": [
+        "S0",
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "threats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verification_method": {
+      "enum": [
+        "AUTOMATED",
+        "MANUAL",
+        "HYBRID",
+        "EXERCISE"
+      ]
+    },
+    "evidence_required": {
+      "type": "boolean",
+      "default": true
+    },
+    "status": {
+      "enum": [
+        "PLANNED",
+        "IMPLEMENTED",
+        "VERIFIED",
+        "FAILED",
+        "EXCEPTED",
+        "RETIRED"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exception_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_verified_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "next_review_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

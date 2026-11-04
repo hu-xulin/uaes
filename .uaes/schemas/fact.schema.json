@@ -1,0 +1,80 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/fact.schema.json",
+  "title": "UAES Knowledge Fact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fact_id",
+    "subject",
+    "value",
+    "source",
+    "status",
+    "scope"
+  ],
+  "properties": {
+    "fact_id": {
+      "type": "string",
+      "pattern": "^FACT-[A-Z0-9-]+$"
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "value": {},
+    "source": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "enum": [
+            "user",
+            "standard",
+            "repository",
+            "ci",
+            "runtime",
+            "external",
+            "inference"
+          ]
+        },
+        "path": {
+          "type": ["string", "null"]
+        },
+        "url": {
+          "type": ["string", "null"],
+          "format": "uri"
+        },
+        "reference": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": ["object", "null"]
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "PROPOSED",
+        "APPROVED",
+        "ACTIVE",
+        "DEPRECATED",
+        "SUPERSEDED",
+        "UNKNOWN",
+        "INVALID"
+      ]
+    },
+    "scope": {
+      "type": "string"
+    },
+    "owner": {
+      "type": ["string", "null"]
+    },
+    "verified_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

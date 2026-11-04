@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/agent-manifest.schema.json",
+  "title": "UAES Agent Manifest",
+  "type": "object",
+  "required": [
+    "agentId",
+    "name",
+    "version",
+    "role",
+    "owner",
+    "status",
+    "skillRefs",
+    "toolRefs",
+    "inputContract",
+    "outputContract"
+  ],
+  "properties": {
+    "agentId": {
+      "type": "string",
+      "pattern": "^AGENT-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "role": {
+      "enum": [
+        "ORCHESTRATOR",
+        "PLANNER",
+        "CODER",
+        "REVIEWER",
+        "TESTER",
+        "SECURITY_ANALYST",
+        "RESEARCHER",
+        "DOCUMENTATION",
+        "RELEASE_ASSISTANT",
+        "SPECIALIST"
+      ]
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "REGISTERED",
+        "ACTIVE",
+        "SUSPENDED",
+        "DEPRECATED",
+        "RETIRED",
+        "REVOKED"
+      ]
+    },
+    "runtime": {
+      "type": "string"
+    },
+    "modelProfile": {
+      "type": "string"
+    },
+    "skillRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "toolRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "inputContract": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outputContract": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contextBudget": {
+      "type": "object",
+      "properties": {
+        "maxInputTokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxOutputTokens": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "authorizationRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evaluationProfile": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

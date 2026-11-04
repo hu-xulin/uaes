@@ -1,0 +1,75 @@
+version: "1.0.0"
+status: "DRAFT"
+
+registry:
+  id: "UAES-AGENT-REGISTRY"
+  description: "Central registry for UTER AI Agents"
+
+governance:
+  default_status: "inactive"
+  require_manifest: true
+  require_permission_profile: true
+  require_evaluation_profile: true
+  require_owner: true
+  default_permission_effect: "deny"
+
+agents:
+  - id: "uter.agent.orchestration.main"
+    role: "orchestrator"
+    manifest: "agents/roles/orchestrator/manifest.json"
+    status: "planned"
+  - id: "uter.agent.product.requirement"
+    role: "product"
+    manifest: "agents/roles/product/manifest.json"
+    status: "planned"
+  - id: "uter.agent.research.technical"
+    role: "research"
+    manifest: "agents/roles/research/manifest.json"
+    status: "planned"
+  - id: "uter.agent.architecture.review"
+    role: "architecture"
+    manifest: "agents/roles/architecture/manifest.json"
+    status: "planned"
+  - id: "uter.agent.design.system"
+    role: "design"
+    manifest: "agents/roles/design/manifest.json"
+    status: "planned"
+  - id: "uter.agent.engineering.coding"
+    role: "coding"
+    manifest: "agents/roles/coding/manifest.json"
+    status: "planned"
+  - id: "uter.agent.quality.review"
+    role: "review"
+    manifest: "agents/roles/review/manifest.json"
+    status: "planned"
+  - id: "uter.agent.quality.testing"
+    role: "testing"
+    manifest: "agents/roles/testing/manifest.json"
+    status: "planned"
+  - id: "uter.agent.security.audit"
+    role: "security"
+    manifest: "agents/roles/security/manifest.json"
+    status: "planned"
+  - id: "uter.agent.documentation"
+    role: "documentation"
+    manifest: "agents/roles/documentation/manifest.json"
+    status: "planned"
+  - id: "uter.agent.delivery"
+    role: "delivery"
+    manifest: "agents/roles/delivery/manifest.json"
+    status: "planned"
+
+lifecycle:
+  allowed_status:
+    - "planned"
+    - "active"
+    - "inactive"
+    - "deprecated"
+    - "experimental"
+
+approval:
+  activation_requires:
+    - "valid_manifest"
+    - "valid_permission_profile"
+    - "tool_access_review"
+    - "evaluation_baseline"

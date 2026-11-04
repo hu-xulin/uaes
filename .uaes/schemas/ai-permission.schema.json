@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/ai-permission.schema.json",
+  "title": "UAES AI Permission",
+  "description": "Reconstructed (provenance: RECONSTRUCTED, status: DRAFT) machine-readable contract for an AI execution permission record, per UAES-01-002 (Agent Authority and Permissions) and UAES-08-012 (Tool Safety).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "permissionId",
+    "agentRole",
+    "resource",
+    "actions",
+    "effect",
+    "status"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "permissionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,}$"
+    },
+    "description": { "type": "string" },
+    "agentRole": {
+      "type": "string",
+      "minLength": 2
+    },
+    "resource": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "EXECUTE",
+          "APPROVE",
+          "DEPLOY",
+          "GRANT"
+        ]
+      }
+    },
+    "effect": {
+      "enum": ["ALLOW", "DENY"]
+    },
+    "status": {
+      "enum": ["ACTIVE", "SUSPENDED", "REVOKED"]
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "WORKSPACE",
+        "REPOSITORY",
+        "ENVIRONMENT",
+        "SYSTEM",
+        "EXTERNAL"
+      ]
+    },
+    "conditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requiresHumanApproval": { "type": "boolean" },
+    "approvedBy": { "type": "string" },
+    "grantedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

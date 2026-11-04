@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/design-token.schema.json",
+  "title": "UAES Design Token",
+  "type": "object",
+  "required": ["$schemaVersion", "tokenSet", "tokens"],
+  "properties": {
+    "$schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "tokenSet": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tokens": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/token"
+      }
+    }
+  },
+  "$defs": {
+    "token": {
+      "type": "object",
+      "required": ["id", "type", "value", "description", "status"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-zA-Z0-9.-]*$"
+        },
+        "type": {
+          "enum": [
+            "color",
+            "dimension",
+            "fontFamily",
+            "fontWeight",
+            "fontSize",
+            "lineHeight",
+            "duration",
+            "cubicBezier",
+            "border",
+            "shadow",
+            "opacity",
+            "number",
+            "typography",
+            "other"
+          ]
+        },
+        "value": {},
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "ACTIVE",
+            "DEPRECATED",
+            "RETIRED"
+          ]
+        },
+        "platforms": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "web",
+              "h5",
+              "electron",
+              "android",
+              "ios",
+              "harmonyos",
+              "universal"
+            ]
+          }
+        },
+        "deprecatedBy": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

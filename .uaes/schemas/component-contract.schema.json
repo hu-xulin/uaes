@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/component-contract.schema.json",
+  "title": "UAES Component Contract",
+  "type": "object",
+  "required": [
+    "componentId",
+    "name",
+    "version",
+    "status",
+    "purpose",
+    "platforms",
+    "props",
+    "variants",
+    "states",
+    "accessibility",
+    "tests"
+  ],
+  "properties": {
+    "componentId": {
+      "type": "string",
+      "pattern": "^UTER-COMPONENT-[A-Z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "EXPERIMENTAL",
+        "ACTIVE",
+        "DEPRECATED",
+        "RETIRED"
+      ]
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "web",
+          "h5",
+          "electron",
+          "android",
+          "ios",
+          "harmonyos"
+        ]
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "required"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "default": {},
+          "description": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "accessibility": {
+      "type": "object",
+      "required": [
+        "keyboard",
+        "semanticElement"
+      ],
+      "properties": {
+        "keyboard": {
+          "type": "boolean"
+        },
+        "semanticElement": {
+          "type": "string"
+        },
+        "ariaPattern": {
+          "type": "string"
+        },
+        "focusManagement": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "owner": {
+      "type": "string"
+    },
+    "deprecatedBy": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

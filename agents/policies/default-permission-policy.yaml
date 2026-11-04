@@ -1,0 +1,126 @@
+version: "1.0.0"
+policy_id: "UAES-AGENT-DEFAULT-POLICY"
+
+default_effect: "deny"
+
+global_controls:
+  enforce_least_privilege: true
+  require_tool_registration: true
+  require_audit: true
+  require_workspace_isolation: true
+  production_credentials_available: false
+  unrestricted_network: false
+  agent_can_modify_own_policy: false
+  delegated_permissions_can_escalate: false
+
+permission_profiles:
+
+  read_only:
+    allow:
+      - "filesystem.read"
+      - "repository.inspect"
+      - "code.search"
+      - "approved_web.search"
+    deny:
+      - "filesystem.write"
+      - "shell.execute"
+      - "git.commit"
+      - "git.push"
+      - "git.merge"
+      - "deployment.execute"
+      - "production.database.write"
+      - "payment.configuration.write"
+
+  workspace_developer:
+    allow:
+      - "filesystem.read"
+      - "filesystem.write.scoped"
+      - "shell.execute.scoped"
+      - "test.execute"
+      - "build.execute"
+      - "git.branch.create"
+      - "git.diff"
+    deny:
+      - "production.database.write"
+      - "payment.configuration.write"
+      - "deployment.execute"
+      - "git.merge"
+    require_approval:
+      - "filesystem.write.outside_workspace"
+      - "network.external.write"
+
+  pull_request_creator:
+    allow:
+      - "filesystem.read"
+      - "filesystem.write.scoped"
+      - "test.execute"
+      - "build.execute"
+      - "git.branch.create"
+      - "git.commit"
+      - "git.push.feature_branch"
+      - "git.pull_request.create"
+    deny:
+      - "git.merge"
+      - "deployment.execute"
+      - "production.database.write"
+      - "payment.configuration.write"
+    require_approval:
+      - "git.push.protected_branch"
+
+  independent_reviewer:
+    allow:
+      - "filesystem.read"
+      - "repository.inspect"
+      - "code.search"
+      - "test.execute"
+      - "report.write.scoped"
+    deny:
+      - "source.write"
+      - "git.commit"
+      - "git.push"
+      - "git.merge"
+      - "deployment.execute"
+
+  test_executor:
+    allow:
+      - "filesystem.read"
+      - "test.execute"
+      - "build.execute"
+      - "report.write.scoped"
+    deny:
+      - "production.database.write"
+      - "payment.configuration.write"
+      - "git.merge"
+      - "deployment.execute"
+
+  security_auditor:
+    allow:
+      - "filesystem.read"
+      - "code.search"
+      - "security.scan"
+      - "dependency.audit"
+      - "report.write.scoped"
+    deny:
+      - "production.database.write"
+      - "payment.configuration.write"
+      - "git.merge"
+      - "deployment.execute"
+
+approval_rules:
+  production_change:
+    effect: "deny_without_explicit_authorization"
+
+  real_payment_change:
+    effect: "deny_without_explicit_authorization"
+
+  irreversible_data_operation:
+    effect: "require_human_approval"
+
+  permission_escalation:
+    effect: "require_human_approval"
+
+  merge_pull_request:
+    effect: "require_human_approval"
+
+  deployment:
+    effect: "require_human_approval"
