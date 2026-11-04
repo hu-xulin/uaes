@@ -42,13 +42,13 @@ skills:
     status: "DRAFT"
     sideEffects: "READ_ONLY"
     standards: ["UAES-00", "UAES-01", "UAES-04", "UAES-06", "UAES-09", "UAES-10"]
-  - id: "SKILL-UAES-TEST-ENGINEERING"
-    name: "uaes-test-engineering"
-    skill: "skills/uaes-test-engineering/SKILL.md"
-    manifest: "skills/uaes-test-engineering/manifest.json"
+  - id: "SKILL-UAES-AUTOMATED-TESTING"
+    name: "uaes-automated-testing"
+    skill: "skills/uaes-automated-testing/SKILL.md"
+    manifest: "skills/uaes-automated-testing/manifest.json"
     status: "DRAFT"
     sideEffects: "REVERSIBLE_WRITE"
-    standards: ["UAES-00", "UAES-04", "UAES-06", "UAES-09", "UAES-10", "UAES-11"]
+    standards: ["UAES-06", "UAES-09", "UAES-10"]
   - id: "SKILL-UAES-AUTO-FIX"
     name: "uaes-auto-fix"
     skill: "skills/uaes-auto-fix/SKILL.md"
@@ -70,27 +70,3 @@ skills:
     status: "DRAFT"
     sideEffects: "READ_ONLY"
     standards: ["UAES-00", "UAES-05", "UAES-06", "UAES-07", "UAES-09", "UAES-10"]
-  - id: "SKILL-UAES-CODE-REVIEW"
-    name: "uaes-code-review"
-    skill: "skills/uaes-code-review/SKILL.md"
-    manifest: "skills/uaes-code-review/manifest.json"
-    status: "DRAFT"
-    sideEffects: "READ_ONLY"
-    standards: ["UAES-06", "UAES-09", "UAES-10"]
-
-  - id: "SKILL-UAES-AUTOMATED-TESTING"
-    name: "uaes-automated-testing"
-    skill: "skills/uaes-automated-testing/SKILL.md"
-    manifest: "skills/uaes-automated-testing/manifest.json"
-    status: "DRAFT"
-    sideEffects: "REVERSIBLE_WRITE"
-    standards: ["UAES-06", "UAES-09", "UAES-10"]
-
-  - id: "SKILL-UAES-AUTO-FIX"
-    name: "uaes-auto-fix"
-    skill: "skills/uaes-auto-fix/SKILL.md"
-    manifest: "skills/uaes-auto-fix/manifest.json"
-    status: "DRAFT"
-    sideEffects: "REVERSIBLE_WRITE"
-    standards: ["UAES-01", "UAES-06", "UAES-09", "UAES-10", "UAES-11"]
-
