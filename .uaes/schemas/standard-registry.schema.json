@@ -28,9 +28,18 @@
         "status"
       ],
       "properties": {
-        "id": { "type": "string", "minLength": 3 },
-        "name": { "type": "string", "minLength": 3 },
-        "abbreviation": { "type": "string", "minLength": 2 },
+        "id": {
+          "type": "string",
+          "minLength": 3
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "abbreviation": {
+          "type": "string",
+          "minLength": 2
+        },
         "version": {
           "type": "string",
           "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
@@ -39,55 +48,100 @@
           "type": "string",
           "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
         },
-        "status": { "$ref": "#/$defs/lifecycleStatus" },
-        "project": { "type": "object" },
-        "governance": { "type": "object" },
+        "status": {
+          "$ref": "#/$defs/lifecycleStatus"
+        },
+        "project": {
+          "type": "object"
+        },
+        "governance": {
+          "type": "object"
+        },
         "lifecycle_status": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "requirement_levels": {
           "type": "array",
-          "items": { "enum": ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"] }
+          "items": {
+            "enum": [
+              "MUST",
+              "MUST_NOT",
+              "SHOULD",
+              "SHOULD_NOT",
+              "MAY"
+            ]
+          }
+        },
+        "priority_levels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provenance": {
+          "type": "string"
         }
       }
     },
     "phases": {
       "type": "object",
-      "additionalProperties": { "$ref": "#/$defs/phase" }
+      "additionalProperties": {
+        "$ref": "#/$defs/phase"
+      }
     },
     "standards": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "schemas": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "gates": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "acceptance": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "system_files": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "tool_adapters": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "dependencies": {
       "type": "array",
-      "items": { "$ref": "#/$defs/dependency" }
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
     },
-    "validation": { "type": "object" },
+    "validation": {
+      "type": "object"
+    },
     "history": {
       "type": "array",
-      "items": { "$ref": "#/$defs/historyRecord" }
+      "items": {
+        "$ref": "#/$defs/historyRecord"
+      }
     }
   },
   "$defs": {
@@ -106,40 +160,83 @@
     "phase": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "description", "status"],
+      "required": [
+        "name",
+        "description",
+        "status"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 3 },
-        "description": { "type": "string", "minLength": 3 },
-        "status": { "$ref": "#/$defs/lifecycleStatus" },
-        "provenance": { "type": "string" },
+        "name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "description": {
+          "type": "string",
+          "minLength": 3
+        },
+        "status": {
+          "$ref": "#/$defs/lifecycleStatus"
+        },
+        "provenance": {
+          "type": "string"
+        },
         "deliverables": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "entry": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "file"],
+      "required": [
+        "id",
+        "file"
+      ],
       "properties": {
         "id": {
           "type": "string",
           "pattern": "^UAES-[A-Z0-9]+(-[A-Z0-9]+)*$"
         },
-        "name": { "type": "string" },
-        "file": { "type": "string", "minLength": 3 },
-        "type": { "type": "string" },
-        "phase": { "type": "string" },
-        "status": { "$ref": "#/$defs/lifecycleStatus" },
-        "priority": { "type": "string" },
-        "provenance": { "type": "string" }
+        "name": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string",
+          "minLength": 3
+        },
+        "type": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/lifecycleStatus"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "provenance": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string"
+        }
       }
     },
     "dependency": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["standard", "depends_on"],
+      "required": [
+        "standard",
+        "depends_on"
+      ],
       "properties": {
         "standard": {
           "type": "string",
@@ -158,13 +255,23 @@
             "type": "string",
             "pattern": "^UAES-[A-Z0-9]+(-[A-Z0-9]+)*$"
           }
+        },
+        "coordination": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "historyRecord": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["version", "date", "change"],
+      "required": [
+        "version",
+        "date",
+        "change"
+      ],
       "properties": {
         "version": {
           "type": "string",
@@ -174,14 +281,21 @@
           "type": "string",
           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
         },
-        "change": { "type": "string", "minLength": 3 },
+        "change": {
+          "type": "string",
+          "minLength": 3
+        },
         "scope": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "notes": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
