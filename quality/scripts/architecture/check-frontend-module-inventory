@@ -17,6 +17,14 @@ EXTENSIONS = %w[.ts .tsx .js .jsx .mts .cts .mjs .cjs].freeze
 SOURCE_GLOBS = %w[**/*.ts **/*.tsx **/*.js **/*.jsx **/*.mts **/*.cts **/*.mjs **/*.cjs].freeze
 IMPORT_PATTERN = /(?:\bimport\s+(?:type\s+)?(?:[^'";]*?\s+from\s+)?|\bexport\s+(?:type\s+)?[^'";]*?\s+from\s+|\bimport\s*\()\s*['"]([^'"]+)['"]/m
 
+def test_source?(relative)
+  relative.split("/").include?("__tests__") || File.basename(relative).match?(/\.(?:test|spec)\.[^.]+\z/)
+end
+
+def generated_source?(relative)
+  relative == "routeTree.gen.ts" || File.basename(relative).match?(/\.(?:generated|gen)\.[^.]+\z/)
+end
+
 def resolve_local(src, importer, specifier)
   candidate =
     if specifier.start_with?("@/")
@@ -36,34 +44,56 @@ end
 files = SOURCE_GLOBS.flat_map { |glob| Dir.glob(File.join(src, glob)) }.uniq.sort
 stop("no frontend source files discovered") if files.empty?
 
-edges = Hash.new(0)
-edge_samples = Hash.new { |hash, key| hash[key] = [] }
+production_edges = Hash.new(0)
+production_samples = Hash.new { |hash, key| hash[key] = [] }
+test_edges = Hash.new(0)
 unresolved = []
+generated_imports = 0
+production_file_count = 0
+test_file_count = 0
+generated_file_count = 0
+
 files.each do |file|
+  relative_importer = file.delete_prefix(src + File::SEPARATOR)
+  if generated_source?(relative_importer)
+    generated_file_count += 1
+    next
+  end
+
+  is_test = test_source?(relative_importer)
+  is_test ? test_file_count += 1 : production_file_count += 1
   content = File.read(file)
   content.scan(IMPORT_PATTERN).flatten.each do |specifier|
     next unless specifier.start_with?("@/", "./", "../")
     target = resolve_local(src, file, specifier)
     unless target
-      unresolved << "#{file.delete_prefix(src + File::SEPARATOR)} -> #{specifier}"
+      unresolved << "#{relative_importer} -> #{specifier}"
       next
     end
 
-    from = file.delete_prefix(src + File::SEPARATOR).split("/").first
-    if target.start_with?(src + File::SEPARATOR)
-      relative_target = target.delete_prefix(src + File::SEPARATOR)
-      to = relative_target.split("/").first
+    target_relative = target.delete_prefix(src + File::SEPARATOR)
+    if generated_source?(target_relative)
+      generated_imports += 1
+      next
+    end
+
+    from = relative_importer.split("/").first
+    to = if target.start_with?(src + File::SEPARATOR)
+      target_relative.split("/").first
     elsif target == src
-      to = "$src-root"
+      "$src-root"
     else
-      to = "$workspace/#{Pathname.new(target).relative_path_from(Pathname.new(src))}"
+      "$workspace/#{Pathname.new(target).relative_path_from(Pathname.new(src))}"
     end
     edge_key = [from, to]
-    edges[edge_key] += 1
-    if from != to && edge_samples[edge_key].length < 8
-      importer_relative = file.delete_prefix(src + File::SEPARATOR)
-      target_relative = target.start_with?(src + File::SEPARATOR) ? target.delete_prefix(src + File::SEPARATOR) : Pathname.new(target).relative_path_from(Pathname.new(src)).to_s
-      edge_samples[edge_key] << "#{importer_relative} -> #{specifier} => #{target_relative}"
+
+    if is_test
+      test_edges[edge_key] += 1
+    else
+      production_edges[edge_key] += 1
+      if from != to && production_samples[edge_key].length < 8
+        production_samples[edge_key] << "#{relative_importer} -> #{specifier} => #{target_relative}"
+      end
     end
   end
 end
@@ -74,12 +104,15 @@ unless unresolved.empty?
   stop("local import resolution incomplete")
 end
 
-puts "FRONTEND MODULE INVENTORY: PASS (#{files.length} source files; all alias/relative imports resolved)"
-puts "FRONTEND MODULE EDGES:"
-edges.sort.each { |(from, to), count| puts "  #{from} -> #{to}: #{count}" }
-puts "FRONTEND MODULE EDGE SAMPLES:"
-edge_samples.sort.each do |(from, to), samples|
+puts "FRONTEND MODULE INVENTORY: PASS (#{files.length} source files; #{production_file_count} production, #{test_file_count} test, #{generated_file_count} generated)"
+puts "FRONTEND MODULE PRODUCTION EDGES:"
+production_edges.sort.each { |(from, to), count| puts "  #{from} -> #{to}: #{count}" }
+puts "FRONTEND MODULE PRODUCTION EDGE SAMPLES:"
+production_samples.sort.each do |(from, to), samples|
   puts "  #{from} -> #{to}:"
   samples.each { |sample| puts "    #{sample}" }
 end
+puts "FRONTEND MODULE TEST-ONLY EDGES:"
+test_edges.sort.each { |(from, to), count| puts "  #{from} -> #{to}: #{count}" }
+puts "FRONTEND MODULE GENERATED IMPORTS EXCLUDED: #{generated_imports}"
 puts "FRONTEND MODULE BOUNDARIES: NOT_VERIFIED (inventory only; dependency policy requires review)"
