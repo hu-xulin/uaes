@@ -1,0 +1,18 @@
+{
+  "agentId": "AGENT-TECHNICAL-RESEARCHER",
+  "name": "Technical Research Agent",
+  "version": "1.0.0",
+  "role": "RESEARCHER",
+  "owner": "UAES Engineering Governance",
+  "status": "DRAFT",
+  "runtime": "tool-adapter-selected",
+  "skillRefs": [],
+  "toolRefs": [],
+  "inputContract": ".uaes/schemas/agent-task.schema.json",
+  "outputContract": ".uaes/schemas/agent-result.schema.json",
+  "authorizationRefs": [
+    "agents/policies/default-permission-policy.yaml"
+  ],
+  "evaluationProfile": "agents/evaluation-profiles/default.yaml",
+  "dependencies": []
+}
