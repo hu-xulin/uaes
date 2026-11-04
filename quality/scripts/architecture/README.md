@@ -33,11 +33,11 @@ ruby quality/scripts/architecture/test-router-openapi-drift.rb
 
 Pinned source: Uter PR #15 head `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Latest UAES revision at this evidence refresh: `76fd67d3e19677fe1707f0e0acee3831427a1efe`.
+Latest UAES revision at this evidence refresh: `7bf0c82f6e9c70a267dd7168426cf7736449012c`.
 
-- Governance Validation: PASS — https://github.com/hu-xulin/uaes/actions/runs/41909200499
-- Database Migration Dialect Matrix: PASS — https://github.com/hu-xulin/uaes/actions/runs/41909200497
-- Architecture Source Checks: expected blocking failure on the live route/OpenAPI comparison — https://github.com/hu-xulin/uaes/actions/runs/41909200530
+- Governance Validation: PASS — https://github.com/hu-xulin/uaes/actions/runs/41910274728
+- Database Migration Dialect Matrix: PASS — https://github.com/hu-xulin/uaes/actions/runs/41910274713
+- Architecture Source Checks: expected blocking failure on the live route/OpenAPI comparison — https://github.com/hu-xulin/uaes/actions/runs/41910274727
 
 The latest Architecture Source Checks run completed all preceding checks successfully: module manifests, RelayKit boundary and fixtures, Go module dependency allowlist and fixtures, API contract compatibility and fixtures, database migration inventory integrity, frontend production/test inventory and fixtures (including per-edge import-kind classification), and router/OpenAPI positive/negative fixtures. The final live router comparison correctly failed on the two unresolved documented operations listed below. This is not a green architecture gate.
 
