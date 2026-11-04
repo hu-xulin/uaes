@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+require "set"
+
+def stop(message, code = 2)
+  warn "FRONTEND MODULE INVENTORY: #{message}"
+  exit code
+end
+
+root = ENV["UTER_REPO_ROOT"]
+stop("UTER_REPO_ROOT is required") if root.nil? || root.empty?
+root = File.expand_path(root)
+src = File.join(root, "web/src")
+stop("web/src directory missing") unless File.directory?(src)
+
+EXTENSIONS = %w[.ts .tsx .js .jsx .mts .cts .mjs .cjs].freeze
+SOURCE_GLOBS = %w[**/*.ts **/*.tsx **/*.js **/*.jsx **/*.mts **/*.cts **/*.mjs **/*.cjs].freeze
+IMPORT_PATTERN = /(?:\bimport\s+(?:type\s+)?(?:[^'";]*?\s+from\s+)?|\bexport\s+(?:type\s+)?[^'";]*?\s+from\s+|\bimport\s*\()\s*['"]([^'"]+)['"]/m
+
+def resolve_local(src, importer, specifier)
+  candidate =
+    if specifier.start_with?("@/")
+      File.join(src, specifier.delete_prefix("@/"))
+    elsif specifier.start_with?("./", "../")
+      File.expand_path(specifier, File.dirname(importer))
+    else
+      return nil
+    end
+
+  candidates = [candidate]
+  EXTENSIONS.each { |ext| candidates << candidate + ext }
+  EXTENSIONS.each { |ext| candidates << File.join(candidate, "index#{ext}") }
+  candidates.find { |path| File.file?(path) }
+end
+
+files = SOURCE_GLOBS.flat_map { |glob| Dir.glob(File.join(src, glob)) }.uniq.sort
+stop("no frontend source files discovered") if files.empty?
+
+edges = Hash.new(0)
+unresolved = []
+files.each do |file|
+  content = File.read(file)
+  content.scan(IMPORT_PATTERN).flatten.each do |specifier|
+    next unless specifier.start_with?("@/", "./", "../")
+    target = resolve_local(src, file, specifier)
+    unless target
+      unresolved << "#{file.delete_prefix(src + File::SEPARATOR)} -> #{specifier}"
+      next
+    end
+
+    from = file.delete_prefix(src + File::SEPARATOR).split("/").first
+    to = target.delete_prefix(src + File::SEPARATOR).split("/").first
+    edges[[from, to]] += 1
+  end
+end
+
+unless unresolved.empty?
+  warn "FRONTEND MODULE INVENTORY: unresolved local imports (#{unresolved.length})"
+  unresolved.first(50).each { |item| warn " - #{item}" }
+  stop("local import resolution incomplete")
+end
+
+puts "FRONTEND MODULE INVENTORY: PASS (#{files.length} source files; all alias/relative imports resolved)"
+puts "FRONTEND MODULE EDGES:"
+edges.sort.each { |(from, to), count| puts "  #{from} -> #{to}: #{count}" }
+puts "FRONTEND MODULE BOUNDARIES: NOT_VERIFIED (inventory only; dependency policy requires review)"
