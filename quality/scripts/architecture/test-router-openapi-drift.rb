@@ -21,7 +21,7 @@ class RouterOpenApiDriftTest < Minitest::Test
     }))
     File.write(File.join(root, "docs-dev/openapi/relay.json"), JSON.generate({
       "paths" => {
-        "/v1/responses" => { "post" => { "responses" => { "200" => { "description" => "OK" } } }
+        "/v1/responses" => { "post" => { "responses" => { "200" => { "description" => "OK" } } } }
       }
     }))
     routes = [
