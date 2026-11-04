@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/agent-result.schema.json",
+  "title": "UAES Agent Result",
+  "type": "object",
+  "required": [
+    "taskId",
+    "agentId",
+    "status",
+    "summary",
+    "evidence",
+    "risks"
+  ],
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "COMPLETED",
+        "PARTIAL",
+        "BLOCKED",
+        "FAILED",
+        "CANCELLED"
+      ]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "reference",
+          "result"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "exitCode": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nextActions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
