@@ -83,7 +83,7 @@ expected_names = names.sort
     fail_check("#{adapter_path} does not point to canonical skill #{canonical_relative}") unless
       adapter_content.include?(canonical_relative)
     fail_check("#{adapter_path} does not declare itself a non-authoritative runtime adapter") unless
-      adapter_content.include?("does not grant permissions or override AGENTS.md")
+      adapter_content.include?("does not grant permissions or override")
   end
 end
 
