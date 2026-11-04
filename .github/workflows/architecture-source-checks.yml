@@ -37,3 +37,8 @@ jobs:
       - name: Run RelayKit boundary positive and negative controls
         working-directory: uaes
         run: ruby quality/scripts/architecture/test-module-boundaries.rb
+      - name: Validate Go module dependency allowlist
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-dependency-rules
