@@ -9,29 +9,39 @@
 - Global registry version: 1.7.0.
 - Registered domain range: P00–P12 (13 domains).
 - Registry lifecycle: DRAFT.
-- Standard, schema, gate, acceptance, agent, skill, and workflow registration does not imply approval or implementation.
-- Uter integration is a separate deliverable and must be verified in the Uter repository.
+- All 278 registered file references exist and are non-empty.
+- Registry entry IDs: 279; duplicate IDs: 0.
+- Phase keys and phase values are normalized to P00–P12.
+- UAES governance CI passed on the remediation branch: 798 integrity checks recorded; no registry, manifest, adapter, or registered-file integrity errors.
 
-## Audit findings
+## Current remediation completed
 
-The 2026-11-05 remote repository audit identified:
-- Root agent entrypoints were empty before the current remediation branch.
-- Several tool adapters, project-context files, role manifests, skill/workflow registries, and execution-model content were empty.
-- The phase registry used inconsistent phase identifiers; canonical identifiers are P00–P12.
-- Some registered files existed but were zero bytes.
-- Runtime skill discovery and project-level enforcement had not been demonstrated by an actual agent task and CI evidence.
+- Root AGENTS.md and CLAUDE.md populated.
+- Five tool-specific bootstrap adapters populated.
+- Canonical skills, machine manifests, skill registry, and Claude/Agents runtime adapters added.
+- Eleven agent role manifests and a default evaluation profile added.
+- Five workflow definitions and a workflow registry added.
+- P00 AI Engineering Execution Model populated.
+- Four previously empty JSON schemas populated.
+- Project context and knowledge files now contain source-backed facts or explicit NOT_VERIFIED status.
+- Empty architecture check entrypoints now fail closed with exit code 2 instead of silently doing nothing.
+- UAES governance validator and GitHub Actions workflow added.
 
-## Current remediation
+## Remaining blockers
 
-The remediation branch is adding repository instructions, tool adapters, skill contracts/manifests, workflow definitions, project context, and static validation. This does not change the lifecycle to APPROVED, IMPLEMENTED, or VERIFIED.
+1. UAES remains DRAFT; no approval or release tag has been granted.
+2. Five architecture check scripts are BLOCKED placeholders; UAES-04 gate is not implemented.
+3. Agent, skill, and workflow runtime discovery has not been proven through real WorkBuddy/Claude Code/Codex task simulations.
+4. JSON Schema semantic validation against a standards-compliant validator is not yet part of CI; current CI checks JSON syntax and manifest fields.
+5. Uter's full test/quality CI is still running or requires its final result; the UAES integration sub-job has passed.
+6. Semantic parity between Uter's local generic standards and UAES has not yet been independently approved.
 
 ## Exit criteria
 
 UAES may be considered VERIFIED only after:
-1. Registry and all referenced files pass automated integrity checks.
-2. All P0/P1 requirements have enforceable verification methods.
-3. Agent, skill, and workflow manifests validate against their schemas.
-4. Runtime discovery is demonstrated for each supported agent adapter.
-5. Quality gates execute in CI and propagate failures.
-6. Uter's integration mapping and project overlays are verified in the Uter repository.
-7. Independent acceptance review approves the evidence.
+1. Registry, referenced files, schemas, and manifests pass automated validation.
+2. Architecture/security/quality gates have real executable checks and negative tests.
+3. Runtime discovery is demonstrated for each supported agent adapter.
+4. P0/P1 requirements have enforceable verification methods.
+5. Uter's integration mapping and project overlays are verified in the Uter repository.
+6. Independent acceptance review approves the evidence.
