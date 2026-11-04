@@ -21,6 +21,8 @@ Each skill MUST provide:
 
 See [registry.yaml](REGISTRY.yaml). Each registered skill is stored at `<skill-name>/SKILL.md`.
 
+Current canonical skills include compliance audit, standard authoring, Uter integration, code review, test engineering, auto-fix, security audit, and design-system audit.
+
 ## Runtime adapters
 
 The canonical contracts are tool-independent. Claude Code, Codex, WorkBuddy, and other agents may expose adapter files in their native skill directories, but adapters MUST reference the canonical contract rather than fork its normative content. Runtime availability must be tested in the target agent; merely storing a Markdown file does not prove that an agent automatically discovers or executes it.
