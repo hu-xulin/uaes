@@ -27,13 +27,15 @@
 - Project context and knowledge files now contain source-backed facts or explicit NOT_VERIFIED status.
 - Empty architecture check entrypoints now fail closed with exit code 2 instead of silently doing nothing.
 - UAES governance validator and GitHub Actions workflow added.
+- JSON Schema meta-validation covers 72 active schemas, with a negative control for invalid schema rejection.
+- Agent and skill manifest instance validation is wired to the declared JSON Schemas; agent skill references are cross-checked against the canonical skill registry.
 
 ## Remaining blockers
 
 1. UAES remains DRAFT; no approval or release tag has been granted.
 2. Five architecture check scripts are BLOCKED placeholders; UAES-04 gate is not implemented.
 3. Agent, skill, and workflow runtime discovery has not been proven through real WorkBuddy/Claude Code/Codex task simulations.
-4. JSON Schema semantic validation against a standards-compliant validator is not yet part of CI; current CI checks JSON syntax and manifest fields.
+4. The new JSON Schema and manifest-instance validation is implemented but its latest CI run must pass before it can be treated as verified; instance-level conformance tests for every schema remain future work.
 5. Uter's full test/quality CI is still running or requires its final result; the UAES integration sub-job has passed.
 6. Semantic parity between Uter's local generic standards and UAES has not yet been independently approved.
 
