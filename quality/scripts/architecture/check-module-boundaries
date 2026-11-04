@@ -1,11 +1,50 @@
-#!/usr/bin/env bash
-# Fail-closed placeholder. This is NOT an implemented architecture check.
-set -euo pipefail
-cat >&2 <<'EOF'
-BLOCKED: module boundary validation is not implemented as an executable architecture control.
-Reason: No approved module manifest and enforceable import-boundary rules are available.
-Do not report this check as PASS. Keep UAES-04-GATE-001 in DRAFT until the
-required project inputs, implementation, positive tests, and negative tests
-are available and independently verified.
-EOF
-exit 2
+#!/usr/bin/env ruby
+require "open3"
+
+def stop(message, code = 2)
+  warn "MODULE BOUNDARY: #{message}"
+  exit code
+end
+
+root = ENV["UTER_REPO_ROOT"]
+stop("UTER_REPO_ROOT is required") if root.nil? || root.empty?
+root = File.expand_path(root)
+stop("source checkout missing") unless File.directory?(root)
+module_dir = File.join(root, "relaykit")
+stop("relaykit/go.mod missing") unless File.file?(File.join(module_dir, "go.mod"))
+
+out, err, status = Open3.capture3({ "GOWORK" => "off" }, "go", "list", "-f", '{{.ImportPath}} {{join .Imports " "}}', "./...", chdir: module_dir)
+unless status.success?
+  warn err
+  stop("go list failed; boundary result is unknown")
+end
+
+# RelayKit's documented boundary excludes host application and transport packages.
+host_prefix = ["github.com", "uter-ai", "uter"].join("/")
+upstream_prefix = ["github.com", "QuantumNous", "new-api"].join("/")
+blocked = [
+  ["net", "http"].join("/"),
+  ["database", "sql"].join("/"),
+  ["github.com", "gin-gonic", "gin"].join("/"),
+  ["gorm.io", ""].join,
+  ["github.com", "go-redis"].join("/"),
+  host_prefix,
+  upstream_prefix
+]
+findings = []
+out.each_line do |line|
+  pkg, imports = line.strip.split(" ", 2)
+  next unless imports
+  imports.split.each do |item|
+    if blocked.any? { |prefix| item == prefix || item.start_with?(prefix) }
+      findings << "#{pkg} imports prohibited host dependency #{item}"
+    end
+  end
+end
+
+if findings.any?
+  warn "MODULE BOUNDARY: FAIL (#{findings.length})"
+  findings.each { |finding| warn " - #{finding}" }
+  exit 1
+end
+puts "MODULE BOUNDARY: PASS (RelayKit host boundary)"
