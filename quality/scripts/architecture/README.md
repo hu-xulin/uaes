@@ -31,35 +31,69 @@ ruby quality/scripts/architecture/test-router-openapi-drift.rb
 
 ## CI evidence
 
-Current pinned source: Uter PR #15 head `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
+Pinned source: Uter PR #15 head `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Latest fully successful Architecture Source Checks before the router/OpenAPI checker was added: https://github.com/hu-xulin/uaes/actions/runs/41901973265 (UAES commit `c00435e2d564eb563afb473101c0481ec923620f`). Current Governance Validation passed at `ecf539cf7696e7afec4b57916a8f87a09318bb38`; the current Architecture Source Checks run failed on the initial route inventory because built-in dynamic plugin routes were not yet included. The checker has been corrected; a new run is required before reporting its outcome.
+Latest UAES revision at this evidence refresh: `55a2fb38e4f82ca1cf917c4167699901d3e66187`.
 
-Successful steps:
-- Validate module manifests
-- Validate RelayKit module boundary
-- Run RelayKit boundary positive and negative controls
-- Validate Go module dependency allowlist
-- Run dependency allowlist positive and negative controls
-- Validate OpenAPI contracts and compatibility
-- Run API contract positive and negative controls
-- Validate Go module dependency allowlist
-- Run dependency allowlist positive and negative controls
+- Governance Validation: PASS — https://github.com/hu-xulin/uaes/actions/runs/41906580256
+- Database Migration Dialect Matrix: PASS — https://github.com/hu-xulin/uaes/actions/runs/41906580420
+- Architecture Source Checks: expected blocking failure on the live route/OpenAPI comparison — https://github.com/hu-xulin/uaes/actions/runs/41906580552
 
-The fixture suite covers:
-- Positive: protocol metadata using `net/http` request types without transport APIs is accepted.
-- Negative: SQL dependency is rejected.
-- Negative: HTTP client transport API is rejected.
-- Fail-closed: missing Uter source checkout is rejected.
-- Dependency rules positive: explicitly allowed Root → RelayKit import accepted.
-- Dependency rules negative: unlisted Root → RelayKit import rejected.
+The Architecture Source Checks run completed all preceding checks successfully: module manifests, RelayKit boundary and fixtures, Go module dependency allowlist and fixtures, API contract compatibility and fixtures, database migration inventory integrity, frontend production/test inventory and fixtures, and router/OpenAPI positive/negative fixtures. The final live router comparison correctly failed on the two unresolved documented operations listed below. This is not a green architecture gate.
 
-Observed Uter Go dependency graph: `MOD-GO-ROOT → MOD-RELAYKIT, MOD-TOKENKIT`; no other inter-module edges were reported. The dependency-rule fixture suite completed 2 runs / 4 assertions with 0 failures. The RelayKit boundary fixture suite completed 4 runs / 10 assertions with 0 failures. The API contract suite completed 4 runs / 10 assertions with 0 failures. OpenAPI inventory at the pinned Uter source contains 161 management operations / 8 schemas and 38 relay operations / 52 schemas. The checker detects breaking changes against the baseline; it does not yet prove router implementation drift against OpenAPI or frontend-client type parity.
+### Go module and API evidence
 
-Uter OpenAPI defects found during the audit were corrected in Uter PR #15: duplicate `operationId` on `/v1/images/generations` and `/v1/images/edits`, plus two undefined security scheme aliases in the management OpenAPI document. UAES checks use Uter source commit `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
+Observed Uter Go dependency graph: `MOD-GO-ROOT → MOD-RELAYKIT, MOD-TOKENKIT`; no other inter-module edges were reported. The RelayKit boundary fixture suite completed 4 runs / 10 assertions with 0 failures. The dependency-rule fixture suite completed 2 runs / 4 assertions with 0 failures. The API contract suite completed 4 runs / 10 assertions with 0 failures. OpenAPI inventory at the pinned Uter source contains 161 management operations / 8 schemas and 38 relay operations / 52 schemas.
 
-Database migration inventory integrity is now checked in CI: **20 custom migration steps and 2 manual SQL files** are present and source/function/path/order checks pass. The same job explicitly reports `DATABASE MIGRATION SAFETY: NOT_VERIFIED`; cross-database compatibility and a tested rollback/recovery harness remain NOT_VERIFIED and continue to block architecture-gate acceptance. A separate `Database Migration Dialect Matrix` workflow runs selected migration tests against ephemeral SQLite, MySQL 8.4.4, and PostgreSQL 17.4 databases. The initial run exposed and fixed a PostgreSQL DSN-format issue. The corrected run passed on UAES head `5caa6fa8fa2abda0b1277444f2a6ba78ffbad17c`: `TestMigrationSchemaStability` passed on all three dialects; prefill-group uniqueness passed on SQLite/MySQL/PostgreSQL (including PostgreSQL legacy-index/constraint cases and rollback-on-invalid-schema cases); token-key uniqueness passed on all three dialects; and user-session refresh-hash migration passed on all three dialects. The same matrix passed again on the latest UAES head `46786b573ec210c9c51443d36fe0e89c1019fb6b`: https://github.com/hu-xulin/uaes/actions/runs/41906364062. This remains a selected-path matrix, not full replay of all 20 migration steps, not ClickHouse coverage, and not rollback certification.
+Uter OpenAPI defects found during the audit were corrected in Uter PR #15: duplicate `operationId` values on `/v1/images/generations` and `/v1/images/edits`, plus two undefined security scheme aliases in the management OpenAPI document. The compatibility checker detects breaking changes against the pinned baseline; it does not prove router implementation parity or frontend-client type parity.
 
-Frontend import inventory is now implemented and runs in CI against the pinned Uter checkout. The first scan covered 1,500 TypeScript/JavaScript source files and resolved all alias/relative local imports. Observed edges include `components → features` (18), `hooks → features` (2), `lib → features` (4), `stores → features` (1), and `features → routes` (6); `features → features` (2,809) and `features → components` (1,751) are also substantial. These are evidence of existing cross-layer coupling, not automatically defects. The checker is inventory-only and prints `FRONTEND MODULE BOUNDARIES: NOT_VERIFIED`; the exact dependency policy must be designed around this measured graph, including workspace-level relative imports, before any MUST rule is enforced. `features/` is organized into domain slices such as auth, channels, chat, dashboard, keys, models, and playground.
+### Database migration evidence
 
-Router-to-OpenAPI drift checking captures the real Gin route table in a temporary test and separately reads `jsplugin.DefaultRegistry.Generation().Routes()` so built-in dynamic plugin endpoints are included. The latest completed runtime capture recorded 450 static Gin routes and 34 built-in plugin routes. It reduced the initial seven mismatches to two: `POST /api/oauth/wechat/bind` and `GET /api/verify/status`. The four Kling operations and `POST /jimeng/` are confirmed by the built-in plugin registry and are now correctly covered. The two remaining management operations are absent from the current Gin router registrations: the router exposes WeChat web OAuth flows and `/api/verify/methods` / `/api/verify`, not the documented `/api/oauth/wechat/bind` or `/api/verify/status`. The checker correctly continues to fail rather than silently waiving them. Its positive/negative fixture suite now runs before the live source gate, so known runtime drift cannot skip validation of the checker implementation itself. Resolve by implementing and testing the promised endpoints or by an explicit API-contract owner decision to correct the OpenAPI document; do not remove or waive either operation automatically. The production-only frontend import inventory now reports 1,500+ TS/JS sources with local imports resolved. It separates production and test-only edges and excludes generated route-tree imports. Observed reverse-direction dependencies that should be treated as boundary candidates (not yet automatically forbidden) include: `components → features` (17), `hooks → features` (1), `lib → features` (2), and `stores → features` (1). Concrete examples include `components/ErrorBoundary.tsx → features/errors/general-error`, `components/layout/components/chat-presets-item.tsx → features/chat/*`, `hooks/use-status.ts → features/auth/types`, `lib/auth-session.ts` / `lib/oauth.ts → features/auth/*`, and `stores/auth-store.ts → features/auth/secure-verification/types`. Some may be legitimate type-only/shared contracts; the next step is to classify each and extract shared contracts where appropriate before enforcing a rule. The latest CI run on `5caa6fa8fa2abda0b1277444f2a6ba78ffbad17c` confirms the same 450 + 34 inventory and fails only on those two operations; the route checker positive/negative fixture suite passes before the live gate. The frontend scanner reports 1,500 source files (1,217 production, 282 test, 1 generated), with 2 generated imports excluded. Its complete production graph still contains the 21 reverse-direction edges listed above. The documented operations have no `operationId`, so the diagnostic reports method/path. Source inspection confirms `router/api-router.go` registers WeChat web OAuth endpoints (`/oauth/wechat-web/*`) but no `/oauth/wechat/bind`; current verification routes include `/verify/methods` and `/verify`, but no `/verify/status`. This is not an implementation bug that can be safely patched by guessing semantics: the contract owner must decide whether these endpoints are still promised API surface. Until then, the check remains a deliberate blocker. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
+The inventory integrity check covers **20 custom migration steps and 2 manual SQL files**, including source/function/path/order validation. It explicitly reports `DATABASE MIGRATION SAFETY: NOT_VERIFIED`.
+
+The selected dialect matrix passed on SQLite, MySQL 8.4.4, and PostgreSQL 17.4 in the latest run above:
+- `TestMigrationSchemaStability` passed on all three dialects.
+- Prefill-group uniqueness migration passed on all three, including PostgreSQL legacy-index/constraint and invalid-schema rollback cases.
+- Token-key uniqueness migration passed on all three, including PostgreSQL legacy/invalid constraint cases.
+- User-session previous-refresh-hash migration passed on all three.
+
+This is not full replay of all 20 migration steps, not ClickHouse log-database coverage, and not full rollback/recovery certification. Migration safety remains NOT_VERIFIED.
+
+### Frontend production dependency evidence
+
+The scanner covers **1,500 source files**: 1,217 production, 282 test, and 1 generated source; it excludes 2 imports targeting generated route-tree files. All scanned local alias/relative imports resolved.
+
+Production dependency edge counts include:
+- `components → features`: 17
+- `hooks → features`: 1
+- `lib → features`: 2
+- `stores → features`: 1
+- `routes → features`: 100 (expected route-to-feature composition; not classified as a reverse-layer violation)
+- `features → components`: 1,743
+- `features → features`: 2,309
+
+The 21 imports from lower-level/shared folders into feature slices are captured as candidates, not automatically declared violations:
+- `components/ErrorBoundary.tsx → features/errors/general-error`
+- `components/language-switcher.tsx → features/profile/lib/format`
+- `components/layout/components/app-header.tsx` and `public-header.tsx → features/system-update/system-update-action`
+- `components/layout/components/chat-presets-item.tsx → features/chat/*`
+- `components/layout/config/system-settings.config.ts → features/system-settings/*/section-registry` (8 imports)
+- `components/sign-out-dialog.tsx → features/auth/api`
+- `hooks/use-status.ts → features/auth/types`
+- `lib/auth-session.ts → features/auth/lib/auth-redirect`
+- `lib/oauth.ts → features/auth/types`
+- `stores/auth-store.ts → features/auth/secure-verification/types`
+
+Routes importing feature slices are normal route composition and should not be blocked by a blanket rule. The next step is to classify the 21 lower-level-to-feature imports by runtime/type-only dependency and responsibility, identify shared contracts, and propose an explicit app-shell/composition boundary. No boundary enforcement has been enabled; `FRONTEND MODULE BOUNDARIES` remains `NOT_VERIFIED`.
+
+### Router / OpenAPI runtime evidence
+
+The runtime capture records **450 static Gin routes and 34 built-in dynamic plugin routes**. The route checker fixture suite passes before the live gate, including parameter routes, catch-all routes, missing-operation rejection, and method mismatch rejection.
+
+The live comparison still reports exactly two documented operations with no matching runtime route:
+- `POST /api/oauth/wechat/bind`
+- `GET /api/verify/status`
+
+Source inspection confirms that the current router exposes WeChat web OAuth routes under `/oauth/wechat-web/*`, not `/oauth/wechat/bind`; verification routes include `/verify/methods` and `/verify`, not `/verify/status`. These are contract-owner decisions: implement and test the promised endpoints, or explicitly revise the API contract after confirming intended behavior. Do not add speculative handlers, delete operations, or add waivers just to make CI green.
+
+Keep UAES-04-GATE-001 in DRAFT until remaining controls and contract decisions are completed and independently verified.
