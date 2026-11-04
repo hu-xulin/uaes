@@ -55,3 +55,8 @@ jobs:
       - name: Run API contract positive and negative controls
         working-directory: uaes
         run: ruby quality/scripts/architecture/test-api-contracts.rb
+      - name: Validate database migration inventory integrity (not rollback acceptance)
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-database-migrations
