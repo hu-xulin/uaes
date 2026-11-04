@@ -6,7 +6,10 @@
   "owner": "UAES Engineering Governance",
   "status": "DRAFT",
   "runtime": "tool-adapter-selected",
-  "skillRefs": [],
+  "skillRefs": [
+    "SKILL-UAES-AUTO-FIX",
+    "SKILL-UAES-TEST-ENGINEERING"
+  ],
   "toolRefs": [],
   "inputContract": ".uaes/schemas/agent-task.schema.json",
   "outputContract": ".uaes/schemas/agent-result.schema.json",
