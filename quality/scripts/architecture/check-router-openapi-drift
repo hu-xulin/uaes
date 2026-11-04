@@ -143,17 +143,19 @@ documents.each do |relative|
       if operation_covered?(routes, verb, path)
         covered += 1
       else
-        errors << "#{relative}: undocumented runtime route for #{verb} #{path}"
+        operation_id = operation.is_a?(Hash) ? operation["operationId"] : nil
+        suffix = operation_id && !operation_id.empty? ? " (operationId=#{operation_id})" : ""
+        errors << "#{relative}: documented operation has no matching runtime route: #{verb} #{path}#{suffix}"
       end
     end
   end
 end
 
 unless errors.empty?
-  warn "ROUTER OPENAPI DRIFT: FAIL (#{errors.length} documented operations missing from runtime Gin route table)"
+  warn "ROUTER OPENAPI DRIFT: FAIL (#{errors.length} documented operations have no matching static Gin or built-in plugin route)"
   errors.each { |error| warn " - #{error}" }
   exit 1
 end
 
-puts "ROUTER OPENAPI DRIFT: PASS (#{covered} documented operations covered by #{routes.length} runtime Gin routes)"
+puts "ROUTER OPENAPI DRIFT: PASS (#{covered} documented operations covered by #{routes.length} static Gin and built-in plugin routes)"
 puts "ROUTER OPENAPI SCOPE: static Gin routes and the active built-in plugin generation are included; host protocol routes are included"
