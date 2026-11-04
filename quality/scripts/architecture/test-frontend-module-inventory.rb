@@ -30,6 +30,8 @@ class FrontendModuleInventoryTest < Minitest::Test
     assert_match(/main.tsx -> routes: 1/, out)
     assert_match(/routes -> features: 1/, out)
     assert_match(/features -> lib: 1/, out)
+    assert_match(/FRONTEND MODULE EDGE SAMPLES:/, out)
+    assert_match(/features\/auth\/sign-in.tsx -> @\/lib\/shared/, out)
     assert_match(/FRONTEND MODULE BOUNDARIES: NOT_VERIFIED/, out)
   ensure
     FileUtils.remove_entry(root) if root && File.exist?(root)
