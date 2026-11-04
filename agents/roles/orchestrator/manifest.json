@@ -8,7 +8,10 @@
   "runtime": "tool-adapter-selected",
   "skillRefs": [
     "SKILL-UAES-COMPLIANCE-AUDIT",
-    "SKILL-UAES-UTER-INTEGRATION"
+    "SKILL-UAES-UTER-INTEGRATION",
+    "SKILL-UAES-CODE-REVIEW",
+    "SKILL-UAES-TEST-ENGINEERING",
+    "SKILL-UAES-SECURITY-AUDIT"
   ],
   "toolRefs": [],
   "inputContract": ".uaes/schemas/agent-task.schema.json",
