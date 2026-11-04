@@ -68,11 +68,13 @@ jobs:
       - name: Run frontend import inventory positive and negative controls
         working-directory: uaes
         run: ruby quality/scripts/architecture/test-frontend-module-inventory.rb
+      # Fixture controls run before the live source gate so known live drift
+      # does not prevent the checker itself from receiving positive/negative tests.
+      - name: Run router/OpenAPI drift positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-router-openapi-drift.rb
       - name: Validate runtime Gin routes against OpenAPI operations
         working-directory: uaes
         env:
           UTER_REPO_ROOT: ${{ github.workspace }}/uter
         run: ruby quality/scripts/architecture/check-router-openapi-drift
-      - name: Run router/OpenAPI drift positive and negative controls
-        working-directory: uaes
-        run: ruby quality/scripts/architecture/test-router-openapi-drift.rb
