@@ -1,6 +1,6 @@
 version: "1.0.0"
 source_repository: hu-xulin/uter
-source_commit: "442ddb5a7c234f2ee2d78651e0882407e9371c91"
+source_commit: "682bb73d728115fc8201e64b0fefddce14c2592d"
 migration_system:
   main_database: "GORM AutoMigrate plus ordered custom migration functions"
   log_database: "MigrateAuditLogs plus ClickHouse native DDL or GORM AutoMigrate"
