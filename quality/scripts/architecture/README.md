@@ -74,7 +74,7 @@ Production dependency edge counts include:
 - `features → components`: 1,743
 - `features → features`: 2,309
 
-The 21 imports from lower-level/shared folders into feature slices are captured as candidates, not automatically declared violations:
+The 21 imports from lower-level/shared folders into feature slices are captured as candidates, not automatically declared violations. The per-edge classifier reports 18 runtime imports and 3 type-only imports (17 runtime from components; 1 type-only from hooks; 1 runtime + 1 type-only from lib; 1 type-only from stores). Global production totals are 5,444 runtime, 518 type-only, and 16 dynamic imports; test-only totals are 698 runtime, 104 type-only, and 33 dynamic. Fixture controls for explicit type imports, inline type-only named imports, type re-exports, runtime imports, dynamic imports, and generated-file exclusion pass in [Architecture Source Checks run 41908683621](https://github.com/hu-xulin/uaes/actions/runs/41908683621). These counts are diagnostic, not compliance acceptance. The imports are:
 - `components/ErrorBoundary.tsx → features/errors/general-error`
 - `components/language-switcher.tsx → features/profile/lib/format`
 - `components/layout/components/app-header.tsx` and `public-header.tsx → features/system-update/system-update-action`
