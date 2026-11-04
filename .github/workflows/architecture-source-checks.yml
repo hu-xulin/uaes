@@ -52,3 +52,6 @@ jobs:
         env:
           UTER_REPO_ROOT: ${{ github.workspace }}/uter
         run: ruby quality/scripts/architecture/check-api-contracts
+      - name: Run API contract positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-api-contracts.rb
