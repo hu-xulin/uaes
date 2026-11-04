@@ -19,7 +19,7 @@
 
 - Root AGENTS.md and CLAUDE.md populated.
 - Five tool-specific bootstrap adapters populated.
-- Canonical skills, machine manifests, skill registry, and Claude/Agents runtime adapters added.
+- Eight canonical skills, machine manifests, skill registry, and Claude/Agents runtime adapters added.
 - Eleven agent role manifests and a default evaluation profile added.
 - Five workflow definitions and a workflow registry added.
 - P00 AI Engineering Execution Model populated.
