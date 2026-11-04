@@ -138,6 +138,12 @@ documents.each do |relative_path, old_contract|
       errors << "#{relative_path}: #{key} added required request-body field #{field}"
     end
 
+    old_refs = Array(old_op["responseSchemaRefs"])
+    new_refs = collect_refs(operation["responses"] || {})
+    (old_refs - new_refs).each do |ref|
+      errors << "#{relative_path}: #{key} removed response schema reference #{ref}"
+    end
+
     old_codes = Array(old_op["responseCodes"])
     new_codes = Array(operation["responses"]&.keys)
     (old_codes - new_codes).each do |code|
