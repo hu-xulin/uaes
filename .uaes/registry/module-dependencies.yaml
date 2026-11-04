@@ -2,7 +2,7 @@
 # Module ownership is resolved by the longest matching module_path prefix.
 version: "1.0.0"
 source_repository: REPO-UTER
-source_commit: "24a7d9a4f6525134c5fa8c2a6a2cf076e25cfacc"
+source_commit: "a79780810d02f775699138cd36b9ac050abb4bd0"
 modules:
   MOD-GO-ROOT:
     allowed_internal_dependencies:
