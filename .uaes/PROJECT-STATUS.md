@@ -10,6 +10,7 @@
 - Registered domain range: P00–P12 (13 domains).
 - Registry lifecycle: DRAFT.
 - All 278 registered file references exist and are non-empty.
+- Tracked empty files: 49 intentional `.gitkeep` placeholders; 0 empty non-placeholder files.
 - Registry entry IDs: 279; duplicate IDs: 0.
 - Phase keys and phase values are normalized to P00–P12.
 - UAES governance CI passed on the remediation branch: 798 integrity checks recorded; no registry, manifest, adapter, or registered-file integrity errors.
