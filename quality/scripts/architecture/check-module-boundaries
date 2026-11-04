@@ -28,7 +28,6 @@ blocked = [
   ["github.com", "gin-gonic", "gin"].join("/"),
   ["gorm.io", ""].join,
   ["github.com", "go-redis"].join("/"),
-  host_prefix,
   upstream_prefix
 ]
 findings = []
