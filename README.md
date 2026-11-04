@@ -70,6 +70,8 @@ node quality/scripts/design-system/verify-import.mjs
 
 ## 五、当前状态
 
+> 本 README 的历史文件数量统计与设计系统导入结论不是当前审计证据；必须以当前分支的自动化 inventory、实际门禁运行和可追溯报告为准。
+
 - 注册表 `v1.7.0 / DRAFT`；`verify-import` 10 项检查 **0 FAIL**。
 - **P05 验收仍 BLOCKED**：组件契约缺 9 个必填字段（65 个组件）、品牌主色变更无正式审批、视觉回归 / axe / 键盘焦点检查未关闭、产品仓 CI 未执行。
-- 本仓库未配置远端，未推送任何内容。
+- 当前 GitHub 默认分支已包含 UAES 文件与提交；原“未配置远端、未推送”表述已过期。README 中的文件数量统计尚未由本次审计重新计数，应以自动化 inventory 报告为准。
