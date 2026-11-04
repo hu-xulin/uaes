@@ -10,7 +10,7 @@
 
 This proposal turns the measured TypeScript/JavaScript import graph into a reviewable dependency policy. It does not move files, alter runtime behavior, or reject the existing graph yet. No boundary MUST rule may be enforced until the affected imports are classified, ownership is agreed, and migration PRs have regression evidence.
 
-The current scanner resolves local alias and relative imports, separates production and test-only edges, excludes generated route-tree files, and fails closed on unresolved local imports. It is an inventory tool, not a semantic TypeScript dependency analyzer: it does not currently distinguish type-only imports from runtime imports, parse package/workspace boundaries comprehensively, or infer dependency inversion.
+The current scanner resolves local alias and relative imports, separates production and test-only edges, excludes generated route-tree files, and fails closed on unresolved local imports. It is an inventory tool, not a full TypeScript AST or semantic dependency analyzer. It classifies static runtime, explicit/type-modifier-only, and dynamic imports per edge using syntax-aware Ruby patterns, but it does not resolve TypeScript symbols, infer type erasure for every syntax form, parse package/workspace boundaries comprehensively, or infer dependency inversion.
 
 ## 2. Measured baseline
 
@@ -27,6 +27,14 @@ The pinned scan contains 1,500 source files: 1,217 production, 282 test, and 1 g
 | `features → features` | 2,309 | Domain coupling; requires public-entrypoint and cross-feature contract review |
 
 The 21 lower-level-to-feature imports are listed in section 3. Counts are import edges, not necessarily unique source files or unique target modules.
+
+The per-edge classifier passed its positive/negative fixture suite on the pinned source. It classified the 21 reverse-direction imports as **18 runtime imports and 3 type-only imports**:
+- `components → features`: 17 runtime
+- `hooks → features`: 1 type-only
+- `lib → features`: 1 runtime and 1 type-only
+- `stores → features`: 1 type-only
+
+Global production import-kind totals in the same run: 5,444 runtime, 518 type-only, and 16 dynamic. Test-only totals: 698 runtime, 104 type-only, and 33 dynamic. These totals are diagnostic counts, not policy acceptance.
 
 ## 3. Reverse-edge classification register
 
@@ -88,7 +96,7 @@ The actual directory structure may not match these logical layers one-to-one. A 
 
 ## 6. Migration and acceptance sequence
 
-1. Add semantic import classification to the inventory tool (type-only, runtime, dynamic, re-export); keep existing output stable.
+1. Continue hardening the per-edge import-kind classifier with fixtures for mixed imports, namespace imports, re-exports, import assertions, and parser edge cases; current syntax-aware runtime/type-only/dynamic classification is implemented and fixture-tested.
 2. Add fixture coverage for type-only imports, re-exports, dynamic imports, workspace-relative imports, generated imports and unresolved imports.
 3. Create neutral auth/system contract modules and migrate the three-way auth type cycle with targeted tests.
 4. Move app-shell composition out of generic `components/` where appropriate; retain generic visual primitives in shared components.
