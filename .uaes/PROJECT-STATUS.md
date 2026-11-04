@@ -13,7 +13,7 @@
 - Tracked empty files: 49 intentional `.gitkeep` placeholders; 0 empty non-placeholder files.
 - Registry entry IDs: 279; duplicate IDs: 0.
 - Phase keys and phase values are normalized to P00–P12.
-- UAES governance CI passed on the remediation branch: 798 integrity checks recorded; no registry, manifest, adapter, or registered-file integrity errors.
+- Latest UAES governance CI passed: registry/reference validation, 72 JSON Schema meta-schema checks, 8 skill manifest instances, 11 agent manifest instances, global registry instance validation, and cross-checking agent skill references.
 
 ## Current remediation completed
 
@@ -35,7 +35,7 @@
 1. UAES remains DRAFT; no approval or release tag has been granted.
 2. Five architecture check scripts are BLOCKED placeholders; UAES-04 gate is not implemented.
 3. Agent, skill, and workflow runtime discovery has not been proven through real WorkBuddy/Claude Code/Codex task simulations.
-4. The new JSON Schema and manifest-instance validation is implemented but its latest CI run must pass before it can be treated as verified; instance-level conformance tests for every schema remain future work.
+4. JSON Schema meta-validation and registered agent/skill manifest instance validation pass in CI; exhaustive instance-level conformance tests for every domain schema remain future work.
 5. Uter's full test/quality CI is still running or requires its final result; the UAES integration sub-job has passed.
 6. Semantic parity between Uter's local generic standards and UAES has not yet been independently approved.
 
