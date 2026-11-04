@@ -15,7 +15,7 @@ class FrontendModuleInventoryTest < Minitest::Test
     FileUtils.mkdir_p(File.join(src, "routes"))
     FileUtils.mkdir_p(File.join(src, "features", "auth"))
     FileUtils.mkdir_p(File.join(src, "lib"))
-    File.write(File.join(src, "main.tsx"), "import '@/lib/shared'\nimport './routes/root'\n")
+    File.write(File.join(src, "main.tsx"), "import '@/lib/shared'\nimport './routes/root'\nimport './routeTree.gen'\n")
     File.write(File.join(src, "lib/shared.ts"), "export const shared = true\n")
     File.write(File.join(src, "routes/root.tsx"), "import '@/features/auth/sign-in'\n")
     File.write(File.join(src, "features/auth/sign-in.tsx"), "import '@/lib/shared'\n")
@@ -37,7 +37,7 @@ class FrontendModuleInventoryTest < Minitest::Test
     assert_match(/features\/auth\/sign-in.tsx -> @\/lib\/shared/, out)
     assert_match(/FRONTEND MODULE TEST-ONLY EDGES:/, out)
     assert_match(/features -> routes: 1/, out)
-    assert_match(/FRONTEND MODULE GENERATED IMPORTS EXCLUDED: 0/, out)
+    assert_match(/FRONTEND MODULE GENERATED IMPORTS EXCLUDED: 1/, out)
     refute_match(/sign-in\.test\.ts -> @\/routes\/root/, out)
     assert_match(/FRONTEND MODULE BOUNDARIES: NOT_VERIFIED/, out)
   ensure
