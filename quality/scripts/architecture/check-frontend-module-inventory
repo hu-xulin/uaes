@@ -37,6 +37,7 @@ files = SOURCE_GLOBS.flat_map { |glob| Dir.glob(File.join(src, glob)) }.uniq.sor
 stop("no frontend source files discovered") if files.empty?
 
 edges = Hash.new(0)
+edge_samples = Hash.new { |hash, key| hash[key] = [] }
 unresolved = []
 files.each do |file|
   content = File.read(file)
@@ -57,7 +58,13 @@ files.each do |file|
     else
       to = "$workspace/#{Pathname.new(target).relative_path_from(Pathname.new(src))}"
     end
-    edges[[from, to]] += 1
+    edge_key = [from, to]
+    edges[edge_key] += 1
+    if from != to && edge_samples[edge_key].length < 8
+      importer_relative = file.delete_prefix(src + File::SEPARATOR)
+      target_relative = target.start_with?(src + File::SEPARATOR) ? target.delete_prefix(src + File::SEPARATOR) : Pathname.new(target).relative_path_from(Pathname.new(src)).to_s
+      edge_samples[edge_key] << "#{importer_relative} -> #{specifier} => #{target_relative}"
+    end
   end
 end
 
@@ -70,4 +77,9 @@ end
 puts "FRONTEND MODULE INVENTORY: PASS (#{files.length} source files; all alias/relative imports resolved)"
 puts "FRONTEND MODULE EDGES:"
 edges.sort.each { |(from, to), count| puts "  #{from} -> #{to}: #{count}" }
+puts "FRONTEND MODULE EDGE SAMPLES:"
+edge_samples.sort.each do |(from, to), samples|
+  puts "  #{from} -> #{to}:"
+  samples.each { |sample| puts "    #{sample}" }
+end
 puts "FRONTEND MODULE BOUNDARIES: NOT_VERIFIED (inventory only; dependency policy requires review)"
