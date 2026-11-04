@@ -1,0 +1,25 @@
+{
+  "skillId": "SKILL-UAES-AUTOMATED-TESTING",
+  "name": "uaes-automated-testing",
+  "version": "1.0.0",
+  "owner": "UAES Engineering Governance",
+  "status": "DRAFT",
+  "inputSchema": ".uaes/schemas/ai-task.schema.json",
+  "outputSchema": ".uaes/schemas/quality-report.schema.json",
+  "dependencies": [
+    "UAES-06",
+    "UAES-09",
+    "UAES-10"
+  ],
+  "toolRefs": [],
+  "sideEffects": "REVERSIBLE_WRITE",
+  "execution": {
+    "timeoutSeconds": 3600,
+    "retryLimit": 0,
+    "idempotent": false
+  },
+  "authorizationRefs": [
+    "UAES-01-002",
+    "UAES-01-003"
+  ]
+}
