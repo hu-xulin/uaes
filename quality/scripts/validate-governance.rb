@@ -80,22 +80,15 @@ end
 end
 CHECKS << "registered paths and schema JSON syntax inspected"
 
-agents = read_yaml("agents/registry.yaml")
-Array(agents["agents"]).each do |agent|
-  manifest_path = agent["manifest"]
-  next unless require_nonempty(manifest_path, "agent manifest #{manifest_path}")
-  manifest = read_json(manifest_path)
-  %w[agentId name version role owner status skillRefs toolRefs inputContract outputContract authorizationRefs evaluationProfile].each do |key|
-    check(manifest.key?(key), "#{manifest_path} includes #{key}")
-  end
-  require_nonempty(manifest["inputContract"]) if manifest["inputContract"]
-  require_nonempty(manifest["outputContract"]) if manifest["outputContract"]
-  require_nonempty(manifest["evaluationProfile"]) if manifest["evaluationProfile"]
-  Array(manifest["authorizationRefs"]).each { |p| require_nonempty(p) }
-end
-
 skills = read_yaml("skills/registry.yaml")
-Array(skills["skills"]).each do |skill|
+skill_entries = Array(skills["skills"])
+skill_ids = skill_entries.map { |skill| skill["id"] }
+skill_names = skill_entries.map { |skill| skill["name"] }
+check(skill_ids.uniq.length == skill_ids.length, "skill registry IDs must be unique")
+check(skill_names.uniq.length == skill_names.length, "skill registry names must be unique")
+known_skill_ids = skill_ids.to_set
+
+skill_entries.each do |skill|
   skill_path = skill["skill"]
   manifest_path = skill["manifest"]
   require_nonempty(skill_path, "skill contract #{skill_path}")
@@ -104,12 +97,32 @@ Array(skills["skills"]).each do |skill|
   %w[skillId name version owner status inputSchema outputSchema sideEffects execution authorizationRefs].each do |key|
     check(manifest.key?(key), "#{manifest_path} includes #{key}")
   end
+  check(manifest["skillId"] == skill["id"], "#{manifest_path} skillId matches registry ID")
+  check(manifest["name"] == skill["name"], "#{manifest_path} name matches registry name")
+  check(manifest["sideEffects"] == skill["sideEffects"], "#{manifest_path} sideEffects matches registry")
   require_nonempty(manifest["inputSchema"]) if manifest["inputSchema"]
   require_nonempty(manifest["outputSchema"]) if manifest["outputSchema"]
   check(%w[NONE READ_ONLY REVERSIBLE_WRITE EXTERNAL_WRITE IRREVERSIBLE].include?(manifest["sideEffects"]), "#{manifest_path} sideEffects is valid")
   name = skill["name"]
   require_nonempty(".claude/skills/#{name}/SKILL.md", "Claude skill adapter #{name}")
   require_nonempty(".agents/skills/#{name}/SKILL.md", "Agents skill adapter #{name}")
+end
+
+agents = read_yaml("agents/registry.yaml")
+Array(agents["agents"]).each do |agent|
+  manifest_path = agent["manifest"]
+  next unless require_nonempty(manifest_path, "agent manifest #{manifest_path}")
+  manifest = read_json(manifest_path)
+  Array(manifest["skillRefs"]).each do |skill_id|
+    check(known_skill_ids.include?(skill_id), "#{manifest_path} skillRef #{skill_id} exists in skill registry")
+  end
+  %w[agentId name version role owner status skillRefs toolRefs inputContract outputContract authorizationRefs evaluationProfile].each do |key|
+    check(manifest.key?(key), "#{manifest_path} includes #{key}")
+  end
+  require_nonempty(manifest["inputContract"]) if manifest["inputContract"]
+  require_nonempty(manifest["outputContract"]) if manifest["outputContract"]
+  require_nonempty(manifest["evaluationProfile"]) if manifest["evaluationProfile"]
+  Array(manifest["authorizationRefs"]).each { |p| require_nonempty(p) }
 end
 
 workflows = read_yaml("workflows/registry.yaml")
