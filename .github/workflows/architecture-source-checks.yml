@@ -47,3 +47,8 @@ jobs:
       - name: Run dependency allowlist positive and negative controls
         working-directory: uaes
         run: ruby quality/scripts/architecture/test-dependency-rules.rb
+      - name: Validate OpenAPI contracts and compatibility
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-api-contracts
