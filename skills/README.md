@@ -21,13 +21,13 @@ Each registered skill MUST provide:
 
 The single source of truth is [registry.yaml](registry.yaml). Each entry points to a canonical `<skill-name>/SKILL.md` and a machine-readable `manifest.json`.
 
-Current registered skill contracts:
+Current registered skill contracts (8 total):
 
 - `uaes-compliance-audit` — read-only compliance and enforcement audit.
 - `uaes-standard-authoring` — author and revise standards under governance controls.
 - `uaes-uter-integration` — integrate UAES into Uter without deleting project overlays.
 - `uaes-code-review` — evidence-based, read-only code review.
-- `uaes-automated-testing` — design and execute deterministic tests.
+- `uaes-test-engineering` — design and execute deterministic tests, including race, security, visual, and regression testing.
 - `uaes-auto-fix` — authorized, isolated, reversible defect repair.
 
 Security audit and design-system audit are future candidates, not registered skills, until their contracts and manifests are added to the registry.
