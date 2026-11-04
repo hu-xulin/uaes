@@ -1,0 +1,30 @@
+name: UAES Governance Validation
+
+on:
+  push:
+    branches: [main, "ai/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uaes-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  governance:
+    name: Registry, manifests, and references
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@13e1bb4f0e9b1e18a4cce2b74c6e17e7c4b4b5c3 # v1.226.0
+        with:
+          ruby-version: "3.3"
+      - name: Validate UAES registries and manifests
+        run: ruby quality/scripts/validate-governance.rb
