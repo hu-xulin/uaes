@@ -19,7 +19,7 @@ Each skill MUST provide:
 
 ## Registered skills
 
-See [REGISTRY.yaml](REGISTRY.yaml). Each registered skill is stored at `<skill-name>/SKILL.md`.
+See [registry.yaml](REGISTRY.yaml). Each registered skill is stored at `<skill-name>/SKILL.md`.
 
 ## Runtime adapters
 
