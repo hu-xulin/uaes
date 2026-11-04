@@ -6,7 +6,8 @@
 #
 # Registry: .uaes/STANDARD-REGISTRY.yaml
 # System: UTER AI Engineering Standard
-# Version: 1.0.0
+# Registry schema version: 1.0.0
+# Registry content version: 1.7.0
 # Scope: P00 - P12 (domains 00-12; all 13 domains registered, see history 1.7.0)
 # Build depth: enterprise
 # Delivery mode: all
@@ -50,6 +51,7 @@ registry:
     script_directory: "quality/scripts/"
     acceptance_directory: "quality/acceptance/"
     report_directory: "reports/"
+    skill_registry: "skills/REGISTRY.yaml"
     decision_directory: "architecture/decisions/"
 
     rules:
@@ -109,7 +111,7 @@ phases:
       - "Global acceptance baseline"
 
   P1:
-    name: "AI Governance and Knowledge Engineering"
+    name: "AI Governance"
     description: "AI behavior governance, execution permissions, project knowledge and decision traceability."
     status: "DRAFT"
     provenance: "PARTIALLY_RECOVERED_AND_RECONSTRUCTED"
@@ -219,7 +221,7 @@ phases:
   # P6: AI Agent Engineering
   # ---------------------------------------------------------------------------
 
-  P6:
+  P8:
     name: "AI Agent Engineering"
     description: "AI agent engineering governance: agent identity, lifecycle, task planning, tool registry, permissions, context and memory, multi-agent orchestration, handoff, skills and workflows, evaluation, security trust boundaries, and failure recovery."
     status: "DRAFT"
@@ -248,13 +250,13 @@ phases:
   # P10: Security & Reliability Engineering
   # ---------------------------------------------------------------------------
 
-  P06:
+  P6:
     name: "Software Engineering"
     description: "Coding principles, repository structure, language-specific engineering (Go/TypeScript/React/Electron), error handling, configuration, code review and performance engineering."
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
-  P09:
+  P9:
     name: "Quality Engineering"
     description: "Quality model, code review, test strategy and levels, visual/accessibility/performance/security testing, test data, flaky-test maintenance, coverage, defect and regression management, quality reporting."
     status: "DRAFT"
