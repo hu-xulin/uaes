@@ -4,7 +4,7 @@ This directory contains canonical, tool-independent skill contracts. A skill des
 
 ## Skill contract
 
-Each skill MUST provide:
+Each registered skill MUST provide:
 
 1. YAML frontmatter with a stable `name` and concise `description`.
 2. Purpose and trigger conditions.
@@ -19,10 +19,21 @@ Each skill MUST provide:
 
 ## Registered skills
 
-See [registry.yaml](REGISTRY.yaml). Each registered skill is stored at `<skill-name>/SKILL.md`.
+The single source of truth is [registry.yaml](registry.yaml). Each entry points to a canonical `<skill-name>/SKILL.md` and a machine-readable `manifest.json`.
 
-Current canonical skills include compliance audit, standard authoring, Uter integration, code review, test engineering, auto-fix, security audit, and design-system audit.
+Current registered skill contracts:
+
+- `uaes-compliance-audit` — read-only compliance and enforcement audit.
+- `uaes-standard-authoring` — author and revise standards under governance controls.
+- `uaes-uter-integration` — integrate UAES into Uter without deleting project overlays.
+- `uaes-code-review` — evidence-based, read-only code review.
+- `uaes-automated-testing` — design and execute deterministic tests.
+- `uaes-auto-fix` — authorized, isolated, reversible defect repair.
+
+Security audit and design-system audit are future candidates, not registered skills, until their contracts and manifests are added to the registry.
 
 ## Runtime adapters
 
-The canonical contracts are tool-independent. Claude Code, Codex, WorkBuddy, and other agents may expose adapter files in their native skill directories, but adapters MUST reference the canonical contract rather than fork its normative content. Runtime availability must be tested in the target agent; merely storing a Markdown file does not prove that an agent automatically discovers or executes it.
+Canonical contracts are tool-independent. Claude Code and Agents Runtime adapters live under `.claude/skills/` and `.agents/skills/`. Adapters MUST point to the canonical contract rather than fork its normative content.
+
+Runtime availability must be tested in the target agent; merely storing a Markdown file does not prove that an agent automatically discovers or executes it. The default permission effect is deny. A skill cannot grant tool access or side effects beyond the governing authorization policy.
