@@ -50,6 +50,13 @@ Run the governance integrity validator:
 ruby quality/scripts/validate-governance.rb
 ```
 
+Validate canonical skill runtime adapters (static discovery-contract integrity only):
+
+```bash
+ruby quality/scripts/agents/test-skill-runtime-adapters.rb
+ruby quality/scripts/agents/check-skill-runtime-adapters.rb
+```
+
 Validate active JSON Schemas (Python 3.12+):
 
 ```bash
