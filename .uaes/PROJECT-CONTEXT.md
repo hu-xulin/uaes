@@ -17,7 +17,7 @@ The Uter repository's root engineering instructions and module manifests identif
 - Databases: SQLite, MySQL, PostgreSQL; separately configured log database supports ClickHouse.
 - Cache: Redis and in-memory cache.
 - Desktop: Electron.
-- Go modules include the root module, `relaykit`, and `tokenkit`; nested modules must be discovered from actual `go.mod` files rather than assumed.
+- Four Go module manifests were verified: `go.mod`, `relaykit/go.mod`, `tokenkit/go.mod`, and `tokenkit/tokenkit/go.mod`.
 
 ## Business and risk context
 
