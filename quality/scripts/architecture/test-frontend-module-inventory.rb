@@ -27,7 +27,7 @@ class FrontendModuleInventoryTest < Minitest::Test
     out, err, status = Open3.capture3({ "UTER_REPO_ROOT" => root }, RbConfig.ruby, CHECKER)
     assert status.success?, err
     assert_match(/FRONTEND MODULE INVENTORY: PASS/, out)
-    assert_match(/main -> routes: 1/, out)
+    assert_match(/main.tsx -> routes: 1/, out)
     assert_match(/routes -> features: 1/, out)
     assert_match(/features -> lib: 1/, out)
     assert_match(/FRONTEND MODULE BOUNDARIES: NOT_VERIFIED/, out)
