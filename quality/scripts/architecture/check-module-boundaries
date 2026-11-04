@@ -40,6 +40,13 @@ out.each_line do |line|
   end
 end
 
+# net/http is used for metadata and standard status constants; forbid actual transport APIs.
+transport_api = /http\\.(Client|DefaultClient|DefaultTransport|NewRequest|NewRequestWithContext|ListenAndServe|ListenAndServeTLS|Serve|ServeTLS|ResponseWriter|Server)/
+Dir.glob(File.join(module_dir, "**", "*.go")).each do |source|
+  if File.read(source).match?(transport_api)
+    findings << "#{source.delete_prefix(root + File::SEPARATOR)} uses net/http transport API"
+  end
+end
 if findings.any?
   warn "MODULE BOUNDARY: FAIL (#{findings.length})"
   findings.each { |finding| warn " - #{finding}" }
