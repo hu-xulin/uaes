@@ -1,0 +1,20 @@
+{
+  "agentId": "AGENT-SECURITY-AUDITOR",
+  "name": "Security Audit Agent",
+  "version": "1.0.0",
+  "role": "SECURITY_ANALYST",
+  "owner": "UAES Engineering Governance",
+  "status": "DRAFT",
+  "runtime": "tool-adapter-selected",
+  "skillRefs": [
+    "SKILL-UAES-COMPLIANCE-AUDIT"
+  ],
+  "toolRefs": [],
+  "inputContract": ".uaes/schemas/agent-task.schema.json",
+  "outputContract": ".uaes/schemas/agent-result.schema.json",
+  "authorizationRefs": [
+    "agents/policies/default-permission-policy.yaml"
+  ],
+  "evaluationProfile": "agents/evaluation-profiles/default.yaml",
+  "dependencies": []
+}
