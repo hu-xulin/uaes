@@ -24,9 +24,9 @@ ruby quality/scripts/architecture/test-dependency-rules.rb
 
 ## CI evidence
 
-Pinned source: Uter commit `24a7d9a4f6525134c5fa8c2a6a2cf076e25cfacc`.
+Current pinned source: Uter PR #15 head `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Latest Architecture Source Checks: **PASS** — https://github.com/hu-xulin/uaes/actions/runs/41896291067
+Latest Architecture Source Checks: **PASS** — https://github.com/hu-xulin/uaes/actions/runs/41900900229 (UAES commit `870553801fa568d34700ddaa227a882211f3fcad`).
 
 Successful steps:
 - Validate module manifests
@@ -51,4 +51,8 @@ Observed Uter Go dependency graph: `MOD-GO-ROOT → MOD-RELAYKIT, MOD-TOKENKIT`;
 
 Uter OpenAPI defects found during the audit were corrected in Uter PR #15: duplicate `operationId` on `/v1/images/generations` and `/v1/images/edits`, plus two undefined security scheme aliases in the management OpenAPI document. UAES checks use Uter source commit `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Database migration inventory integrity is now checked in CI. Cross-database compatibility and a tested rollback/recovery harness remain NOT_VERIFIED and continue to block architecture-gate acceptance. Frontend boundary enforcement and router-to-OpenAPI implementation drift are also not yet covered. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
+Database migration inventory integrity is now checked in CI: **20 custom migration steps and 2 manual SQL files** are present and source/function/path/order checks pass. The same job explicitly reports `DATABASE MIGRATION SAFETY: NOT_VERIFIED`; cross-database compatibility and a tested rollback/recovery harness remain NOT_VERIFIED and continue to block architecture-gate acceptance.
+
+Frontend source inventory (same pinned Uter PR #15 head) shows distinct `routes/`, `features/`, `components/`, `design-system/`, `context/`, `hooks/`, `lib/`, `stores/`, `config/`, `i18n/`, and `styles/` roots. `features/` is itself organized into domain slices (for example auth, channels, chat, dashboard, keys, models, playground, wallet-related route areas). This is observed structure only: no frontend import-graph or boundary checker has been implemented or accepted yet. Do not infer dependency direction from folder names alone.
+
+Router-to-OpenAPI implementation drift is also not yet covered. The current OpenAPI checker validates the document and compatibility baseline only; it does not extract Gin route registrations from `router/*.go`. This remains an explicit architecture blocker. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
