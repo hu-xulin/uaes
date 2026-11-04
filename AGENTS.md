@@ -63,7 +63,7 @@ A document being written is not evidence that it is implemented. A command being
 
 ## Skills and workflows
 
-Canonical UAES skill contracts live under `skills/`; the registry is `skills/REGISTRY.yaml`. Read the relevant `SKILL.md` before executing a registered skill. A skill is guidance and a task contract; it does not independently authorize tools or side effects.
+Canonical UAES skill contracts live under `skills/`; the registry is `skills/registry.yaml`. Read the relevant `SKILL.md` before executing a registered skill. A skill is guidance and a task contract; it does not independently authorize tools or side effects.
 
 Workflow definitions live under `workflows/`. Quality gates and acceptance baselines live under `quality/`. Keep these registries and their referenced files consistent.
 
