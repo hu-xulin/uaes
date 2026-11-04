@@ -62,7 +62,7 @@ jobs:
         env:
           GOWORK: off
           TEST_MYSQL_DSN: root:root@tcp(127.0.0.1:3306)/uaes_migration_test?parseTime=true&multiStatements=true
-          TEST_POSTGRES_DSN: host=127.0.0.1 user=postgres password=postgres dbname=uaes_migration_test port=5432 sslmode=disable TimeZone=UTC
+          TEST_POSTGRES_DSN: postgres://postgres:postgres@127.0.0.1:5432/uaes_migration_test?sslmode=disable
         run: |
           set -o pipefail
           go test ./model \
