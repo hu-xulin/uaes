@@ -84,8 +84,6 @@ files.each do |file|
     match = Regexp.last_match
     specifier = match[:specifier]
     next unless specifier.start_with?("@/", "./", "../")
-    kind = import_kind(match[:statement])
-    (is_test ? test_import_kinds : production_import_kinds)[kind] += 1
     target = resolve_local(src, file, specifier)
     unless target
       unresolved << "#{relative_importer} -> #{specifier}"
@@ -97,6 +95,9 @@ files.each do |file|
       generated_imports += 1
       next
     end
+
+    kind = import_kind(match[:statement])
+    (is_test ? test_import_kinds : production_import_kinds)[kind] += 1
 
     from = relative_importer.split("/").first
     to = if target.start_with?(src + File::SEPARATOR)
