@@ -1,0 +1,23 @@
+schema_version: "1.0.0"
+registry_version: "1.0.0"
+status: "DRAFT"
+source_of_truth: "skills/REGISTRY.yaml"
+skills:
+  - id: "UAES-SKILL-001"
+    name: "uaes-compliance-audit"
+    path: "skills/uaes-compliance-audit/SKILL.md"
+    status: "DRAFT"
+    applies_to: ["UAES", "Uter project adapters"]
+    standards: ["UAES-00", "UAES-01", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "UAES-SKILL-002"
+    name: "uaes-standard-authoring"
+    path: "skills/uaes-standard-authoring/SKILL.md"
+    status: "DRAFT"
+    applies_to: ["UAES"]
+    standards: ["UAES-00", "UAES-01"]
+  - id: "UAES-SKILL-003"
+    name: "uaes-uter-integration"
+    path: "skills/uaes-uter-integration/SKILL.md"
+    status: "DRAFT"
+    applies_to: ["Uter project adapters"]
+    standards: ["UAES-00", "UAES-01", "UAES-06", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
