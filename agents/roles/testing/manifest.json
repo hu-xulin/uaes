@@ -7,7 +7,7 @@
   "status": "DRAFT",
   "runtime": "tool-adapter-selected",
   "skillRefs": [
-    "SKILL-UAES-AUTOMATED-TESTING"
+    "SKILL-UAES-TEST-ENGINEERING"
   ],
   "toolRefs": [],
   "inputContract": ".uaes/schemas/agent-task.schema.json",
