@@ -34,3 +34,6 @@ jobs:
         env:
           UTER_REPO_ROOT: ${{ github.workspace }}/uter
         run: ruby quality/scripts/architecture/check-module-boundaries
+      - name: Run RelayKit boundary positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-module-boundaries.rb
