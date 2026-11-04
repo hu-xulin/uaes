@@ -25,6 +25,21 @@ def generated_source?(relative)
   relative == "routeTree.gen.ts" || File.basename(relative).match?(/\.(?:generated|gen)\.[^.]+\z/)
 end
 
+
+def import_kind(statement)
+  return :dynamic if statement.match?(/\\bimport\\s*\\(\\s*\\z/)
+
+  return :type_only if statement.match?(/\\b(?:import|export)\\s+type\\b/)
+
+  named_clause = statement.match(/\\b(?:import|export)\\s+\\{([^}]*)\\}\\s+from\\s*\\z/m)
+  if named_clause
+    specifiers = named_clause[1].split(",").map(&:strip)
+    return :type_only if !specifiers.empty? && specifiers.all? { |item| item.match?(/\\Atype\\s+/) }
+  end
+
+  :runtime
+end
+
 def resolve_local(src, importer, specifier)
   candidate =
     if specifier.start_with?("@/")
@@ -47,6 +62,8 @@ stop("no frontend source files discovered") if files.empty?
 production_edges = Hash.new(0)
 production_samples = Hash.new { |hash, key| hash[key] = [] }
 test_edges = Hash.new(0)
+production_import_kinds = Hash.new(0)
+test_import_kinds = Hash.new(0)
 unresolved = []
 generated_imports = 0
 production_file_count = 0
@@ -114,5 +131,9 @@ production_samples.sort.each do |(from, to), samples|
 end
 puts "FRONTEND MODULE TEST-ONLY EDGES:"
 test_edges.sort.each { |(from, to), count| puts "  #{from} -> #{to}: #{count}" }
+puts "FRONTEND MODULE PRODUCTION IMPORT KINDS:"
+production_import_kinds.sort.each { |kind, count| puts "  #{kind}: #{count}" }
+puts "FRONTEND MODULE TEST IMPORT KINDS:"
+test_import_kinds.sort.each { |kind, count| puts "  #{kind}: #{count}" }
 puts "FRONTEND MODULE GENERATED IMPORTS EXCLUDED: #{generated_imports}"
 puts "FRONTEND MODULE BOUNDARIES: NOT_VERIFIED (inventory only; dependency policy requires review)"
