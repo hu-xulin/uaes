@@ -7,7 +7,7 @@ The architecture gate remains **DRAFT**. A check is considered accepted only whe
 | check-architecture-manifests | IMPLEMENTED; CI PASS | Validates module IDs, required fields, source paths, manifest existence, Go module identities and package names against the pinned Uter checkout. |
 | check-module-boundaries | IMPLEMENTED FOR RELAYKIT; CI PASS | Uses `go list` to inspect RelayKit direct imports; rejects host-module imports, SQL/ORM/Redis and transport client/server APIs. Allows HTTP request metadata and standard status constants, while excluding test-only helpers from production API scanning. Does not yet validate every module's complete boundary graph. |
 | check-dependency-rules | IMPLEMENTED FOR FOUR GO MODULES; CI PASS | Compares actual Go package imports against `.uaes/registry/module-dependencies.yaml`; resolves overlapping module paths by longest prefix and fails closed on missing modules or `go list` errors. |
-| check-api-contracts | BLOCKED | Generated API inventory and compatibility validator are not implemented. |
+| check-api-contracts | IMPLEMENTED FOR TWO OPENAPI DOCS; CI PASS | Validates OpenAPI 3.x structure, local references, security scheme references, operationId uniqueness, responses, and compatibility against the pinned baseline (operation removals, operationId changes, new required parameters/body fields, response removals, schema/property/type/enum breaks). |
 | check-database-migrations | BLOCKED | Migration inventory, compatibility policy, and rollback test harness are not implemented. |
 
 ## Source requirements
@@ -32,6 +32,10 @@ Successful steps:
 - Run RelayKit boundary positive and negative controls
 - Validate Go module dependency allowlist
 - Run dependency allowlist positive and negative controls
+- Validate OpenAPI contracts and compatibility
+- Run API contract positive and negative controls
+- Validate Go module dependency allowlist
+- Run dependency allowlist positive and negative controls
 
 The fixture suite covers:
 - Positive: protocol metadata using `net/http` request types without transport APIs is accepted.
@@ -39,6 +43,6 @@ The fixture suite covers:
 - Negative: HTTP client transport API is rejected.
 - Fail-closed: missing Uter source checkout is rejected.\n- Dependency rules positive: explicitly allowed Root → RelayKit import accepted.\n- Dependency rules negative: unlisted Root → RelayKit import rejected.
 
-Observed Uter Go dependency graph: `MOD-GO-ROOT → MOD-RELAYKIT, MOD-TOKENKIT`; no other inter-module edges were reported. The dependency-rule fixture suite completed 2 runs / 4 assertions with 0 failures. The RelayKit boundary fixture suite completed 4 runs / 10 assertions with 0 failures. This validates the current four-module Go dependency policy; it does not prove frontend module boundaries, API compatibility, or database migration safety.
+Observed Uter Go dependency graph: `MOD-GO-ROOT → MOD-RELAYKIT, MOD-TOKENKIT`; no other inter-module edges were reported. The dependency-rule fixture suite completed 2 runs / 4 assertions with 0 failures. The RelayKit boundary fixture suite completed 4 runs / 10 assertions with 0 failures. The API contract suite completed 4 runs / 10 assertions with 0 failures. OpenAPI inventory at the pinned Uter source contains 161 management operations / 8 schemas and 38 relay operations / 52 schemas. The checker detects breaking changes against the baseline; it does not yet prove router implementation drift against OpenAPI or frontend-client type parity.
 
-Keep UAES-04-GATE-001 in DRAFT until the remaining architecture controls are implemented and independently verified.
+Uter OpenAPI defects found during the audit were corrected in Uter PR #15: duplicate `operationId` on `/v1/images/generations` and `/v1/images/edits`, plus two undefined security scheme aliases in the management OpenAPI document. UAES checks use Uter source commit `442ddb5a7c234f2ee2d78651e0882407e9371c91`.\n\nDatabase migration inventory, compatibility policy, and rollback harness remain BLOCKED. Frontend boundary enforcement and router-to-OpenAPI implementation drift are also not yet covered. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
