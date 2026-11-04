@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require "set"
+require "pathname"
 
 def stop(message, code = 2)
   warn "FRONTEND MODULE INVENTORY: #{message}"
@@ -48,7 +49,14 @@ files.each do |file|
     end
 
     from = file.delete_prefix(src + File::SEPARATOR).split("/").first
-    to = target.delete_prefix(src + File::SEPARATOR).split("/").first
+    if target.start_with?(src + File::SEPARATOR)
+      relative_target = target.delete_prefix(src + File::SEPARATOR)
+      to = relative_target.split("/").first
+    elsif target == src
+      to = "$src-root"
+    else
+      to = "$workspace/#{Pathname.new(target).relative_path_from(Pathname.new(src))}"
+    end
     edges[[from, to]] += 1
   end
 end
