@@ -1,11 +1,88 @@
-#!/usr/bin/env bash
-# Fail-closed placeholder. This is NOT an implemented architecture check.
-set -euo pipefail
-cat >&2 <<'EOF'
-BLOCKED: architecture manifest validation is not implemented as an executable architecture control.
-Reason: No canonical architecture manifest registry or manifest schema mapping has been completed.
-Do not report this check as PASS. Keep UAES-04-GATE-001 in DRAFT until the
-required project inputs, implementation, positive tests, and negative tests
-are available and independently verified.
-EOF
-exit 2
+#!/usr/bin/env ruby
+# UAES-04 architecture manifest validator.
+# Validates the registered Uter modules against a pinned source checkout.
+require "json"
+require "yaml"
+require "pathname"
+
+def fail_with(message, code = 1)
+  warn "ARCHITECTURE MANIFEST: #{message}"
+  exit code
+end
+
+uaes_root = File.expand_path("../../..", __dir__)
+registry = ENV.fetch("UAES_MODULE_REGISTRY", File.join(uaes_root, ".uaes/registry/modules.yaml"))
+uter_root = ENV["UTER_REPO_ROOT"]
+fail_with("UTER_REPO_ROOT is required; refusing to validate without source checkout", 2) if uter_root.nil? || uter_root.empty?
+fail_with("Uter source root does not exist: #{uter_root}", 2) unless File.directory?(uter_root)
+fail_with("module registry does not exist: #{registry}", 2) unless File.file?(registry)
+
+begin
+  data = YAML.safe_load_file(registry, permitted_classes: [], aliases: false)
+rescue StandardError => e
+  fail_with("cannot parse registry: #{e.class}: #{e.message}")
+end
+
+modules = data.is_a?(Hash) ? data["modules"] : nil
+fail_with("registry must contain a non-empty modules array") unless modules.is_a?(Array) && !modules.empty?
+
+ids = modules.map { |m| m.is_a?(Hash) ? m["id"] : nil }
+fail_with("every module must have a non-empty id") if ids.any? { |id| !id.is_a?(String) || id.empty? }
+duplicates = ids.group_by(&:itself).select { |_id, values| values.length > 1 }.keys
+fail_with("duplicate module ids: #{duplicates.join(", ")}") unless duplicates.empty?
+
+errors = []
+modules.each do |mod|
+  id = mod["id"]
+  path = mod["path"]
+  manifest = mod["manifest"]
+  type = mod["type"]
+  name = mod["module_name"]
+  [path, manifest, type].each do |value|
+    errors << "#{id}: path, manifest and type are required" unless value.is_a?(String) && !value.empty?
+  end
+  next unless path.is_a?(String) && manifest.is_a?(String) && type.is_a?(String)
+
+  [path, manifest].each do |relative|
+    candidate = File.expand_path(relative, uter_root)
+    unless candidate == uter_root || candidate.start_with?(uter_root + File::SEPARATOR)
+      errors << "#{id}: path escapes UTER_REPO_ROOT: #{relative}"
+      next
+    end
+  end
+
+  module_path = File.expand_path(path, uter_root)
+  manifest_path = File.expand_path(manifest, uter_root)
+  errors << "#{id}: module path missing: #{path}" unless File.directory?(module_path)
+  errors << "#{id}: manifest missing: #{manifest}" unless File.file?(manifest_path) || File.directory?(manifest_path)
+
+  case type
+  when "go-module"
+    unless File.file?(manifest_path)
+      next
+    end
+    declared = File.foreach(manifest_path).find { |line| line.match?(/^module\s+/) }
+    actual_name = declared&.sub(/^module\s+/, "")&.strip
+    errors << "#{id}: module_name is required for go-module" unless name.is_a?(String) && !name.empty?
+    errors << "#{id}: go.mod declares #{actual_name.inspect}, registry expects #{name.inspect}" unless actual_name == name
+    errors << "#{id}: go.mod must be located at the registered module path" unless manifest_path == File.join(module_path, "go.mod")
+  when "web-application", "desktop-application"
+    if File.file?(manifest_path) && manifest_path.end_with?("package.json")
+      begin
+        package = JSON.parse(File.read(manifest_path))
+        expected = mod["package_name"]
+        errors << "#{id}: package_name mismatch (registry #{expected.inspect}, package #{package["name"].inspect})" unless expected.nil? || package["name"] == expected
+      rescue JSON::ParserError => e
+        errors << "#{id}: invalid package.json: #{e.message}"
+      end
+    end
+  end
+end
+
+if errors.any?
+  warn "ARCHITECTURE MANIFEST: FAIL (#{errors.length} finding(s))"
+  errors.each { |error| warn " - #{error}" }
+  exit 1
+end
+
+puts "ARCHITECTURE MANIFEST: PASS (#{modules.length} registered modules; source=#{uter_root})"
