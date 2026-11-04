@@ -38,7 +38,7 @@ jobs:
         working-directory: uaes
         run: ruby quality/scripts/architecture/test-module-boundaries.rb
       - name: Prepare generated embed path for package discovery
-        run: mkdir -p uter/web/dist/docs-content/_next && touch uter/web/dist/uaes-architecture-placeholder.html uter/web/dist/docs-content/_next/uaes-architecture-placeholder.html
+        run: mkdir -p uter/web/dist/docs-content/_next && touch uter/web/dist/index.html uter/web/dist/uaes-architecture-placeholder.html uter/web/dist/docs-content/_next/uaes-architecture-placeholder.html
       - name: Validate Go module dependency allowlist
         working-directory: uaes
         env:
