@@ -26,6 +26,10 @@ jobs:
         run: ruby --version
       - name: Validate UAES registries and manifests
         run: ruby quality/scripts/validate-governance.rb
+      - name: Test skill runtime adapter positive and negative fixtures
+        run: ruby quality/scripts/agents/test-skill-runtime-adapters.rb
+      - name: Validate canonical skill runtime adapters
+        run: ruby quality/scripts/agents/check-skill-runtime-adapters.rb
       - name: Set up Python for JSON Schema validation
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
