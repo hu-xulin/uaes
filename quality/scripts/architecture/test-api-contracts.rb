@@ -101,7 +101,8 @@ class ApiContractTest < Minitest::Test
 
   def test_rejects_removed_operation
     root, baseline = fixture
-    operations = { "/v1/new" => { "get" => { "operationId" => "new", "responses" => { "200" => { "description" => "OK" } } } } }\n    write_document(root, operations: operations)
+    operations = { "/v1/new" => { "get" => { "operationId" => "new", "responses" => { "200" => { "description" => "OK" } } } } }
+    write_document(root, operations: operations)
     _out, err, status = run_checker(root, baseline)
     refute status.success?
     assert_match(/removed operation/, err)
