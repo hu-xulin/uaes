@@ -96,3 +96,15 @@ AI MUST：
 ## 7. Acceptance
 
 只有在 Schema、语义校验、依赖分析、ADR 生命周期、契约兼容性、数据迁移和架构漂移检查均有可执行实现，并通过正向和负向测试后，才可申请正式启用。
+
+
+## 8. Current implementation state (2026-11-05)
+
+The following architecture check entrypoints exist but currently fail closed with exit code 2:
+- `quality/scripts/architecture/check-architecture-manifests`
+- `quality/scripts/architecture/check-module-boundaries`
+- `quality/scripts/architecture/check-dependency-rules`
+- `quality/scripts/architecture/check-api-contracts`
+- `quality/scripts/architecture/check-database-migrations`
+
+They are explicit BLOCKED placeholders, not implemented architecture controls and not evidence of a passing gate. UAES-04-GATE-001 MUST remain DRAFT until the required project inventories, executable checks, positive tests, and negative tests are completed.
