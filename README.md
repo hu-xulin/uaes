@@ -1,77 +1,76 @@
 # UTER AI Engineering Standard (UAES)
 
-> 本仓库是 **UTER AI 工程标准库**（治理 / 规范库），不是产品应用代码仓库。
-> 单一事实源：`.uaes/STANDARD-REGISTRY.yaml`（`registry.version: 1.7.0`，`status: DRAFT`）。
+UAES is the centralized AI engineering governance and standards repository for Uter and other adopting projects. It contains normative standards, schemas, registries, agent and skill contracts, workflows, quality gates, acceptance criteria, and audit evidence. It is **not** the Uter product source-code repository.
 
-## 一、代码在哪里
+## Governance status
 
-全局注册表明确声明 `project.architecture_relationship: PARALLEL` —— 标准库与产品代码仓是**并行治理关系**，不复制产品源码。
+| Field | Current value |
+|---|---|
+| Registry | `.uaes/STANDARD-REGISTRY.yaml` |
+| Registry version | `1.7.0` |
+| Lifecycle | **DRAFT** |
+| Domain coverage | P00–P12 |
+| Skill registry | `skills/registry.yaml` |
+| Validation workflow | `.github/workflows/uaes-validation.yml` |
 
-| 仓库 | 路径 | 内容 |
-| --- | --- | --- |
-| 产品代码 | `/Users/lincolnhu/uter` | Go 后端 + React / TypeScript 前端，数千个源文件 |
-| 标准库（本仓库） | `/Users/lincolnhu/uaes` | 规范文档、Schema、门禁、报告，以及少量「校验 / 生成」脚本 |
+DRAFT means the standards are not yet an approved release. Presence in this repository does not automatically make a rule active in Uter or prove that an agent runtime discovers it. Project integration, semantic parity, enforcement, and runtime evidence are separate acceptance requirements.
 
-本仓库共 467 个受控文件，构成如下：
+## Repository structure
 
-| 类型 | 数量 | 说明 |
-| --- | --- | --- |
-| `.md` | 303 | 标准、门禁、验收基线、报告（主体是文档，不是代码） |
-| `.json` / `.yaml` | 89 / 7 | 其中 65 个是 `.uaes/schemas/` 下的 Schema，属规范定义 |
-| `.gitkeep` 等空占位 | 113 | 保住 governance 目录层级，必须纳入版本控制 |
-| **可执行 / 样式代码** | **12** | 见下表 |
+| Path | Purpose |
+|---|---|
+| `standards/` | Normative standards for P00–P12 |
+| `.uaes/schemas/` | Machine-readable JSON Schema contracts |
+| `.uaes/STANDARD-REGISTRY.yaml` | Global standards registry and lifecycle metadata |
+| `quality/gates/` | Quality gate definitions and status |
+| `quality/acceptance/` | Phase acceptance criteria |
+| `quality/scripts/` | Governance and architecture validation tools |
+| `agents/` | Agent role manifests, registry, and runtime adapters |
+| `skills/` | Canonical, tool-independent skill contracts and registry |
+| `workflows/` | Repeatable engineering workflow definitions |
+| `.claude/skills/` | Claude Code skill adapters |
+| `.agents/skills/` | Agents Runtime skill adapters |
+| `design-system/` | Design token source, generated artifacts, and component contracts |
+| `.uaes/knowledge/` | Project facts, decisions, and knowledge provenance |
 
-**12 个代码文件（都在子目录里，顶层看不到「src」这类目录）：**
+## Start here
 
-| 路径 | 数量 | 作用 |
-| --- | --- | --- |
-| `quality/scripts/design-system/*.mjs` | 6 | token 生成器、对比度校验、组件契约校验、设计令牌扫描、导入总校验、路径解析 |
-| `design-system/tests/*.ts`、`design-system/reference/web/tests/*.ts` | 3 | Vitest 测试（token 源、导航选中态、状态徽标对比度） |
-| `design-system/**/*.css` | 3 | `theme.css`、`index.css`、生成产物 `tokens/generated/brand.css` |
+1. Read [AGENTS.md](AGENTS.md) for repository-wide governance and execution rules.
+2. Read [CLAUDE.md](CLAUDE.md) when using Claude Code.
+3. Read [the global standard registry](.uaes/STANDARD-REGISTRY.yaml) and [project status](.uaes/PROJECT-STATUS.md).
+4. Read the applicable standard and its dependencies before executing a task.
+5. For registered skills, read the canonical `skills/<skill-name>/SKILL.md` and its manifest. Runtime adapters must not fork the canonical contract.
+6. For Uter adoption, read the integration contract and P00–P12 traceability matrix in the Uter repository's `.uaes/` directory.
 
-配套的可执行数据资产：`design-system/tokens/source/*.json`（token 源与投影）、`design-system/components/registry/component-registry.json`、`design-system/reference/web/package.json` 与 `ci.yml`。
+## Validate
 
-从分支 `uaes/p4-design-token-engine` 导入的是**设计系统资产与校验脚本**，不是产品源码；完整前端组件与后端实现始终在 `/Users/lincolnhu/uter`。
-
-## 二、启动本地控制台
-
-控制台进程刻意放在仓库之外（零侵入，不改动规范库任何目录层级）：
+Run the governance integrity validator:
 
 ```bash
-node /Users/lincolnhu/uaes-console.mjs 4173
-# 打开 http://127.0.0.1:4173
+ruby quality/scripts/validate-governance.rb
 ```
 
-提供：左侧目录树、Markdown 渲染、全文检索、注册表概览、一键运行门禁校验。
-除显式点击「运行门禁校验」会执行仓库自带脚本外，其余全部只读。
-
-## 三、执行校验
+Validate active JSON Schemas (Python 3.12+):
 
 ```bash
-node quality/scripts/design-system/verify-import.mjs
+python -m pip install jsonschema==4.25.1
+python quality/scripts/validate-json-schemas.py
 ```
 
-10 项检查，机器可读报告写入 `reports/quality/UAES-P05-IMPORT-VERIFICATION.json`（遵循 `.uaes/schemas/quality-report.schema.json`），组件契约差距记录在 `design-system/components/contracts/UAES-COMPONENT-CONTRACT-GAP.md`。
+The GitHub Actions workflow runs both checks on pushes to the main/AI branches and pull requests. These checks validate registry/reference integrity and JSON Schema meta-schema validity. They do not prove runtime skill discovery, instance-level conformance for every schema, or project compliance.
 
-单项目录见 `quality/scripts/design-system/README.md`，设计资产布局见 `design-system/README.md`。
+Design-system import checks and tests are documented under `quality/scripts/design-system/` and `design-system/`.
 
-## 四、目录契约（来自注册表 `governance`）
+## Adoption and authority
 
-| 目录 | 用途 |
-| --- | --- |
-| `standards/` | 13 个标准域（00–12）的标准文档 |
-| `.uaes/schemas/` | JSON Schema 定义 |
-| `quality/gates/` | 质量门禁 |
-| `quality/acceptance/` | 阶段验收基线 |
-| `quality/scripts/` | 可执行校验脚本（含 `architecture/`、`design-system/`） |
-| `reports/` | `baseline/`、`compliance/`、`quality/`、`release/`、`security/` 五类报告 |
-| `agents/`、`skills/`、`workflows/` | 角色、技能与工作流注册表 |
-| `design-system/` | 依 `UAES-05` §6 导入的 token / 组件契约实现资产 |
+- User authorization and safety boundaries always take precedence.
+- UAES owns generic governance only after an adopting project approves and pins a released version.
+- The adopting project retains project-specific requirements, product invariants, architecture facts, technology overlays, and executable gates.
+- During migration, unresolved conflicts are BLOCKED; do not silently choose the more permissive rule.
+- A local rule may be deprecated only after semantic parity, project overlay preservation, runtime discovery, CI enforcement, and independent approval are evidenced.
 
-## 五、当前状态
+## Related repository
 
-> 本 README 的历史文件数量统计与设计系统导入结论不是当前审计证据；必须以当前分支的自动化 inventory、实际门禁运行和可追溯报告为准。
+The Uter product repository is maintained separately: https://github.com/hu-xulin/uter
 
-- 注册表 `v1.7.0 / DRAFT`；`verify-import` 10 项检查 **0 FAIL**。
-- **P05 验收仍 BLOCKED**：组件契约缺 9 个必填字段（65 个组件）、品牌主色变更无正式审批、视觉回归 / axe / 键盘焦点检查未关闭、产品仓 CI 未执行。
-- 当前 GitHub 默认分支已包含 UAES 文件与提交；原“未配置远端、未推送”表述已过期。README 中的文件数量统计尚未由本次审计重新计数，应以自动化 inventory 报告为准。
+The Uter repository owns its own integration contract and traceability matrix. Changes to UAES do not by themselves modify Uter or prove that Uter is compliant.
