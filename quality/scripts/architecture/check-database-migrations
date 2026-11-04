@@ -19,7 +19,7 @@ stop("inventory root must be a mapping") unless inventory.is_a?(Hash)
 expected_source = inventory.fetch("source_repository", nil)
 stop("source_repository must be hu-xulin/uter") unless expected_source == "hu-xulin/uter"
 source_commit = inventory.fetch("source_commit", nil)
-stop("source_commit must be a pinned 40-character SHA") unless source_commit.is_a?(String) && source_commit.match?(/\\A[0-9a-f]{40}\\z/)
+stop("source_commit must be a pinned 40-character SHA") unless source_commit.is_a?(String) && source_commit.length == 40 && source_commit.match?(/[0-9a-f]{40}/)
 
 main = inventory.fetch("migration_system", {})
 stop("migration_system must declare rollback_harness") unless main.key?("rollback_harness")
