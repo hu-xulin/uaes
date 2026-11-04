@@ -12,7 +12,7 @@ The architecture gate remains **DRAFT**. A check is considered accepted only whe
 
 ## Source requirements
 
-Both implemented scripts require `UTER_REPO_ROOT` to point to a pinned Uter checkout. Missing source, missing manifests, or failed Go package discovery are NOT PASS conditions.
+All source-level checks require `UTER_REPO_ROOT` to point to a pinned Uter checkout. Missing source, missing manifests, or failed Go package discovery are NOT PASS conditions.
 
 ```bash
 UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-architecture-manifests
@@ -30,6 +30,8 @@ Successful steps:
 - Validate module manifests
 - Validate RelayKit module boundary
 - Run RelayKit boundary positive and negative controls
+- Validate Go module dependency allowlist
+- Run dependency allowlist positive and negative controls
 
 The fixture suite covers:
 - Positive: protocol metadata using `net/http` request types without transport APIs is accepted.
