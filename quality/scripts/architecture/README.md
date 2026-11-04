@@ -33,13 +33,13 @@ ruby quality/scripts/architecture/test-router-openapi-drift.rb
 
 Pinned source: Uter PR #15 head `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Latest UAES revision at this evidence refresh: `55a2fb38e4f82ca1cf917c4167699901d3e66187`.
+Latest UAES revision at this evidence refresh: `76fd67d3e19677fe1707f0e0acee3831427a1efe`.
 
-- Governance Validation: PASS — https://github.com/hu-xulin/uaes/actions/runs/41906580256
-- Database Migration Dialect Matrix: PASS — https://github.com/hu-xulin/uaes/actions/runs/41906580420
-- Architecture Source Checks: expected blocking failure on the live route/OpenAPI comparison — https://github.com/hu-xulin/uaes/actions/runs/41906580552
+- Governance Validation: PASS — https://github.com/hu-xulin/uaes/actions/runs/41909200499
+- Database Migration Dialect Matrix: PASS — https://github.com/hu-xulin/uaes/actions/runs/41909200497
+- Architecture Source Checks: expected blocking failure on the live route/OpenAPI comparison — https://github.com/hu-xulin/uaes/actions/runs/41909200530
 
-The Architecture Source Checks run completed all preceding checks successfully: module manifests, RelayKit boundary and fixtures, Go module dependency allowlist and fixtures, API contract compatibility and fixtures, database migration inventory integrity, frontend production/test inventory and fixtures, and router/OpenAPI positive/negative fixtures. The final live router comparison correctly failed on the two unresolved documented operations listed below. This is not a green architecture gate.
+The latest Architecture Source Checks run completed all preceding checks successfully: module manifests, RelayKit boundary and fixtures, Go module dependency allowlist and fixtures, API contract compatibility and fixtures, database migration inventory integrity, frontend production/test inventory and fixtures (including per-edge import-kind classification), and router/OpenAPI positive/negative fixtures. The final live router comparison correctly failed on the two unresolved documented operations listed below. This is not a green architecture gate.
 
 ### Go module and API evidence
 
@@ -51,7 +51,7 @@ Uter OpenAPI defects found during the audit were corrected in Uter PR #15: dupli
 
 The inventory integrity check covers **20 custom migration steps and 2 manual SQL files**, including source/function/path/order validation. It explicitly reports `DATABASE MIGRATION SAFETY: NOT_VERIFIED`.
 
-The selected dialect matrix passed on SQLite, MySQL 8.4.4, and PostgreSQL 17.4 in the latest run above:
+The selected dialect matrix passed again on SQLite, MySQL 8.4.4, and PostgreSQL 17.4 in the latest run above:
 - `TestMigrationSchemaStability` passed on all three dialects.
 - Prefill-group uniqueness migration passed on all three, including PostgreSQL legacy-index/constraint and invalid-schema rollback cases.
 - Token-key uniqueness migration passed on all three, including PostgreSQL legacy/invalid constraint cases.
