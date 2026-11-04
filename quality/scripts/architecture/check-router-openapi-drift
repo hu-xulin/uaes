@@ -1,0 +1,150 @@
+#!/usr/bin/env ruby
+require "json"
+require "open3"
+require "rbconfig"
+require "tempfile"
+
+def stop(message, code = 2)
+  warn "ROUTER OPENAPI DRIFT: #{message}"
+  exit code
+end
+
+def gin_path_covers_openapi?(gin_path, openapi_path)
+  gin_segments = gin_path.split("/").reject(&:empty?)
+  api_segments = openapi_path.split("/").reject(&:empty?)
+  index = 0
+
+  while index < gin_segments.length
+    segment = gin_segments[index]
+    return index < api_segments.length if segment.start_with?("*")
+    return false if index >= api_segments.length
+
+    dynamic = segment.start_with?(":")
+    api_dynamic = api_segments[index].match?(/\A\{[^{}]+\}(?::.*)?\z/)
+    return false unless dynamic || segment == api_segments[index] || api_dynamic
+
+    index += 1
+  end
+
+  index == api_segments.length
+end
+
+def operation_covered?(routes, method, path)
+  routes.any? do |route|
+    route["method"] == method && gin_path_covers_openapi?(route["path"], path)
+  end
+end
+
+root = ENV["UTER_REPO_ROOT"]
+stop("UTER_REPO_ROOT is required") if root.nil? || root.empty?
+root = File.expand_path(root)
+stop("Uter source checkout missing") unless File.directory?(root)
+
+documents = %w[docs-dev/openapi/api.json docs-dev/openapi/relay.json]
+documents.each { |path| stop("OpenAPI document missing: #{path}") unless File.file?(File.join(root, path)) }
+
+inventory_json = ENV["UAES_ROUTE_INVENTORY_JSON"]
+if inventory_json && !inventory_json.empty?
+  stop("route inventory fixture missing") unless File.file?(inventory_json)
+  routes = JSON.parse(File.read(inventory_json))
+else
+  router_dir = File.join(root, "router")
+  stop("router source directory missing") unless File.directory?(router_dir)
+  test_path = File.join(router_dir, "uaes_route_inventory_test.go")
+  stop("refusing to overwrite existing #{test_path}") if File.exist?(test_path)
+  output = Tempfile.new(["uaes-gin-routes-", ".json"])
+  output.close
+  go_test = <<~GO
+    package router
+
+    import (
+      "encoding/json"
+      "os"
+      "testing"
+
+      "github.com/gin-gonic/gin"
+    )
+
+    func TestUAESRouteInventory(t *testing.T) {
+      gin.SetMode(gin.ReleaseMode)
+      engine := gin.New()
+      SetApiRouter(engine)
+      SetDashboardRouter(engine)
+      SetRelayRouter(engine)
+      SetTaskPluginProtocolRouter(engine)
+      SetVideoRouter(engine)
+      SetTaskRouter(engine)
+
+      routes := engine.Routes()
+      records := make([]map[string]string, 0, len(routes))
+      for _, route := range routes {
+        records = append(records, map[string]string{"method": route.Method, "path": route.Path})
+      }
+      target := os.Getenv("UAES_ROUTE_INVENTORY_OUTPUT")
+      if target == "" {
+        t.Fatal("UAES_ROUTE_INVENTORY_OUTPUT is required")
+      }
+      file, err := os.Create(target)
+      if err != nil {
+        t.Fatal(err)
+      }
+      defer file.Close()
+      if err := json.NewEncoder(file).Encode(records); err != nil {
+        t.Fatal(err)
+      }
+      t.Logf("captured %d registered Gin routes", len(records))
+    }
+  GO
+
+  begin
+    File.write(test_path, go_test)
+    env = {
+      "GOWORK" => "off",
+      "UAES_ROUTE_INVENTORY_OUTPUT" => output.path
+    }
+    stdout, stderr, status = Open3.capture3(env, "go", "test", "./router", "-run", "^TestUAESRouteInventory$", "-count=1", "-v", chdir: root)
+    unless status.success?
+      warn stdout
+      warn stderr
+      stop("runtime Gin route capture failed; route coverage is unknown")
+    end
+    puts stdout.lines.grep(/captured \d+ registered Gin routes/)
+    routes = JSON.parse(File.read(output.path))
+  ensure
+    File.delete(test_path) if File.exist?(test_path)
+    output.unlink
+  end
+end
+
+stop("runtime route inventory is empty") unless routes.is_a?(Array) && !routes.empty?
+routes.each_with_index do |route, index|
+  unless route.is_a?(Hash) && route["method"].is_a?(String) && route["path"].is_a?(String)
+    stop("invalid route inventory entry at index #{index}")
+  end
+end
+
+errors = []
+covered = 0
+documents.each do |relative|
+  document = JSON.parse(File.read(File.join(root, relative)))
+  (document["paths"] || {}).each do |path, path_item|
+    (path_item || {}).each do |method, operation|
+      next unless %w[get post put patch delete options head trace].include?(method)
+      verb = method.upcase
+      if operation_covered?(routes, verb, path)
+        covered += 1
+      else
+        errors << "#{relative}: undocumented runtime route for #{verb} #{path}"
+      end
+    end
+  end
+end
+
+unless errors.empty?
+  warn "ROUTER OPENAPI DRIFT: FAIL (#{errors.length} documented operations missing from runtime Gin route table)"
+  errors.each { |error| warn " - #{error}" }
+  exit 1
+end
+
+puts "ROUTER OPENAPI DRIFT: PASS (#{covered} documented operations covered by #{routes.length} runtime Gin routes)"
+puts "ROUTER OPENAPI SCOPE: plugin-generation routes are dynamic and excluded; host protocol operations are included"
