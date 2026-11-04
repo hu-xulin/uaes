@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: hu-xulin/uter
-          ref: 24a7d9a4f6525134c5fa8c2a6a2cf076e25cfacc
+          ref: a79780810d02f775699138cd36b9ac050abb4bd0
           path: uter
       - name: Validate module manifests
         working-directory: uaes
