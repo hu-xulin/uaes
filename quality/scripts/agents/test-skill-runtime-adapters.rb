@@ -33,7 +33,7 @@ class SkillRuntimeAdaptersTest < Minitest::Test
         description: runtime adapter
         ---
         Read the canonical contract at skills/sample-skill/SKILL.md.
-        This adapter does not grant permissions or override AGENTS.md.
+        This adapter does not grant permissions or override.
       MD
     end
 
