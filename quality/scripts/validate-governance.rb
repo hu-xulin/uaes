@@ -86,7 +86,7 @@ Array(agents["agents"]).each do |agent|
   next unless require_nonempty(manifest_path, "agent manifest #{manifest_path}")
   manifest = read_json(manifest_path)
   %w[agentId name version role owner status skillRefs toolRefs inputContract outputContract authorizationRefs evaluationProfile].each do |key|
-    check(manifest.key?(key), "#{manifest_path} missing #{key}")
+    check(manifest.key?(key), "#{manifest_path} includes #{key}")
   end
   require_nonempty(manifest["inputContract"]) if manifest["inputContract"]
   require_nonempty(manifest["outputContract"]) if manifest["outputContract"]
@@ -106,7 +106,7 @@ Array(skills["skills"]).each do |skill|
   end
   require_nonempty(manifest["inputSchema"]) if manifest["inputSchema"]
   require_nonempty(manifest["outputSchema"]) if manifest["outputSchema"]
-  check(%w[NONE READ_ONLY REVERSIBLE_WRITE EXTERNAL_WRITE IRREVERSIBLE].include?(manifest["sideEffects"]), "#{manifest_path} has invalid sideEffects")
+  check(%w[NONE READ_ONLY REVERSIBLE_WRITE EXTERNAL_WRITE IRREVERSIBLE].include?(manifest["sideEffects"]), "#{manifest_path} sideEffects is valid")
   name = skill["name"]
   require_nonempty(".claude/skills/#{name}/SKILL.md", "Claude skill adapter #{name}")
   require_nonempty(".agents/skills/#{name}/SKILL.md", "Agents skill adapter #{name}")
