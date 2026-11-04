@@ -17,7 +17,9 @@ All source-level checks require `UTER_REPO_ROOT` to point to a pinned Uter check
 ```bash
 UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-architecture-manifests
 UTER_REPO_ROOT=/absolute/path/to/uter ruby quality/scripts/architecture/check-module-boundaries
-ruby quality/scripts/architecture/test-module-boundaries.rb\nruby quality/scripts/architecture/check-dependency-rules\nruby quality/scripts/architecture/test-dependency-rules.rb
+ruby quality/scripts/architecture/test-module-boundaries.rb
+ruby quality/scripts/architecture/check-dependency-rules
+ruby quality/scripts/architecture/test-dependency-rules.rb
 ```
 
 ## CI evidence
@@ -41,8 +43,12 @@ The fixture suite covers:
 - Positive: protocol metadata using `net/http` request types without transport APIs is accepted.
 - Negative: SQL dependency is rejected.
 - Negative: HTTP client transport API is rejected.
-- Fail-closed: missing Uter source checkout is rejected.\n- Dependency rules positive: explicitly allowed Root → RelayKit import accepted.\n- Dependency rules negative: unlisted Root → RelayKit import rejected.
+- Fail-closed: missing Uter source checkout is rejected.
+- Dependency rules positive: explicitly allowed Root → RelayKit import accepted.
+- Dependency rules negative: unlisted Root → RelayKit import rejected.
 
 Observed Uter Go dependency graph: `MOD-GO-ROOT → MOD-RELAYKIT, MOD-TOKENKIT`; no other inter-module edges were reported. The dependency-rule fixture suite completed 2 runs / 4 assertions with 0 failures. The RelayKit boundary fixture suite completed 4 runs / 10 assertions with 0 failures. The API contract suite completed 4 runs / 10 assertions with 0 failures. OpenAPI inventory at the pinned Uter source contains 161 management operations / 8 schemas and 38 relay operations / 52 schemas. The checker detects breaking changes against the baseline; it does not yet prove router implementation drift against OpenAPI or frontend-client type parity.
 
-Uter OpenAPI defects found during the audit were corrected in Uter PR #15: duplicate `operationId` on `/v1/images/generations` and `/v1/images/edits`, plus two undefined security scheme aliases in the management OpenAPI document. UAES checks use Uter source commit `442ddb5a7c234f2ee2d78651e0882407e9371c91`.\n\nDatabase migration inventory, compatibility policy, and rollback harness remain BLOCKED. Frontend boundary enforcement and router-to-OpenAPI implementation drift are also not yet covered. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
+Uter OpenAPI defects found during the audit were corrected in Uter PR #15: duplicate `operationId` on `/v1/images/generations` and `/v1/images/edits`, plus two undefined security scheme aliases in the management OpenAPI document. UAES checks use Uter source commit `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
+
+Database migration inventory, compatibility policy, and rollback harness remain BLOCKED. Frontend boundary enforcement and router-to-OpenAPI implementation drift are also not yet covered. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
