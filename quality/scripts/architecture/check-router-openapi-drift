@@ -63,6 +63,7 @@ else
       "testing"
 
       "github.com/gin-gonic/gin"
+      "github.com/uter-ai/uter/pkg/jsplugin"
     )
 
     func TestUAESRouteInventory(t *testing.T) {
@@ -78,7 +79,15 @@ else
       routes := engine.Routes()
       records := make([]map[string]string, 0, len(routes))
       for _, route := range routes {
-        records = append(records, map[string]string{"method": route.Method, "path": route.Path})
+        records = append(records, map[string]string{"method": route.Method, "path": route.Path, "source": "gin"})
+      }
+      generation := jsplugin.DefaultRegistry.Generation()
+      if generation == nil {
+        t.Fatal("built-in task plugin routing generation is unavailable")
+      }
+      pluginRoutes := generation.Routes()
+      for _, binding := range pluginRoutes {
+        records = append(records, map[string]string{"method": binding.Route.Method, "path": binding.Route.Path, "source": "plugin"})
       }
       target := os.Getenv("UAES_ROUTE_INVENTORY_OUTPUT")
       if target == "" {
@@ -92,7 +101,7 @@ else
       if err := json.NewEncoder(file).Encode(records); err != nil {
         t.Fatal(err)
       }
-      t.Logf("captured %d registered Gin routes", len(records))
+      t.Logf("captured %d static Gin routes and %d dynamic plugin routes", len(routes), len(pluginRoutes))
     }
   GO
 
@@ -108,7 +117,7 @@ else
       warn stderr
       stop("runtime Gin route capture failed; route coverage is unknown")
     end
-    puts stdout.lines.grep(/captured \d+ registered Gin routes/)
+    puts stdout.lines.grep(/captured \d+ static Gin routes and \d+ dynamic plugin routes/)
     routes = JSON.parse(File.read(output.path))
   ensure
     File.delete(test_path) if File.exist?(test_path)
@@ -147,4 +156,4 @@ unless errors.empty?
 end
 
 puts "ROUTER OPENAPI DRIFT: PASS (#{covered} documented operations covered by #{routes.length} runtime Gin routes)"
-puts "ROUTER OPENAPI SCOPE: plugin-generation routes are dynamic and excluded; host protocol operations are included"
+puts "ROUTER OPENAPI SCOPE: static Gin routes and the active built-in plugin generation are included; host protocol routes are included"
