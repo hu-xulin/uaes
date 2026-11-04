@@ -13,8 +13,8 @@ root = File.expand_path(root)
 stop("source checkout missing: #{root}") unless File.directory?(root)
 
 uaes_root = File.expand_path("../../..", __dir__)
-module_registry = File.join(uaes_root, ".uaes/registry/modules.yaml")
-rules_file = File.join(uaes_root, ".uaes/registry/module-dependencies.yaml")
+module_registry = ENV.fetch("UAES_MODULE_REGISTRY", File.join(uaes_root, ".uaes/registry/modules.yaml"))
+rules_file = ENV.fetch("UAES_MODULE_DEPENDENCY_RULES", File.join(uaes_root, ".uaes/registry/module-dependencies.yaml"))
 stop("module registry missing") unless File.file?(module_registry)
 stop("dependency rules missing") unless File.file?(rules_file)
 
