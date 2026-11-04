@@ -22,9 +22,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@13e1bb4f0e9b1e18a4cce2b74c6e17e7c4b4b5c3 # v1.226.0
-        with:
-          ruby-version: "3.3"
+      - name: Check Ruby runtime
+        run: ruby --version
       - name: Validate UAES registries and manifests
         run: ruby quality/scripts/validate-governance.rb
