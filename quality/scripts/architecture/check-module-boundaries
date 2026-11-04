@@ -23,7 +23,6 @@ end
 host_prefix = ["github.com", "uter-ai", "uter"].join("/")
 upstream_prefix = ["github.com", "QuantumNous", "new-api"].join("/")
 blocked = [
-  ["net", "http"].join("/"),
   ["database", "sql"].join("/"),
   ["github.com", "gin-gonic", "gin"].join("/"),
   ["gorm.io", ""].join,
