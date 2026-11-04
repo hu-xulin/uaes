@@ -37,6 +37,8 @@ jobs:
       - name: Run RelayKit boundary positive and negative controls
         working-directory: uaes
         run: ruby quality/scripts/architecture/test-module-boundaries.rb
+      - name: Prepare generated embed path for package discovery
+        run: mkdir -p uter/web/dist/docs-content/_next && touch uter/web/dist/docs-content/_next/uaes-architecture-placeholder.html
       - name: Validate Go module dependency allowlist
         working-directory: uaes
         env:
