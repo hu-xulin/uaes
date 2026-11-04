@@ -8,7 +8,7 @@ The architecture gate remains **DRAFT**. A check is considered accepted only whe
 | check-module-boundaries | IMPLEMENTED FOR RELAYKIT; CI PASS | Uses `go list` to inspect RelayKit direct imports; rejects host-module imports, SQL/ORM/Redis and transport client/server APIs. Allows HTTP request metadata and standard status constants, while excluding test-only helpers from production API scanning. Does not yet validate every module's complete boundary graph. |
 | check-dependency-rules | IMPLEMENTED FOR FOUR GO MODULES; CI PASS | Compares actual Go package imports against `.uaes/registry/module-dependencies.yaml`; resolves overlapping module paths by longest prefix and fails closed on missing modules or `go list` errors. |
 | check-api-contracts | IMPLEMENTED FOR TWO OPENAPI DOCS; CI PASS | Validates OpenAPI 3.x structure, local references, security scheme references, operationId uniqueness, responses, and compatibility against the pinned baseline (operation removals, operationId changes, new required parameters/body fields, response removals, schema/property/type/enum breaks). |
-| check-database-migrations | BLOCKED | Migration inventory, compatibility policy, and rollback test harness are not implemented. |
+| check-database-migrations | INVENTORY VALIDATION IMPLEMENTED; SAFETY NOT_VERIFIED | Validates pinned source identity, every registered custom migration source/function, unique IDs/order, and manual SQL files. It explicitly does not claim cross-dialect compatibility or rollback safety; those remain blocked. |
 
 ## Source requirements
 
@@ -51,4 +51,4 @@ Observed Uter Go dependency graph: `MOD-GO-ROOT → MOD-RELAYKIT, MOD-TOKENKIT`;
 
 Uter OpenAPI defects found during the audit were corrected in Uter PR #15: duplicate `operationId` on `/v1/images/generations` and `/v1/images/edits`, plus two undefined security scheme aliases in the management OpenAPI document. UAES checks use Uter source commit `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Database migration inventory, compatibility policy, and rollback harness remain BLOCKED. Frontend boundary enforcement and router-to-OpenAPI implementation drift are also not yet covered. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
+Database migration inventory integrity is now checked in CI. Cross-database compatibility and a tested rollback/recovery harness remain NOT_VERIFIED and continue to block architecture-gate acceptance. Frontend boundary enforcement and router-to-OpenAPI implementation drift are also not yet covered. Keep UAES-04-GATE-001 in DRAFT until the remaining controls are implemented and independently verified.
