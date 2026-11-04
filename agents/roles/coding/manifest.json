@@ -8,7 +8,7 @@
   "runtime": "tool-adapter-selected",
   "skillRefs": [
     "SKILL-UAES-AUTO-FIX",
-    "SKILL-UAES-AUTOMATED-TESTING"
+    "SKILL-UAES-TEST-ENGINEERING"
   ],
   "toolRefs": [],
   "inputContract": ".uaes/schemas/agent-task.schema.json",
