@@ -102,7 +102,7 @@ Array(skills["skills"]).each do |skill|
   next unless require_nonempty(manifest_path, "skill manifest #{manifest_path}")
   manifest = read_json(manifest_path)
   %w[skillId name version owner status inputSchema outputSchema sideEffects execution authorizationRefs].each do |key|
-    check(manifest.key?(key), "#{manifest_path} missing #{key}")
+    check(manifest.key?(key), "#{manifest_path} includes #{key}")
   end
   require_nonempty(manifest["inputSchema"]) if manifest["inputSchema"]
   require_nonempty(manifest["outputSchema"]) if manifest["outputSchema"]
