@@ -1,0 +1,24 @@
+{
+  "skillId": "SKILL-UAES-STANDARD-AUTHORING",
+  "name": "uaes-standard-authoring",
+  "version": "1.0.0",
+  "owner": "UAES Engineering Governance",
+  "status": "DRAFT",
+  "inputSchema": ".uaes/schemas/ai-task.schema.json",
+  "outputSchema": ".uaes/schemas/quality-report.schema.json",
+  "dependencies": [
+    "UAES-00",
+    "UAES-01"
+  ],
+  "toolRefs": [],
+  "sideEffects": "REVERSIBLE_WRITE",
+  "execution": {
+    "timeoutSeconds": 3600,
+    "retryLimit": 0,
+    "idempotent": false
+  },
+  "authorizationRefs": [
+    "UAES-01-002",
+    "UAES-01-003"
+  ]
+}
