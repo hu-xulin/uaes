@@ -1,7 +1,7 @@
 {
   "report_id": "UAES-P13-REGISTRY-VALIDATION",
-  "generated_at": "2026-11-04T17:16:38.347Z",
-  "governance_root": "/Users/lincolnhu/uter-ai",
+  "generated_at": "2026-11-04T17:46:15.263Z",
+  "governance_root": "/Users/lincolnhu/uaes",
   "code_root": "/Users/lincolnhu/uter",
   "checks": [
     {

@@ -5,7 +5,7 @@
 ## 总入口
 
 ```bash
-cd /Users/lincolnhu/uter-ai
+cd /Users/lincolnhu/uaes
 node quality/scripts/uaes/uaes.mjs all
 ```
 

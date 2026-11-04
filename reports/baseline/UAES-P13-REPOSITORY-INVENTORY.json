@@ -1,7 +1,7 @@
 {
   "report_id": "UAES-P13-REPOSITORY-INVENTORY",
   "task_id": "UAES-P13-REPOSITORY-INTEGRATION",
-  "generated_at": "2026-11-04T17:16:38.572Z",
+  "generated_at": "2026-11-04T17:46:15.483Z",
   "repository": {
     "id": "REPO-UTER",
     "root": "/Users/lincolnhu/uter",
@@ -12,7 +12,7 @@
   },
   "governance_repository": {
     "id": "REPO-UAES",
-    "root": "/Users/lincolnhu/uter-ai",
+    "root": "/Users/lincolnhu/uaes",
     "relationship": "PARALLEL"
   },
   "summary": {

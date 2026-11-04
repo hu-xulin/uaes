@@ -69,7 +69,7 @@
     {
       "evidence_type": "REGISTRY_VALIDATION",
       "location": "reports/quality/UAES-P13-REGISTRY-VALIDATION.json",
-      "sha256": "f21e224b6603be32ac0c0cf509503ce6ca25e2d5ee720f0ab13c3cd1212c3c8b"
+      "sha256": "811bf430fa6891c4bf72417d904d148c3aa34ebead0256880e738ac2c0125327"
     },
     {
       "evidence_type": "MODULE_REGISTRY",
@@ -99,10 +99,10 @@
     {
       "evidence_type": "REPOSITORY_INVENTORY",
       "location": "reports/baseline/UAES-P13-REPOSITORY-INVENTORY.json",
-      "sha256": "88c2b73dcdbfd3da7398830bdaa232e131c87f075054423b9c421283140293bb"
+      "sha256": "ebce9c3da4c5b520bfa31d1ee84f93370d65566223357436b8e46c67c879b0ab"
     }
   ],
-  "generated_at": "2026-11-04T17:16:38.380Z",
+  "generated_at": "2026-11-04T17:46:15.293Z",
   "generated_by": "quality/scripts/uaes/quality-gate-runner.mjs",
   "conclusion": "Layer 1 (governance validation) and Layer 2 (module/impact resolution) executed with real evidence. Layer 3 domain gates and Layer 4 global gate remain NOT_RUN because the governance layer is read-only against the product repository. Global gate is BLOCKED, not PASS."
 }

@@ -1,8 +1,8 @@
 # UAES P13 Repository Integration — Repository Inventory
 
-生成时间：2026-11-04T17:16:38.572Z · 审计对象：`/Users/lincolnhu/uter` · HEAD `e4cbd007934be4825bde4cbc0345b1cbeebd0aa5` · 工作区脏文件 40 项（**只读审计，未触碰**）
+生成时间：2026-11-04T17:46:15.483Z · 审计对象：`/Users/lincolnhu/uter` · HEAD `e4cbd007934be4825bde4cbc0345b1cbeebd0aa5` · 工作区脏文件 40 项（**只读审计，未触碰**）
 
-规范库：`/Users/lincolnhu/uter-ai`（独立仓库，关系 `PARALLEL`）。
+规范库：`/Users/lincolnhu/uaes`（独立仓库，关系 `PARALLEL`）。
 
 ## 摘要
 

@@ -12,7 +12,7 @@
 
 > 本文件是实施证据，不是 UAES 标准文件。
 > 唯一事实源：`.uaes/STANDARD-REGISTRY.yaml`。
-> 产品代码仓库：`/Users/lincolnhu/uter`；规范库：`/Users/lincolnhu/uter-ai`，关系 `PARALLEL`。
+> 产品代码仓库：`/Users/lincolnhu/uter`；规范库：`/Users/lincolnhu/uaes`，关系 `PARALLEL`。
 > 核心原则：**先适配现有代码，再逐步规范代码；不移动、不重命名任何业务代码目录。**
 
 ## 1. 本次做了什么

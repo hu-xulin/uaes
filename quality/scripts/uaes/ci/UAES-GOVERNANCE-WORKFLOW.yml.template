@@ -31,8 +31,8 @@ jobs:
           path: uter
       - uses: actions/checkout@v4
         with:
-          repository: hu-xulin/uter-ai        # adjust to the real governance remote
-          path: uter-ai
+          repository: hu-xulin/uaes
+          path: uaes
           token: ${{ secrets.UAES_REGISTRY_TOKEN }}
       - uses: actions/setup-node@v4
         with:
@@ -41,7 +41,7 @@ jobs:
         env:
           UTER_REPO_ROOT: ${{ github.workspace }}/uter
         run: node quality/scripts/uaes/uaes.mjs validate
-        working-directory: uter-ai
+        working-directory: uaes
 
   # ---------- Layer 2: Module + Change Impact ----------
   l2-change-impact:
@@ -55,8 +55,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@v4
         with:
-          repository: hu-xulin/uter-ai
-          path: uter-ai
+          repository: hu-xulin/uaes
+          path: uaes
           token: ${{ secrets.UAES_REGISTRY_TOKEN }}
       - uses: actions/setup-node@v4
         with:
@@ -68,11 +68,11 @@ jobs:
           git -C "$UTER_REPO_ROOT" diff --name-only \
             "origin/${{ github.base_ref }}...HEAD" > /tmp/changed-files.txt
           node quality/scripts/uaes/uaes.mjs impact --stdin < /tmp/changed-files.txt
-        working-directory: uter-ai
+        working-directory: uaes
       - uses: actions/upload-artifact@v4
         with:
           name: uaes-change-impact
-          path: uter-ai/reports/quality/UAES-P13-CHANGE-IMPACT.json
+          path: uaes/reports/quality/UAES-P13-CHANGE-IMPACT.json
 
   # ---------- Layer 3: Domain Quality Gates ----------
   # Run ONLY the verification commands listed by the impact engine, not every
@@ -103,12 +103,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: hu-xulin/uter-ai
-          path: uter-ai
+          repository: hu-xulin/uaes
+          path: uaes
           token: ${{ secrets.UAES_REGISTRY_TOKEN }}
       - name: Aggregate
         run: node quality/scripts/uaes/uaes.mjs gate
-        working-directory: uter-ai
+        working-directory: uaes
       - name: Fail on any FAIL / BLOCKED result
         run: |
           python3 - <<'PY'
@@ -116,4 +116,4 @@ jobs:
           r = json.load(open('reports/quality/UAES-P13-GOVERNANCE-VERIFICATION.json'))
           sys.exit(0 if r['gate_status'] == 'PASS' else 1)
           PY
-        working-directory: uter-ai
+        working-directory: uaes

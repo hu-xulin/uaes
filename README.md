@@ -10,7 +10,7 @@
 | 仓库 | 路径 | 内容 |
 | --- | --- | --- |
 | 产品代码 | `/Users/lincolnhu/uter` | Go 后端 + React / TypeScript 前端，数千个源文件 |
-| 标准库（本仓库） | `/Users/lincolnhu/uter-ai` | 规范文档、Schema、门禁、报告，以及少量「校验 / 生成」脚本 |
+| 标准库（本仓库） | `/Users/lincolnhu/uaes` | 规范文档、Schema、门禁、报告，以及少量「校验 / 生成」脚本 |
 
 本仓库共 467 个受控文件，构成如下：
 
@@ -38,7 +38,7 @@
 控制台进程刻意放在仓库之外（零侵入，不改动规范库任何目录层级）：
 
 ```bash
-node /Users/lincolnhu/uter-ai-console.mjs 4173
+node /Users/lincolnhu/uaes-console.mjs 4173
 # 打开 http://127.0.0.1:4173
 ```
 
