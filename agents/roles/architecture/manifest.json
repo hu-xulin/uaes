@@ -7,7 +7,8 @@
   "status": "DRAFT",
   "runtime": "tool-adapter-selected",
   "skillRefs": [
-    "SKILL-UAES-COMPLIANCE-AUDIT"
+    "SKILL-UAES-COMPLIANCE-AUDIT",
+    "SKILL-UAES-CODE-REVIEW"
   ],
   "toolRefs": [],
   "inputContract": ".uaes/schemas/agent-task.schema.json",
