@@ -183,6 +183,22 @@ for agent in agents_registry.get("agents", []):
     validate_instance("agent-manifest.schema.json", manifest, manifest_path)
 
 skills_registry = load_yaml_instance("skills/registry.yaml")
+skill_ids = [item.get("id") for item in skills_registry.get("skills", [])]
+if len(skill_ids) != len(set(skill_ids)):
+    errors.append("skills/registry.yaml: duplicate skill IDs")
+registered_skill_ids = set(skill_ids)
+for agent in agents_registry.get("agents", []):
+    manifest_path = agent.get("manifest")
+    if not manifest_path:
+        continue
+    try:
+        agent_manifest = json.loads((ROOT / manifest_path).read_text(encoding="utf-8"))
+    except Exception:
+        continue
+    for skill_ref in agent_manifest.get("skillRefs", []):
+        if skill_ref not in registered_skill_ids:
+            errors.append(f"{manifest_path}: unregistered skill reference {skill_ref}")
+
 for skill in skills_registry.get("skills", []):
     manifest_path = skill.get("manifest")
     if not manifest_path:
