@@ -33,6 +33,12 @@ approved_removals.each do |approval|
 end
 stop("duplicate API breaking-change approval id") unless approval_ids.uniq.length == approval_ids.length
 stop("duplicate API breaking-change approval operation") unless approval_keys.uniq.length == approval_keys.length
+unknown_approval_documents = approved_removals.map { |approval| approval["document"] }.uniq - documents.keys
+stop("API breaking-change approval references unknown baseline document(s): #{unknown_approval_documents.join(", ")}") unless unknown_approval_documents.empty?
+if baseline["source_commit"]
+  mismatched_baseline_approvals = approved_removals.reject { |approval| approval["baseline_source_commit"] == baseline["source_commit"] }
+  stop("API breaking-change approval baseline source_commit does not match the pinned compatibility baseline") unless mismatched_baseline_approvals.empty?
+end
 stop("baseline contains no OpenAPI documents") if documents.empty?
 
 METHODS = %w[get post put patch delete options head trace].freeze
