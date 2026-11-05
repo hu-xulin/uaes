@@ -17,8 +17,8 @@ class P00FoundationAuditTest < Minitest::Test
     root = Dir.mktmpdir("uaes-p00-")
     %w[.uaes/schemas standards/00-foundation].each { |path| FileUtils.mkdir_p(File.join(root, path)) }
     File.write(File.join(root, ".uaes/VERSION"), "1.0.0\n")
-    File.write(File.join(root, "standards/00-foundation/UAES-00.md"), "# UAES-00\n\n**Status:** DRAFT\n")
-    File.write(File.join(root, "standards/00-foundation/UAES-01.md"), "# UAES-01\n\n**Status:** DRAFT\n")
+    File.write(File.join(root, "standards/00-foundation/UAES-00.md"), "# UAES-00\n\n**Status:** DRAFT\n\n### UAES-00-PRIN-001 — fixture rule\n")
+    File.write(File.join(root, "standards/00-foundation/UAES-01.md"), "# UAES-01\n\n**Status:** DRAFT\n\n### UAES-01-RULE-001 — fixture rule\n")
 
     registry_schema = {
       "$schema" => "https://json-schema.org/draft/2020-12/schema",
@@ -281,6 +281,24 @@ class P00FoundationAuditTest < Minitest::Test
     }
     write_registry(root, registry)
     assert_audit_fails(root, "E0 exceptions cannot be approved or active")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_duplicate_rule_definitions
+    root = fixture
+    path = File.join(root, "standards/00-foundation/UAES-01.md")
+    File.write(path, "# UAES-01\n\n**Status:** DRAFT\n\n### UAES-00-PRIN-001 — duplicate\n")
+    assert_audit_fails(root, "normative rule definitions are unique")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_rule_id_collision_with_standard_id
+    root = fixture
+    path = File.join(root, "standards/00-foundation/UAES-01.md")
+    File.write(path, "# UAES-01\n\n**Status:** DRAFT\n\n### UAES-00-001 — collision\n")
+    assert_audit_fails(root, "rule IDs do not collide with registered standard/schema/gate IDs")
   ensure
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
