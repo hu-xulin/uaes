@@ -3092,3 +3092,4 @@ history:
     notes:
       - "The registry remains DRAFT; this version increment does not approve or activate UAES."
       - "Status vocabulary is aligned across registry, standard metadata schema, registry schema, and UAES-00-003."
+      - "P00 audit registered 12 previously unregistered JSON schemas, declared the shared agent-handoff schema, and corrected the P07/P08 dependency cycle."
