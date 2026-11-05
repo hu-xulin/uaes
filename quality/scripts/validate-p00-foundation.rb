@@ -205,14 +205,19 @@ else
     path = File.join(ROOT, entry["file"].to_s)
     next unless File.file?(path)
     File.readlines(path, chomp: true).each_with_index do |line, index|
-      match = line.match(/^\s*\#{3,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/) ||
+      heading_match = line.match(/^\s*\#{3,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/)
+      match = heading_match ||
               line.match(/^\s*\|\s*(UAES-[A-Z0-9-]+)\s*\|/) ||
               line.match(/^\s*(?:[-*]\s*)?\*\*(UAES-[A-Z0-9-]+)\s*(?:[—-]|\*\*)/)
       next unless match
       rule_id = match[1]
+      rule_format = /\AUAES-(?:(?:0[0-9]|1[0-2])-[A-Z][A-Z0-9]*-\d{3}|(?:0[0-9]|1[0-2])-\d{3}-(?:[A-Z]{1,4})?\d{3}|[A-Z][A-Z0-9]*-\d{3})\z/
+      next unless rule_id.match?(rule_format)
+      if ids.include?(rule_id)
+        record(false, "rule ID collides with registered ID: #{rule_id}") if heading_match
+        next
+      end
       rule_occurrences[rule_id] << "#{entry["file"]}:#{index + 1}"
-      record(rule_id.match?(/\AUAES-(?:[A-Z][A-Z0-9]*-\d{3}|(?:0[0-9]|1[0-2])-[A-Z][A-Z0-9]*-\d{3}|(?:0[0-9]|1[0-2])-\d{3}-\d{3})\z/),
-             "rule ID uses a collision-safe format: #{rule_id}")
     end
   end
   duplicate_rules = rule_occurrences.select { |_id, locations| locations.length > 1 }
