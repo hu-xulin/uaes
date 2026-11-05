@@ -148,3 +148,17 @@ Implemented on Uter PR #15:
 - No runtime handler, auth semantics, database, payment configuration, production environment, or deployment was changed.
 
 The final Uter source for the fresh parity run is `422caafffb7a64370700ddd4859a057911f5f9e0`. The UAES Architecture Source Checks workflow and database migration inventory are being repinned to this exact source commit. Acceptance remains pending until the new live parity run passes.
+
+
+## 1E. Compatibility gate behavior and approved removal ledger
+
+The first Architecture Source Checks run after removing the two operations correctly failed earlier at `check-api-contracts`, before live route parity, because the pinned compatibility baseline still contained both operations. This was an expected protection, not a regression in the checker.
+
+A narrow, auditable approval mechanism has now been added:
+- `.uaes/registry/api-breaking-change-approvals.json` records exactly the two owner-approved removals, each with a unique approval ID, exact document + HTTP operation, owner decision, reason, consumer-audit path, baseline source commit, and implementation source commit.
+- `check-api-contracts` accepts a removed operation only when an exact matching `OPTION_B_APPROVED` entry exists. Unapproved removals still fail.
+- The checker rejects duplicate approvals, approvals for unknown baseline documents, baseline-source mismatches, approvals for operations absent from the pinned baseline, and stale approvals when an operation is still present.
+- `test-api-contracts.rb` now has positive and negative controls for approved removal and stale approval rejection; the existing unapproved-removal negative control remains.
+- Architecture workflow path filters now include both the API compatibility baseline and approval registry.
+
+This is not a blanket compatibility bypass and does not weaken checks for other operations, request/response changes, schemas, or required fields. Final acceptance awaits the exact-current-head Architecture Source Checks run, including live Gin/OpenAPI parity.
