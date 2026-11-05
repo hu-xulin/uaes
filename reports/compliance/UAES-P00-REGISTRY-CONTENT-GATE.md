@@ -7,7 +7,7 @@
 | 仓库 / 分支 | `hu-xulin/uaes` / `ai/uaes-p00-content-gate-2026-11-05` |
 | 基线 | `origin/main` @ `968e4a63648b7cd1ec9e242179ceef689849202b` |
 | 范围 | Layer-1 `validate-registry.mjs` 门禁、注册表声明资产、CI 接入 |
-| 状态 | **IMPLEMENTED + 本地 VERIFIED**；CI 远程结论 `NOT_RUN`（尚未推送） |
+| 状态 | **IMPLEMENTED + 本地 VERIFIED + 远程 CI VERIFIED**（PR #3，两次运行 `success`） |
 | 关联 | `_reports/UTER-UAES-FULL-COMPLIANCE/`（Uter 仓）R-001 / R-004 / R-005 / R-007 / GATE-THREE-WAY-TEST |
 
 > 状态语义：`PRESENT` / `DRAFT` / `IMPLEMENTED` 不等于 `VERIFIED`。
@@ -156,6 +156,20 @@ CI 不签出 Uter 产品仓。最初方案是构造产品仓桩文件，但实�
 
 三个 action 均锁定到经 GitHub API 验证的 commit SHA。
 
+### 7.1 远程 CI 实际结论（PR #3）
+
+| Run ID | 事件 | 结论 | 步骤 |
+| --- | --- | --- | --- |
+| `42039481154` | `push`（分支首推） | `success` | 9/9 步 success |
+| `42039602706` | `pull_request` | `success` | 9/9 步 success |
+
+两次运行的关键步骤 `Run Layer-1 content gate` / `Assert evidence semantics` /
+`Three-way gate tests` / `Verify gate steps produced no report side effects` 均为 `success`。
+`gh run watch 42039602706 --exit-status` 退出码 `0`。
+
+> 注意：CI 绿灯只证明**内容级门禁在 CI 中可执行且有效**，不等于 Uter 合规；
+> CI 中 18 项产品仓相关检查按设计保持 `NOT_RUN`。
+
 ---
 
 ## 8. 未关闭风险（OPEN，不得据此宣布合规）
@@ -171,7 +185,7 @@ CI 不签出 Uter 产品仓。最初方案是构造产品仓桩文件，但实�
 | F-07 | 本分支 5 份资产逐字复用 PR #1；PR #1（`ai/uaes-agent-skills-governance-2026-11-05`）仍为 **Open + Draft / 100 文件**，PR #2 已 **CLOSED** | 存在合并顺序依赖：PR #1 的注册表为 v1.8.0 且**仍保留** `UAES-SCHEMA-08-003` 重复声明，其 `validate-registry.mjs` **没有** G-019~G-023。若 PR #1 后合并并整份覆盖注册表，会重新触发 G-023；合并前需在 PR #1 上同步本分支的注册表去重与门禁改动 |
 | F-08 | `paths.mjs` 硬编码 `createRequire('/Users/lincolnhu/uter/web/package.json')` | 不具可移植性；CI 只能靠 PyYAML 降级 |
 | F-09 | Uter `main` 仍**零 UAES 引用**；S2–S6 集成未开始 | R-002 Uter 基线审计 |
-| F-10 | 本分支远程 CI 结论尚未产生 | `NOT_RUN`（尚未 push）；不得写成 VERIFIED |
+| F-10 | **PR #3 尚未合并，`main` 上仍是 18/18 旧门禁** | 内容级漏检在 `main` 分支仍然生效，直到本 PR 合并；本 PR 已 `MERGEABLE`，未执行合并 |
 
 ---
 
