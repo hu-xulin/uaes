@@ -111,7 +111,10 @@ else
     record(id.match?(/\AUAES-[A-Z0-9]+(?:-[A-Z0-9]+)*\z/), "#{kind} ID format: #{id}")
     record(!path.empty? && !path.start_with?("/") && !path.split("/").include?(".."), "#{id} uses a safe relative file path")
     record(nonempty?(ROOT, path), "#{id} file exists and is non-empty: #{path}")
-    record(valid_statuses.include?(entry["status"]), "#{id} lifecycle status is valid") if entry.key?("status")
+    record(valid_statuses.include?(entry["status"]), "#{id} lifecycle status is valid")
+    if %w[standards schemas gates acceptance].include?(kind)
+      record(!entry["phase"].to_s.empty? && phases.key?(entry["phase"]), "#{id} has a registered phase")
+    end
     if %w[APPROVED IMPLEMENTED VERIFIED ACTIVE].include?(entry["status"])
       approval = entry["approval"].is_a?(Hash) ? entry["approval"] : {}
       %w[approver approved_at evidence change_request].each { |key| record(!approval[key].to_s.empty?, "#{id} approval record includes #{key}") }
