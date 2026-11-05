@@ -56,7 +56,9 @@ SUPERSEDED 表示该标准已被另一个标准或版本替代，可作为历史
 | SUPERSEDED | 已由新版本替代 |
 | RETIRED | 已退役 |
 
-状态集合必须与 `.uaes/STANDARD-REGISTRY.yaml`、`standard-registry.schema.json` 和 `standard-metadata.schema.json` 完全一致。任何状态集合变化都必须同步更新以上资产并运行 P00 正向、负向测试。\n\n## 4. Semantic Versioning
+状态集合必须与 `.uaes/STANDARD-REGISTRY.yaml`、`standard-registry.schema.json` 和 `standard-metadata.schema.json` 完全一致。任何状态集合变化都必须同步更新以上资产并运行 P00 正向、负向测试。
+
+## 4. Semantic Versioning
 
 UAES 使用：
 
