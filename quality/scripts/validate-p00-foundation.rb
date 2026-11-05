@@ -174,7 +174,7 @@ else
     path = File.join(ROOT, entry["file"].to_s)
     next unless File.file?(path)
     File.readlines(path, chomp: true).each_with_index do |line, index|
-      match = line.match(/^\s*#{2,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/)
+      match = line.match(/^\s*\#{2,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/)
       rule_occurrences[match[1]] << "#{entry["file"]}:#{index + 1}" if match
     end
   end
@@ -192,7 +192,7 @@ else
 
   dependency_map = dependency_records.to_h { |item| [item["standard"], Array(item["depends_on"])] }
   standard_entries.each do |entry|
-    if entry["id"].to_s.match?(/\\AUAES-(?:0[1-9]|1[0-2])\\z/)
+    if entry["id"].to_s.match?(/\AUAES-(?:0[1-9]|1[0-2])\z/)
       record(dependency_map.fetch(entry["id"], []).include?("UAES-00"), "#{entry["id"]} domain standard depends on UAES-00")
     end
   end
@@ -202,7 +202,7 @@ else
   record(exception_ids.uniq.length == exception_ids.length, "exception IDs are unique")
   exceptions.each do |exception|
     id = exception["id"].to_s
-    record(id.match?(/\\AUAES-EXC-\\d{4,}\\z/), "exception ID format: #{id}")
+    record(id.match?(/\AUAES-EXC-\\d{4,}\z/), "exception ID format: #{id}")
     record(%w[REQUESTED RISK_ASSESSED IN_REVIEW NEEDS_REVISION APPROVED ACTIVE REJECTED EXPIRED REVOKED CLOSED].include?(exception["status"]), "#{id} exception status is valid")
     Array(exception["related_rule_ids"]).each do |rule_id|
       record(ids.include?(rule_id) || rule_occurrences.key?(rule_id), "#{id} references a known rule: #{rule_id}")
