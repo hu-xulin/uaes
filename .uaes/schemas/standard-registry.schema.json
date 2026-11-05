@@ -343,10 +343,22 @@
       "additionalProperties": false,
       "required": [
         "id",
+        "exception_class",
         "related_rule_ids",
         "status",
         "requester",
-        "reason"
+        "reason",
+        "business_justification",
+        "technical_constraints",
+        "risk_assessment",
+        "affected_components",
+        "security_impact",
+        "data_impact",
+        "financial_impact",
+        "compensating_controls",
+        "expires_at",
+        "rollback_plan",
+        "verification_plan"
       ],
       "properties": {
         "id": {
@@ -417,6 +429,39 @@
         },
         "pull_request": {
           "type": "string"
+        },
+        "exception_class": {
+          "enum": [
+            "E0",
+            "E1",
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        "technical_constraints": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "security_impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data_impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "financial_impact": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "allOf": [
@@ -445,6 +490,33 @@
               "rollback_plan",
               "verification_plan"
             ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "exception_class": {
+                "const": "E0"
+              }
+            },
+            "required": [
+              "exception_class"
+            ]
+          },
+          "then": {
+            "not": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "APPROVED",
+                    "ACTIVE"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            }
           }
         }
       ]
