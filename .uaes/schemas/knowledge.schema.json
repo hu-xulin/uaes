@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uter.ai/uaes/schemas/knowledge.schema.json",
+  "title": "UAES Knowledge Record",
+  "type": "object",
+  "required": [
+    "knowledgeId",
+    "title",
+    "kind",
+    "source",
+    "provenance",
+    "status",
+    "content"
+  ],
+  "properties": {
+    "knowledgeId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "PROJECT_FACT",
+        "ARCHITECTURE",
+        "PRODUCT",
+        "ENGINEERING",
+        "DECISION",
+        "INCIDENT",
+        "DESIGN",
+        "OPERATION"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance": {
+      "enum": [
+        "SOURCE_VERIFIED",
+        "USER_CONFIRMED",
+        "INFERRED",
+        "RECONSTRUCTED",
+        "UNKNOWN"
+      ]
+    },
+    "status": {
+      "enum": [
+        "CURRENT",
+        "DRAFT",
+        "STALE",
+        "SUPERSEDED",
+        "RETIRED"
+      ]
+    },
+    "content": {
+      "type": "string"
+    },
+    "verifiedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "related": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reviewAfter": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": false
+}
