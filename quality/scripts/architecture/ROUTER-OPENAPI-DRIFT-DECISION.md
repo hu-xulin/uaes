@@ -1,6 +1,6 @@
 # Uter OpenAPI / Runtime Route Drift — Contract Decision Record
 
-> Status: **BLOCKED — API contract owner decision required**
+> Status: **OPTION B APPROVED — OpenAPI cleanup implemented; final parity CI pending**
 > Uter source commit: `008ec53adc9652ee454090b4fb1152536dd45bf3`
 > UAES Architecture Source Checks: https://github.com/hu-xulin/uaes/actions/runs/41967181380
 > No runtime API or OpenAPI behavior was changed by this record.
@@ -74,7 +74,7 @@ Do not infer equivalence from similar names or neighboring routes. The current i
 
 Record one choice:
 - [ ] Option A — preserve and implement both operations
-- [ ] Option B — revise OpenAPI to the actual runtime contract
+- [x] Option B — revise OpenAPI to the actual runtime contract (OWNER APPROVED 2026-11-05)
 - [ ] Option C — temporary compatibility migration
 
 Also confirm:
@@ -126,4 +126,25 @@ The runtime inventory again captured 450 static Gin routes and 34 dynamic plugin
 
 Run: https://github.com/hu-xulin/uaes/actions/runs/41968779803
 
-No API owner decision has been recorded. Options A/B/C and the restrictions in §4 remain unchanged. Keep the gate blocking and Uter migration pending.
+API contract owner selected **Option B** on 2026-11-05. The two paths were removed from the Uter OpenAPI after the repository-local consumer audit. See §1D for the decision and evidence. Keep the route-parity gate blocking until a fresh run against the updated Uter source passes.
+
+
+## 1D. Owner decision — Option B approved and implemented
+
+On 2026-11-05, the API contract owner explicitly selected **Option B**: both legacy operations are obsolete; complete the consumer survey and remove the stale OpenAPI declarations. This supersedes the earlier “decision required” status in §§1–1C.
+
+The Uter PR #15 branch contains the owner-approved audit at `.uaes/API-LEGACY-ENDPOINT-DEPRECATION-AUDIT-2026-11-05.md`. The survey found:
+- no current Gin route for either path;
+- no current frontend API call to either path;
+- current verification client uses `GET /api/verify/methods`, `POST /api/verify`, and `POST /api/verify/email_code`;
+- current generic OAuth uses `POST /api/oauth/state` and callback flows; the dedicated WeChat website-app flow is login-only and is **not** claimed to replace WeChat account binding;
+- seven locale API-reference copies contained stale references, including a WeChat HTTP-method disagreement (OpenAPI POST versus docs GET);
+- production external-client usage telemetry is not present in the inspected repository, so the audit does not assert that no external caller ever existed. The owner's explicit obsolescence decision is the authority for removal.
+
+Implemented on Uter PR #15:
+- `docs-dev/openapi/api.json`: removed exactly `/api/oauth/wechat/bind` and `/api/verify/status`; operation count reduced from 161 to 159 and path count from 136 to 134.
+- Removed both obsolete API-reference sections from the seven locale copies.
+- Added a filter to `docs-web/scripts/sync-upstream-docs.py` so future documentation synchronization cannot reintroduce these paths.
+- No runtime handler, auth semantics, database, payment configuration, production environment, or deployment was changed.
+
+The final Uter source for the fresh parity run is `076ea0c2a9fc3eace5dc5c1ccea9d2247fee6db1`. The UAES Architecture Source Checks workflow and database migration inventory are being repinned to this exact source commit. Acceptance remains pending until the new live parity run passes.
