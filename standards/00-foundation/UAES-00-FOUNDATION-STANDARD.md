@@ -393,4 +393,5 @@ UAES 体系只有同时满足以下条件，才可宣布完成：
 
 | Version | Status | Change |
 |---|---|---|
-| 1.0.0 | DRAFT | Initial UAES Foundation |\n| 1.1.0 | DRAFT | Namespace principle IDs to avoid collisions with registered standard IDs |\n| 1.2.0 | DRAFT | Align Foundation status vocabulary with UAES-00-003 and the global registry |
+| 1.0.0 | DRAFT | Initial UAES Foundation |
+| 1.1.0 | DRAFT | Namespace principle IDs to avoid collisions with registered standard IDs |\n| 1.2.0 | DRAFT | Align Foundation status vocabulary with UAES-00-003 and the global registry |
