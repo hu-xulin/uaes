@@ -92,7 +92,7 @@ custom_steps:
     order: 30
     failure_mode: LOG_AND_CONTINUE
     rollback_status: NOT_PROVIDED
-    recovery: "Verify subscription_plans.price_amount type and values per database dialect; retry controlled conversion."
+    recovery: "Verify subscription_plans.price_amount type, precision, scale, range, and exact values per database dialect. PostgreSQL numeric type check currently accepts any numeric precision/scale; conversion to decimal(10,6) may round or overflow. Metadata and DDL errors are logged and swallowed; verify actual schema before retry."
   - id: DBM-005
     scope: main
     source: model/main.go
@@ -112,7 +112,7 @@ custom_steps:
     order: 50
     failure_mode: LOG_AND_CONTINUE
     rollback_status: BACKUP_TABLE_CREATED
-    recovery: "Inspect options_legacy_* backup table and rebuilt options primary key; do not drop backup without independent verification."
+    recovery: "Inspect options_legacy_* backup table and rebuilt options primary key; empty keys are omitted and conflicting duplicate values collapse to the last encountered value. Test failures between table renames and restore from the retained legacy table; do not drop backup without independent verification."
   - id: DBM-007
     scope: main
     source: model/usedata_migration.go
@@ -257,8 +257,12 @@ manual_sql:
   - path: bin/migration_v0.2-v0.3.sql
     status: LEGACY_MANUAL
     rollback_status: NOT_PROVIDED
-    recovery: "Historical quota transfer; reconcile users.quota and tokens.remain_quota from a verified backup."
+    recovery: "NON-IDEMPOTENT: re-execution adds token remain_quota to user quota again and can double-credit. Never rerun when execution status is unknown. Require verified backup, per-user reconciliation, and owner-approved one-time execution evidence."
   - path: bin/migration_v0.3-v0.4.sql
     status: LEGACY_MANUAL
     rollback_status: NOT_PROVIDED
-    recovery: "Historical ability rows are inserted idempotently using NOT EXISTS; verify target ability tuples."
+    recovery: "NOT EXISTS prevents identical tuple reinsertion, but does not reconcile existing disabled or semantically divergent rows. Verify expected ability tuples and enabled state; note the script uses MySQL-style identifier quoting."
+
+# Detailed source-level findings and validation programme:
+# quality/scripts/architecture/DATABASE-MIGRATION-SAFETY-AUDIT.md
+# Overall status remains DATABASE MIGRATION SAFETY: NOT_VERIFIED.
