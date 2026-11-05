@@ -63,6 +63,25 @@ class RouterOpenApiDriftTest < Minitest::Test
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
 
+
+  def test_rejects_static_route_for_openapi_parameter
+    root, route_file = fixture
+    document_path = File.join(root, "docs-dev/openapi/api.json")
+    document = JSON.parse(File.read(document_path))
+    document["paths"]["/api/static/{resource_id}"] = {
+      "get" => { "responses" => { "200" => { "description" => "OK" } } }
+    }
+    File.write(document_path, JSON.generate(document))
+    routes = JSON.parse(File.read(route_file))
+    routes << { "method" => "GET", "path" => "/api/static/fixed" }
+    File.write(route_file, JSON.generate(routes))
+    _out, err, status = run_checker(root, route_file)
+    refute status.success?
+    assert_match(/GET \/api\/static\/\{resource_id\}/, err)
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
   def test_rejects_method_mismatch
     root, route_file = fixture
     routes = JSON.parse(File.read(route_file))
