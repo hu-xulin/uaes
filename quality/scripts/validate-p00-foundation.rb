@@ -160,6 +160,21 @@ else
   graph.keys.each { |node| visit_dependency(node, graph, Set.new, visited, cycles) }
   record(cycles.empty?, "required dependency graph has no cycles#{cycles.empty? ? "" : ": #{cycles.uniq.join(", ")}"}")
 
+  # Rule IDs declared in standard headings are audited separately from registry entry IDs.
+  rule_occurrences = Hash.new { |hash, key| hash[key] = [] }
+  standard_entries.each do |entry|
+    path = File.join(ROOT, entry["file"].to_s)
+    next unless File.file?(path)
+    File.readlines(path, chomp: true).each_with_index do |line, index|
+      match = line.match(/^\s*#{2,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/)
+      rule_occurrences[match[1]] << "#{entry["file"]}:#{index + 1}" if match
+    end
+  end
+  duplicate_rules = rule_occurrences.select { |_id, locations| locations.length > 1 }
+  record(duplicate_rules.empty?, "rule IDs in standard headings are unique#{duplicate_rules.empty? ? "" : ": #{duplicate_rules.keys.join(", ")}"}")
+  collisions = rule_occurrences.keys & ids
+  record(collisions.empty?, "rule IDs do not collide with registered standard/schema/gate IDs#{collisions.empty? ? "" : ": #{collisions.join(", ")}"}")
+
   history = Array(registry["history"])
   history_versions = history.map { |item| item["version"] }
   record(history_versions.uniq.length == history_versions.length, "registry history versions are unique")
