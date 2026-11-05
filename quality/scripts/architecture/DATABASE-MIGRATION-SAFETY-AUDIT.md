@@ -235,7 +235,9 @@ Do not mark migration safety complete until all applicable gates have reproducib
 ## 6. Immediate implementation priorities
 
 1. Add a regression test and a safe execution guard for LEGACY-SQL-001; do not run the historical script against any real dataset.
-2. Add DBM-004 fixtures for precision/scale, overflow, PostgreSQL numeric variants, metadata-query failure, and swallowed DDL failure; decide whether the migration must fail startup rather than silently continue.\n3. Add DBM-006 fixtures for empty keys, conflicting duplicate values, concurrent writes, and process interruption between table renames; prove restoration from the legacy table.\n4. Complete source review and fixtures for remaining initializer, audit-log, and ClickHouse TTL migrations.
+2. Add DBM-004 fixtures for precision/scale, overflow, PostgreSQL numeric variants, metadata-query failure, and swallowed DDL failure; decide whether the migration must fail startup rather than silently continue. 
+3. Add DBM-006 fixtures for empty keys, conflicting duplicate values, concurrent writes, and process interruption between table renames; prove restoration from the legacy table. 
+4. Complete source review and fixtures for remaining initializer, audit-log, and ClickHouse TTL migrations.
 5. Add before/after aggregate export and reconciliation assertions for DBM-007.
 6. Add migration failure injection and retry harness for the full startup sequence.
 7. Add disposable SQLite/MySQL/PostgreSQL/ClickHouse services to the test matrix, with independent log DB cases.
