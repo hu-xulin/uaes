@@ -29,7 +29,7 @@
 | 00-06 | Standard lifecycle status | NOT_VERIFIED | Lifecycle alignment passed run #593; latest exception model edits await the current full gate. |
 | 00-07 | Normative priority | NOT_VERIFIED | MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY and P0-P3 vocabularies passed earlier; rule-ID convention was revised and requires rerun plus semantic review. |
 | 00-08 | Standard versioning | NOT_VERIFIED | Registry 1.8.0 and history passed run #593; an additional 1.8.0 reconciliation note was added afterward. |
-| 00-09 | Standard conflict audit | NOT_VERIFIED | Resolved status-vocabulary drift, registry-vs-metadata-schema ambiguity, dependency-type representation ambiguity, and P07/P08 dependency conflict. Full cross-domain semantic review remains open. |
+| 00-09 | Standard conflict audit | NOT_VERIFIED | Resolved status-vocabulary drift, governance activation-order conflict, rule/standard ID namespace conflict, registry-vs-metadata-schema ambiguity, dependency-type representation ambiguity, P07/P08 dependency conflict, E0 exception semantics, and task-contract schema coverage. Full cross-domain semantic review remains open. |
 | 00-10 | Duplicate rule audit | NOT_VERIFIED | Expanded rule definition scanner and duplicate/collision tests were added after run #593; rerun pending. |
 | 00-11 | Exception approval | NOT_VERIFIED | Exception schema now includes E0-E4 and complete request evidence; latest validator/tests await rerun, and out-of-registry waiver inventory remains open. |
 | 00-12 | Audit evidence | PASS | This report links to the audit branch and run #593; CI logs record exact checks and regression results. Independent semantic review remains separate. |
@@ -53,8 +53,9 @@
 - UAES Governance Validation run 42036118088 failed on the first execution and correctly exposed: 12 unregistered schema files, one undeclared duplicate schema path, a P07/P08 dependency cycle, and a domain-title false positive in the rule scanner.
 - UAES Governance Validation run 42036237551 failed because the new file-status parity regex was over-escaped. The failure was corrected in commit e44b2d60e812af10ab6cfcf50d5bf8acb7013791.
 - UAES Governance Validation run 42037086837 passed the full P00 validator (2,255 checks) but exposed one negative-fixture YAML-alias issue; fixture serialization was corrected in commit 6de2e0e62d515cba38d18069d957cf1efa3e1a8a.
+- UAES Governance Validation run 42037770079 exposed rule-scanner false positives for registered domain/standard IDs and an unsupported P12 rule suffix; the scanner was revised to distinguish standard references from rule definitions and accept the P12 M### convention. Subsequent P00 rule-ID, exception, lifecycle and task-schema edits are awaiting a new run.
 - UAES Governance Validation run 42037232482 then passed: P00 validator 2,255 checks; P00 regression tests 17 runs / 49 assertions / 0 failures; skill adapter tests 3 runs / 11 assertions / 0 failures; 72 JSON Schemas validated.
-- UAES Governance Validation run #593 succeeded on the preceding revision (2,255 validator checks; P00 tests 17/49 with zero failures; skill adapter tests 3/11 with zero failures; 72 schemas validated). Subsequent rule-ID scanner, exception schema, and test updates are not yet revalidated; the next workflow run is pending.
+- UAES Governance Validation run #593 succeeded on the preceding revision (2,255 validator checks; P00 tests 17 runs / 49 assertions / 0 failures; skill adapter tests 3 runs / 11 assertions / 0 failures; 72 schemas validated). Subsequent rule-ID scanner, E0 exception model, task-contract schema, and lifecycle-order changes are not yet revalidated; the next workflow run is pending.
 - Uter PR #15 now includes version/status pin checks and negative fixtures; its CI result is also pending.
 
 ## Remaining blockers
