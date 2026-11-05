@@ -22,8 +22,18 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: hu-xulin/uter
-          ref: 337485b4b19824f9bee59b6f8226802b455ab0ec
+          # Keep aligned with the Uter integration PR source baseline.
+          ref: 008ec53adc9652ee454090b4fb1152536dd45bf3
           path: uter
+      - name: Verify checked out Uter baseline
+        working-directory: uter
+        run: |
+          actual="$(git rev-parse HEAD)"
+          expected="008ec53adc9652ee454090b4fb1152536dd45bf3"
+          test "$actual" = "$expected" || {
+            echo "Uter source baseline mismatch: got $actual, expected $expected"
+            exit 1
+          }
       - name: Validate module manifests
         working-directory: uaes
         env:
