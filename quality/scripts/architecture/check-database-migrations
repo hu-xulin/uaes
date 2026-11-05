@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require "yaml"
+require "open3"
 
 def stop(message, code = 2)
   warn "DATABASE MIGRATION INVENTORY: #{message}"
@@ -13,13 +14,18 @@ stop("inventory missing: #{inventory_path}") unless File.file?(inventory_path)
 root = ENV["UTER_REPO_ROOT"]
 stop("UTER_REPO_ROOT is required") if root.nil? || root.empty?
 root = File.realpath(root)
+stdout, stderr, status = Open3.capture3("git", "-C", root, "rev-parse", "HEAD")
+stop("cannot resolve checked-out Uter Git commit: #{stderr.strip}") unless status.success?
+checked_out_commit = stdout.strip
+stop("checked-out Uter HEAD is not a 40-character SHA") unless checked_out_commit.match?(/\\A[0-9a-f]{40}\\z/)
 inventory = YAML.safe_load_file(inventory_path, permitted_classes: [], aliases: false)
 stop("inventory root must be a mapping") unless inventory.is_a?(Hash)
 
 expected_source = inventory.fetch("source_repository", nil)
 stop("source_repository must be hu-xulin/uter") unless expected_source == "hu-xulin/uter"
 source_commit = inventory.fetch("source_commit", nil)
-stop("source_commit must be a pinned 40-character SHA") unless source_commit.is_a?(String) && source_commit.length == 40 && source_commit.match?(/[0-9a-f]{40}/)
+stop("source_commit must be a pinned 40-character SHA") unless source_commit.is_a?(String) && source_commit.length == 40 && source_commit.match?(/\\A[0-9a-f]{40}\\z/)
+stop("inventory source_commit #{source_commit} does not match checked-out Uter HEAD #{checked_out_commit}") unless source_commit == checked_out_commit
 
 main = inventory.fetch("migration_system", {})
 stop("migration_system must declare rollback_harness") unless main.key?("rollback_harness")
