@@ -47,7 +47,9 @@ SUPERSEDED 表示该标准已被另一个标准或版本替代，可作为历史
 | DRAFT | 草案 |
 | IN_REVIEW | 正在审查 |
 | NEEDS_REVISION | 需要修改 |
-| APPROVED | 已批准，尚未正式生效 |
+| APPROVED | 已批准，尚未完成实施与验证，不代表已经生效 |
+| IMPLEMENTED | 已完成规范要求的工程实施，仍需验证 |
+| VERIFIED | 已通过规定的验证与证据审查，等待正式生效 |
 | ACTIVE | 正式生效 |
 | REJECTED | 被拒绝 |
 | DEPRECATED | 不建议新任务继续采用 |
