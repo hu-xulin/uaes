@@ -154,3 +154,16 @@ The store-facing minimal challenge contract should include only the fields requi
 ## Store persistence check
 
 The pinned `web/src/stores/auth-store.ts` creates the store directly with Zustand `create<AuthState>()` and does not apply a persist middleware in this module. `pendingLoginVerification` is initialized to `null`, cleared by `setBundle` when a login completes, cleared when the user identity changes, and cleared by `reset`. The current store implementation therefore provides no evidence that this challenge object is persisted by this store. This does not rule out persistence by an external wrapper or another integration; verify all store composition and hydration entrypoints before changing serialization assumptions.
+
+## Implementation status update — 2026-11-05
+
+A type-ownership refactor has been opened as Uter draft PR [#16](https://github.com/hu-xulin/uter/pull/16), targeting the Uter UAES integration branch (not `main`). Current head: `f143169f69f4ae211c263ea485df6666b4c0a686`.
+
+Implemented in the isolated branch:
+- `web/src/types/auth.ts`: neutral shared auth/session contracts and login-specific `'2fa' | 'passkey'` challenge methods.
+- `web/src/types/system.ts`: neutral `SystemStatus` and `CustomOAuthProviderInfo` contracts.
+- Store and auth-feature compatibility type re-exports retained.
+- Shared status/OAuth/chat/security consumers switched to neutral imports.
+- Login challenge positive/negative regression test added.
+
+**Verification:** GitHub status and workflow-run queries returned no status/run for the current PR head or synthetic merge commit at the time of this update. Typecheck, lint, build, and test success are therefore **NOT VERIFIED**. PR remains DRAFT / NOT MERGED. This implementation is not yet accepted as complete and the frontend module-boundary proposal remains DRAFT / NOT ENFORCED.
