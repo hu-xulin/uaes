@@ -129,9 +129,9 @@ else
     record(valid_statuses.include?(entry["status"]), "#{id} lifecycle status is valid")
     if kind == "standards" && nonempty?(ROOT, path)
       source = File.read(File.join(ROOT, path))
-      status_match = source.match(/^\\s*\\*\\*Status:\\*\\*\\s*([A-Z_]+)/i) ||
-                     source.match(/^\\s*\\|\\s*Status\\s*\\|\\s*([A-Z_]+)\\s*\\|/i) ||
-                     source.match(/^\\s*Status:\\s*([A-Z_]+)/i)
+      status_match = source.match(/^\s*\*\*Status:\*\*\s*([A-Z_]+)/i) ||
+                     source.match(/^\s*\|\s*Status\s*\|\s*([A-Z_]+)\s*\|/i) ||
+                     source.match(/^\s*Status:\s*([A-Z_]+)/i)
       record(status_match && status_match[1] == entry["status"],
              "#{id} file status matches registry status")
     end
