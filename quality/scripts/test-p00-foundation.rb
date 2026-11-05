@@ -170,8 +170,15 @@ class P00FoundationAuditTest < Minitest::Test
     root = fixture
     registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
     registry["exceptions"] << {
-      "id" => "UAES-EXC-0001", "related_rule_ids" => ["UAES-00"],
-      "status" => "ACTIVE", "requester" => "fixture", "reason" => "fixture"
+      "id" => "UAES-EXC-0001", "exception_class" => "E1",
+      "related_rule_ids" => ["UAES-00"], "status" => "ACTIVE",
+      "requester" => "fixture", "reason" => "fixture",
+      "business_justification" => "fixture", "technical_constraints" => "fixture",
+      "risk_assessment" => "fixture", "affected_components" => ["fixture"],
+      "security_impact" => "fixture", "data_impact" => "fixture",
+      "financial_impact" => "fixture", "compensating_controls" => ["fixture"],
+      "expires_at" => "2099-01-01T00:00:00Z", "rollback_plan" => "fixture",
+      "verification_plan" => "fixture"
     }
     write_registry(root, registry)
     assert_audit_fails(root, "approved exception includes approver")
@@ -253,6 +260,27 @@ class P00FoundationAuditTest < Minitest::Test
     path = File.join(root, "standards/00-foundation/UAES-00.md")
     File.write(path, "# UAES-00\n")
     assert_audit_fails(root, "file status matches registry status")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_approved_e0_exception
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["exceptions"] << {
+      "id" => "UAES-EXC-0002", "exception_class" => "E0",
+      "related_rule_ids" => ["UAES-00"], "status" => "APPROVED",
+      "requester" => "fixture", "reason" => "fixture",
+      "business_justification" => "fixture", "technical_constraints" => "fixture",
+      "risk_assessment" => "fixture", "affected_components" => ["fixture"],
+      "security_impact" => "fixture", "data_impact" => "fixture",
+      "financial_impact" => "fixture", "compensating_controls" => ["fixture"],
+      "expires_at" => "2099-01-01T00:00:00Z", "rollback_plan" => "fixture",
+      "verification_plan" => "fixture", "approver" => "owner",
+      "approved_at" => "2026-01-01T00:00:00Z", "approval_evidence" => "PR-1"
+    }
+    write_registry(root, registry)
+    assert_audit_fails(root, "E0 exceptions cannot be approved or active")
   ensure
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
