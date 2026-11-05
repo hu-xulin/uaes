@@ -197,7 +197,7 @@ else
     path = File.join(ROOT, entry["file"].to_s)
     next unless File.file?(path)
     File.readlines(path, chomp: true).each_with_index do |line, index|
-      match = line.match(/^\s*\#{2,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/)
+      match = line.match(/^\s*\#{3,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/)
       rule_occurrences[match[1]] << "#{entry["file"]}:#{index + 1}" if match
     end
   end
