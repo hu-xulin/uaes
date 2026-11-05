@@ -34,7 +34,7 @@
 | 00-11 | Exception approval | NOT_VERIFIED | Exception schema now includes E0-E4 and complete request evidence; latest validator/tests await rerun, and out-of-registry waiver inventory remains open. |
 | 00-12 | Audit evidence | PASS | This report links to the audit branch and run #593; CI logs record exact checks and regression results. Independent semantic review remains separate. |
 | 00-13 | Repository boundary | PASS | UAES README defines governance-only scope and PARALLEL relationship; Uter remains product code repository. |
-| 00-14 | Integration version pin | NOT_VERIFIED | Uter integration checker asserts commit, registry blob, version 1.7.0, and DRAFT status; negative fixtures exist, but Uter CI remains unconfirmed. |
+| 00-14 | Integration version pin | PASS | Uter PR #15 CI run 42038650687 job “UAES integration contract” passed positive/negative pin fixtures, integration wiring, P01 policy tests, and one-non-main-branch guard. Lock remains commit 84416f7f55c1166e3f5adfa0575c1ea713ff20d2 / blob 1c74e918b84b8cc18d2806a936721852b823ca75 / version 1.7.0 / DRAFT. Other Uter CI jobs are still in progress. |
 | 00-15 | Registry/file consistency | NOT_VERIFIED | All 72 schema files were reconciled in run #593; latest exception schema update awaits revalidation. |
 
 ## Changes made on the UAES audit branch
@@ -60,16 +60,14 @@
 
 ## Remaining blockers
 
-1. Execute the new Ruby validator and positive/negative tests in CI; inspect actual logs and fix every failure.
-2. Independently audit all registered standards for semantic conflicts, duplicate definitions, and rule ownership.
-3. Review all exception/waiver records and confirm there are no unregistered exceptions outside the new registry.
-4. Verify the latest 22-case P00 suite and task-contract positive/negative Schema controls in CI; run #593 predates these additions.
-5. Allow the remaining Uter PR #15 CI jobs to finish; its UAES integration contract job has already passed.
-6. Complete full semantic comparison of Uter's 10 domain standards, 4 UEQE standards, design system, and all applicable UAES rules.
-7. Keep UAES DRAFT and Uter MIGRATION_PENDING until owner approval and independent acceptance; do not remove Uter project overlays.
+1. Re-run the latest UAES P00 validator, 22 positive/negative cases, task-contract Schema controls, and all registry meta-validation after the most recent P00 changes; run #593 predates these additions.
+2. Complete independent semantic comparison of all registered UAES standards, duplicate rule ownership, and cross-standard conflicts.
+3. Inventory all exception/waiver references outside the new exceptions registry and confirm no unregistered or unauthorized exception is in force.
+4. Allow the remaining Uter PR #15 CI jobs to finish; the UAES integration contract job has passed, but race, coverage, backend, and frontend jobs remain in progress.
+5. Keep UAES DRAFT and Uter MIGRATION_PENDING until owner approval and independent acceptance; do not remove Uter project overlays.
 
 ## Acceptance decision
 
-**P00 overall: BLOCKED — 00-09 and 00-11 still require full semantic/exception-inventory review; the latest UAES P00 code/schema changes also need a fresh complete CI run.**
+**P00 overall: BLOCKED — latest UAES P00 code/schema changes still need a fresh complete CI run; 00-09 semantic review and 00-11 exception inventory remain open.**
 
 No PR was merged. No production environment, database, payment configuration, deployment, or secret was modified.
