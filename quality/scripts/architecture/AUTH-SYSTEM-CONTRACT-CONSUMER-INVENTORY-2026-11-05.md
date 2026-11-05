@@ -167,3 +167,15 @@ Implemented in the isolated branch:
 - Login challenge positive/negative regression test added.
 
 **Verification:** Uter CI run [41975573361](https://github.com/hu-xulin/uter/actions/runs/41975573361) has now been created for the current PR head and is **PENDING**. No job results are available yet. Typecheck, lint, build, and test success are therefore **NOT VERIFIED**. PR remains DRAFT / NOT MERGED. This implementation is not yet accepted as complete and the frontend module-boundary proposal remains DRAFT / NOT ENFORCED.
+
+### CI progress snapshot
+
+For Uter CI run `41975573361` at head `f143169f69f4ae211c263ea485df6666b4c0a686`:
+- Frontend Typecheck: **PASS**.
+- UAES integration contract job: **PASS**.
+- Electron desktop secret persistence job: **PASS**.
+- Go dependency vulnerability scan job: **PASS**.
+- Frontend tests, lint, design/copyright checks and production build: **IN PROGRESS** at the time of this snapshot.
+- Backend vet/build/tests, coverage, race detector and UEQE review engine: **IN PROGRESS** at the time of this snapshot.
+
+These are job/step observations, not a completed CI acceptance result.
