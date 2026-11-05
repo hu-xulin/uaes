@@ -21,21 +21,21 @@
 
 | ID | Audit item | Current result | Evidence / finding |
 |---|---|---|---|
-| 00-01 | Standard registry audit | PASS_AUTOMATED | P00 validator passed in UAES Governance Validation run #593; 2,255 invariant checks completed. |
-| 00-02 | Standard file integrity | PASS_AUTOMATED | All registered paths passed existence, non-empty, safe-path and metadata checks in run #593. |
-| 00-03 | Standard ID audit | PASS_AUTOMATED | Foundation principle ID collision fixed; duplicate ID and rule-heading scans passed in run #593. |
-| 00-04 | Schema registry audit | PASS_AUTOMATED | Registered all 12 orphan schemas, declared shared agent-handoff schema, and passed registry/schema checks; 72 JSON Schemas passed meta-validation in run #593. |
-| 00-05 | Standard dependencies | PASS_AUTOMATED | Corrected P07/P08 dependency records; no required dependency cycle or dangling dependency remained in run #593. |
-| 00-06 | Standard lifecycle status | PASS_AUTOMATED | Twelve states, schema enums, registry entries, standard file metadata, and promoted-state approval provenance passed run #593. |
-| 00-07 | Normative priority | PASS_AUTOMATED / PARTIAL_REVIEW | MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY and P0-P3 vocabularies passed; semantic precedence review remains a human governance task. |
-| 00-08 | Standard versioning | PASS_AUTOMATED | Registry 1.8.0, VERSION file, semantic format, unique history entries and latest history alignment passed run #593. |
+| 00-01 | Standard registry audit | PASS | P00 validator passed in UAES Governance Validation run #593; 2,255 invariant checks completed. |
+| 00-02 | Standard file integrity | PASS | All registered paths passed existence, non-empty, safe-path and metadata checks in run #593. |
+| 00-03 | Standard ID audit | PASS | Foundation principle ID collision fixed; duplicate ID and rule-heading scans passed in run #593. |
+| 00-04 | Schema registry audit | PASS | Registered all 12 orphan schemas, declared shared agent-handoff schema, and passed registry/schema checks; 72 JSON Schemas passed meta-validation in run #593. |
+| 00-05 | Standard dependencies | PASS | Corrected P07/P08 dependency records; no required dependency cycle or dangling dependency remained in run #593. |
+| 00-06 | Standard lifecycle status | PASS | Twelve states, schema enums, registry entries, standard file metadata, and promoted-state approval provenance passed run #593. |
+| 00-07 | Normative priority | NOT_VERIFIED | MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY and P0-P3 vocabularies passed; semantic precedence review remains a human governance task. |
+| 00-08 | Standard versioning | PASS | Registry 1.8.0, VERSION file, semantic format, unique history entries and latest history alignment passed run #593. |
 | 00-09 | Standard conflict audit | PARTIAL | Resolved status-vocabulary drift, registry-vs-metadata-schema ambiguity, dependency-type representation ambiguity, and P07/P08 dependency conflict. Full cross-domain semantic review remains open. |
-| 00-10 | Duplicate rule audit | PASS_AUTOMATED | Duplicate rule-heading scan and registry/rule collision check passed run #593. |
-| 00-11 | Exception approval | PASS_AUTOMATED / PARTIAL_INVENTORY | Empty exception registry, schema, approval, expiry, and compensating-control checks passed; independent search for out-of-registry waivers remains open. |
-| 00-12 | Audit evidence | PASS_EVIDENCE | This report links to the audit branch and run #593; CI logs record exact checks and regression results. Independent semantic review remains separate. |
-| 00-13 | Repository boundary | PASS_STATIC | UAES README defines governance-only scope and PARALLEL relationship; Uter remains product code repository. |
-| 00-14 | Integration version pin | PASS_STATIC | Uter integration contract pins UAES commit 84416f7f55c1166e3f5adfa0575c1ea713ff20d2, registry blob 1c74e918b84b8cc18d2806a936721852b823ca75, version 1.7.0, status DRAFT. The pinned commit was resolved successfully. |
-| 00-15 | Registry/file consistency | PASS_AUTOMATED | All 72 schema files are registered (one explicitly shared); schema inventory and registry/file reconciliation passed run #593. |
+| 00-10 | Duplicate rule audit | PASS | Duplicate rule-heading scan and registry/rule collision check passed run #593. |
+| 00-11 | Exception approval | NOT_VERIFIED | Empty exception registry, schema, approval, expiry, and compensating-control checks passed; independent search for out-of-registry waivers remains open. |
+| 00-12 | Audit evidence | PASS | This report links to the audit branch and run #593; CI logs record exact checks and regression results. Independent semantic review remains separate. |
+| 00-13 | Repository boundary | PASS | UAES README defines governance-only scope and PARALLEL relationship; Uter remains product code repository. |
+| 00-14 | Integration version pin | PASS | Uter integration contract pins UAES commit 84416f7f55c1166e3f5adfa0575c1ea713ff20d2, registry blob 1c74e918b84b8cc18d2806a936721852b823ca75, version 1.7.0, status DRAFT. The pinned commit was resolved successfully. |
+| 00-15 | Registry/file consistency | PASS | All 72 schema files are registered (one explicitly shared); schema inventory and registry/file reconciliation passed run #593. |
 
 ## Changes made on the UAES audit branch
 
@@ -67,6 +67,6 @@
 
 ## Acceptance decision
 
-**P00 overall: NOT_VERIFIED — BLOCKED pending execution evidence and independent semantic review.**
+**P00 overall: BLOCKED — 00-07, 00-09, 00-11, and 00-14 still require human review or Uter-side CI evidence.**
 
 No PR was merged. No production environment, database, payment configuration, deployment, or secret was modified.
