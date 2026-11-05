@@ -32,12 +32,12 @@ class P00FoundationAuditTest < Minitest::Test
     File.write(File.join(root, ".uaes/schemas/standard-metadata.schema.json"), JSON.pretty_generate(metadata_schema))
 
     entries = [
-      { "id" => "UAES-00", "file" => "standards/00-foundation/UAES-00.md", "status" => "DRAFT" },
-      { "id" => "UAES-01", "file" => "standards/00-foundation/UAES-01.md", "status" => "DRAFT" }
+      { "id" => "UAES-00", "file" => "standards/00-foundation/UAES-00.md", "phase" => "P00", "status" => "DRAFT" },
+      { "id" => "UAES-01", "file" => "standards/00-foundation/UAES-01.md", "phase" => "P01", "status" => "DRAFT" }
     ]
     schema_entries = [
-      { "id" => "UAES-SCHEMA-00-001", "file" => ".uaes/schemas/standard-registry.schema.json", "status" => "DRAFT" },
-      { "id" => "UAES-SCHEMA-00-002", "file" => ".uaes/schemas/standard-metadata.schema.json", "status" => "DRAFT" }
+      { "id" => "UAES-SCHEMA-00-001", "file" => ".uaes/schemas/standard-registry.schema.json", "phase" => "P00", "status" => "DRAFT" },
+      { "id" => "UAES-SCHEMA-00-002", "file" => ".uaes/schemas/standard-metadata.schema.json", "phase" => "P00", "status" => "DRAFT" }
     ]
     phases = (0..12).to_h { |n| [format("P%02d", n), { "name" => "Phase #{n}", "status" => "DRAFT" }] }
     registry = {
@@ -182,6 +182,26 @@ class P00FoundationAuditTest < Minitest::Test
     registry["registry"]["requirement_levels"] = %w[MUST MAY]
     write_registry(root, registry)
     assert_audit_fails(root, "normative requirement levels match")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_missing_lifecycle_status
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["standards"][0].delete("status")
+    write_registry(root, registry)
+    assert_audit_fails(root, "lifecycle status is valid")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_unregistered_phase
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["schemas"][0]["phase"] = "P99"
+    write_registry(root, registry)
+    assert_audit_fails(root, "has a registered phase")
   ensure
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
