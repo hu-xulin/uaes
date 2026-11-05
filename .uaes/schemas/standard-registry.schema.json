@@ -12,6 +12,7 @@
     "schemas",
     "gates",
     "acceptance",
+    "exceptions",
     "dependencies",
     "history"
   ],
@@ -159,6 +160,12 @@
       "items": {
         "$ref": "#/$defs/historyRecord"
       }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exceptionRecord"
+      }
     }
   },
   "$defs": {
@@ -206,6 +213,9 @@
           "items": {
             "type": "string"
           }
+        },
+        "approval": {
+          "$ref": "#/$defs/approvalRecord"
         }
       }
     },
@@ -248,6 +258,9 @@
         },
         "tool": {
           "type": "string"
+        },
+        "approval": {
+          "$ref": "#/$defs/approvalRecord"
         }
       }
     },
@@ -317,6 +330,145 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "exceptionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "related_rule_ids",
+        "status",
+        "requester",
+        "reason"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^UAES-EXC-[0-9]{4,}$"
+        },
+        "related_rule_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "enum": [
+            "REQUESTED",
+            "RISK_ASSESSED",
+            "IN_REVIEW",
+            "NEEDS_REVISION",
+            "APPROVED",
+            "ACTIVE",
+            "REJECTED",
+            "EXPIRED",
+            "REVOKED",
+            "CLOSED"
+          ]
+        },
+        "requester": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "business_justification": {
+          "type": "string"
+        },
+        "risk_assessment": {
+          "type": "string"
+        },
+        "compensating_controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "approver": {
+          "type": "string"
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "approval_evidence": {
+          "type": "string"
+        },
+        "rollback_plan": {
+          "type": "string"
+        },
+        "verification_plan": {
+          "type": "string"
+        },
+        "pull_request": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "APPROVED",
+                  "ACTIVE"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "approver",
+              "approved_at",
+              "approval_evidence",
+              "expires_at",
+              "risk_assessment",
+              "compensating_controls",
+              "rollback_plan",
+              "verification_plan"
+            ]
+          }
+        }
+      ]
+    },
+    "approvalRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approver",
+        "approved_at",
+        "evidence",
+        "change_request"
+      ],
+      "properties": {
+        "approver": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "change_request": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
