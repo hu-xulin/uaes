@@ -60,3 +60,17 @@ The Uter PR CI run `41964304811` subsequently completed with 8/8 jobs passing at
 ## 4. Audit conclusion
 
 This addendum updates DBM-006 evidence only. It does not certify rollback, restore, production readiness, or complete UAES compliance. The parent audit remains DRAFT and the overall migration classification remains NOT_VERIFIED.
+
+
+## 5. Additional CI evidence — run 41968301249
+
+A second run of the selected migration dialect matrix completed successfully against Uter source `008ec53adc9652ee454090b4fb1152536dd45bf3`.
+
+- Workflow: [Database Migration Dialect Matrix](https://github.com/hu-xulin/uaes/actions/runs/41968301249)
+- Job: `SQLite, MySQL and PostgreSQL migration tests` (job ID `127050362364`)
+- Result: **PASS**
+- MySQL service: 8.4.4; PostgreSQL service: 17.4.
+- Log evidence includes successful `TestMigrationSchemaStability` on SQLite/MySQL/PostgreSQL; `TestMigratePrefillGroupUniqueness` on all three; `TestMigrateTokenKeyUniqueness` on all three; and `TestUserSessionPreviousRefreshHashMigration` on all three.
+- `TestMigrateOptionPrimaryKeyRebuildsAndPreservesLegacyRows` passed on SQLite only.
+
+This run does not close the DBM-006 gaps in §2–§3: it does not exercise the Options rebuild's MySQL named-lock/atomic-rename path or PostgreSQL advisory-lock/transaction path, does not add interruption/failure-injection or restore tests, and does not resolve duplicate/empty-key semantics or startup fail-open policy. DBM-006 remains HIGH / NOT VERIFIED.
