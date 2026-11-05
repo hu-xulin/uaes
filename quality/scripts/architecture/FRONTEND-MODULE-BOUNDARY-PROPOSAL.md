@@ -82,6 +82,55 @@ The imports are type-only, but the direction still couples store contracts to fe
 
 `SystemStatus` is also currently declared in `features/auth/types.ts` while consumed by `hooks/use-status.ts` and `lib/oauth.ts`. Extract it to a neutral system contract module and re-export from the legacy feature module during migration if import compatibility is needed.
 
+### 3.2 Auth contract migration map (implementation plan; not yet applied)
+
+The Uter source at `008ec53adc9652ee454090b4fb1152536dd45bf3` was additionally checked for the relevant package scripts and auth regression suites.
+
+**Current ownership and proposed neutral ownership**
+
+| Contract | Current owner | Proposed neutral owner | Compatibility requirement |
+|---|---|---|---|
+| `AuthUser` | `stores/auth-store.ts` | `web/src/types/auth.ts` | Preserve all optional fields and index/permission shapes exactly |
+| `LoginSession` | `stores/auth-store.ts` | `web/src/types/auth.ts` | Preserve exact serialized session fields |
+| `AuthBundle` | `stores/auth-store.ts` | `web/src/types/auth.ts` | Preserve access token, token type, expiry, user, and session shape |
+| `AuthBootstrapState` | `stores/auth-store.ts` | `web/src/types/auth.ts` | Preserve the `idle | checking | complete` union |
+| `PendingLoginVerification` | `stores/auth-store.ts` | `web/src/types/auth.ts` | Preserve persisted challenge and optional redirect shape |
+| `LoginChallenge` | `features/auth/secure-verification/types.ts` | `web/src/types/auth.ts` (minimal wire/persisted contract only) | Preserve `require_verification`, `flow_token`, `expires_at`, and allowed method literals |
+| `SystemStatus` | `features/auth/types.ts` | `web/src/types/system.ts` | Preserve nested and direct optional properties and index signature |
+
+Do **not** move `VerificationOperation`, `RequestVerificationOptions`, `SecureVerificationState`, security-proof orchestration, or feature UI contracts into the shared store contract module. Those remain feature-owned. The neutral login challenge contract should contain only the serializable server challenge shape needed by the auth store; feature-specific adapters may refine it without introducing a reverse dependency.
+
+**Required compatibility bridge**
+
+- During migration, the existing feature type modules may re-export neutral contracts so existing imports do not need to change in one large patch.
+- The store must import neutral auth contracts only; it must not import from `features/**`.
+- Feature API/type modules may import neutral auth/system contracts.
+- Avoid duplicate independently maintained declarations. There must be one canonical definition for each moved shape.
+- Do not change Zustand state keys, storage keys, JSON serialization, login response parsing, or API payloads in this refactor.
+
+**Regression suites present at the pinned source commit**
+
+- `web/src/features/auth/api.test.ts`
+- `web/src/features/auth/otp/__tests__/login-verification.test.tsx`
+- `web/src/features/auth/secure-verification/__tests__/verification-api.test.ts`
+- `web/src/features/auth/secure-verification/__tests__/verification-flow.test.tsx`
+- `web/src/lib/auth-session.test.ts`
+- `web/src/lib/auth-saved-language.test.ts`
+- `web/src/features/security/components/__tests__/login-session-utils.test.ts`
+- `web/src/features/security/components/__tests__/login-session-item.test.tsx`
+
+**Required verification on the Uter PR branch**
+
+1. `cd web && pnpm typecheck`
+2. Run the listed Vitest suites explicitly with `pnpm exec vitest run <paths...>`.
+3. Run the full `pnpm test` suite.
+4. Run `pnpm lint` and `pnpm build:check`.
+5. Add focused store tests before moving types: pending challenge set/clear, user identity change invalidation, reset/bootstrap transitions, and serialization/hydration if persistence is enabled for this store.
+6. Compare generated declarations/typecheck output and run the frontend import-graph scanner; the `stores → features` reverse edge must become zero without creating a new shared-to-feature edge.
+7. Record exact source SHA, changed files, test commands/results, and a before/after import graph.
+
+No implementation is authorized by this plan alone. It remains DRAFT until the full consumer inventory, ownership review, regression evidence, and architecture-owner approval are complete.
+
 ## 4. Proposed target layers (not yet approved)
 
 1. **shared primitives** — design-system, generic components, i18n utilities, platform-neutral pure utilities and neutral API/domain contracts.
