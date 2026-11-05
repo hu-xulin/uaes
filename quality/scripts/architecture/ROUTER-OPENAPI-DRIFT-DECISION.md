@@ -162,3 +162,17 @@ A narrow, auditable approval mechanism has now been added:
 - Architecture workflow path filters now include both the API compatibility baseline and approval registry.
 
 This is not a blanket compatibility bypass and does not weaken checks for other operations, request/response changes, schemas, or required fields. Final acceptance awaits the exact-current-head Architecture Source Checks run, including live Gin/OpenAPI parity.
+
+
+## 1F. First successful post-removal architecture run
+
+Architecture Source Checks run [41970798603](https://github.com/hu-xulin/uaes/actions/runs/41970798603) completed **PASS** on 2026-11-05 against the exact pinned Uter source `422caafffb7a64370700ddd4859a057911f5f9e0`.
+
+Verified results:
+- API compatibility checker accepted only the two exact owner-approved removals recorded in the approval registry; all other compatibility checks passed.
+- API contract fixture suite passed, including unapproved-removal rejection, approved-removal acceptance, and stale-approval rejection.
+- Router/OpenAPI positive and negative fixtures passed.
+- Live route parity passed: **197 documented operations covered by 484 static Gin and built-in plugin routes** (450 static Gin + 34 dynamic plugin routes).
+- No unmatched documented operation remains.
+
+This resolves the two-route parity blocker for the pinned Uter source. It does not prove that every runtime route is documented, nor does it certify third-party external-client usage or promote the broader UAES/Uter migration to VERIFIED.
