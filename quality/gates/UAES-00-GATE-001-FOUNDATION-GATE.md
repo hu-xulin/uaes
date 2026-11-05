@@ -80,6 +80,31 @@ Foundation Gate 是 UAES 框架的第一道质量闸门，用于在**任何标�
 | 通过条件 | 无「未执行却标记 PASS」的结论 |
 | 失败 | BLOCK |
 
+
+## 3.1 P00-15 Foundation Governance Audit Mapping
+
+The following controls expand G00-001..007 into the complete P00-01..15 audit scope. Every result remains NOT_RUN until the corresponding command or review is actually executed.
+
+| P00 | Control | Required evidence | Blocking |
+|---|---|---|---|
+| 00-01 | Registry structure | YAML parse, required keys, registry schema validation | Yes |
+| 00-02 | Registered file integrity | Every registered path exists, is readable and non-empty (except explicit placeholders) | Yes |
+| 00-03 | Identifier uniqueness | Global registry IDs and normative rule IDs are unique and conform to naming rules | Yes |
+| 00-04 | Schema registry | Every schema path is registered, unique, parseable, Draft 2020-12, and local references resolve | Yes |
+| 00-05 | Dependencies | Required references resolve, dependency sources are unique, and REQUIRES graph is acyclic | Yes |
+| 00-06 | Lifecycle status | Registry, phase, entry, and schema status enums agree; promoted states carry approval provenance | Yes |
+| 00-07 | Normative priority | MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY and P0-P3 vocabularies are consistent | Yes |
+| 00-08 | Version governance | Semantic version, VERSION file, history sequence, and latest history entry agree | Yes |
+| 00-09 | Cross-standard conflict | Human semantic review records conflicts, precedence, disposition, and evidence | Yes |
+| 00-10 | Duplicate rules | Duplicate normative rule definitions and registry/rule ID collisions are detected | Yes |
+| 00-11 | Exception approval | Exception IDs, rule references, approver, evidence, expiry, risk, and compensating controls are validated | Yes |
+| 00-12 | Evidence traceability | Each conclusion links to source paths, command output, commit, and reviewer/approver where required | Yes |
+| 00-13 | Repository boundary | UAES governance assets and Uter product implementation responsibilities remain distinct | Yes |
+| 00-14 | Integration pin | Uter records exact UAES commit, registry blob SHA, version, and lifecycle status | Yes |
+| 00-15 | Registry/file parity | Registered paths and on-disk schema inventory reconcile without unexplained orphans | Yes |
+
+The automated implementation is quality/scripts/validate-p00-foundation.rb; its positive/negative fixtures are quality/scripts/test-p00-foundation.rb. Static implementation is not execution evidence. CI must pass before any automated item is promoted to PASS.
+
 ## 4. Severity
 
 | Severity | Meaning | Action |
