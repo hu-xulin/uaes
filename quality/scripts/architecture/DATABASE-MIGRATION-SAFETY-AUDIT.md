@@ -71,10 +71,10 @@ Both inspect existing PostgreSQL catalog definitions, acquire an ACCESS EXCLUSIV
 **Severity:** HIGH (availability and uniqueness)  
 **Evidence gap:** No live PostgreSQL version matrix, lock-timeout test, concurrent writer test, interrupted-transaction test, or pre-existing unusual index fixture was established by this audit. Transactional DDL is PostgreSQL-specific; do not generalize this guarantee to other engines.
 
-### DBM-004 — subscription plan price conversion needs exact source-value verification
+### DBM-004 — subscription plan price conversion can silently retain old schema or round values
 **Source:** `model/main.go#migrateSubscriptionPlanPriceAmount`
 
-The migration is invoked before AutoMigrate and its caller does not receive an error (the inventory classifies it LOG_AND_CONTINUE). This audit has not yet completed a full source-level review of its conversion SQL, rounding behavior, and failure observability.
+The migration is invoked before AutoMigrate and its caller does not receive an error. The complete function was inspected: MySQL alters the column to DECIMAL(10,6) NOT NULL DEFAULT 0; PostgreSQL casts using ::decimal(10,6). Metadata lookup errors are logged and the DDL attempt continues; DDL errors are also logged and swallowed, so startup proceeds with the old type. PostgreSQL returns early for any data_type='numeric' without checking precision/scale, so numeric columns with a different precision/scale may be incorrectly treated as already migrated. DECIMAL(10,6) conversion can round values beyond six fractional digits and may overflow values outside the target range. SQLite skips the conversion.
 
 **Severity:** HIGH (financial amount precision)  
 **Required action:** Inspect the complete function and test representative positive, negative, boundary, fractional, NULL, and malformed legacy values for each supported engine. Compare decimal values before/after, not only column types.
@@ -174,9 +174,9 @@ The migration processes batches, uses conditional updates, verifies the encrypte
 | DBM-001 | 64-bit wallet preflight | No automatic conversion; explicit bypass | Source inspected | PARTIAL |
 | DBM-002 | Token key uniqueness | Constraint/index replacement and exclusive lock | Source inspected | PARTIAL |
 | DBM-003 | Prefill uniqueness | Global uniqueness replaced by partial uniqueness | Source inspected | PARTIAL |
-| DBM-004 | Price float/double → decimal | Potential precision/rounding change | Caller inspected; converter pending | NOT VERIFIED |
+| DBM-004 | Price float/double → decimal | Potential precision/rounding change; silent failure; PostgreSQL numeric precision/scale false-positive | Full converter source inspected; data fixtures pending | NOT VERIFIED |
 | DBM-005 | model_limits → text | Type alteration / table lock | Source inspected | PARTIAL |
-| DBM-006 | Options PK rebuild | Table replacement; legacy snapshot retained | Source partially inspected | NOT VERIFIED |
+| DBM-006 | Options PK rebuild | Empty keys omitted; conflicting duplicates collapse to last value; two-step rename recovery | Full function inspected; failure fixtures pending | NOT VERIFIED |
 | DBM-007 | quota_data dedupe | Duplicate rows deleted after aggregate merge | Source inspected | PARTIAL |
 | DBM-008 | GORM AutoMigrate | Schema changes without down migration | Entrypoint inspected | NOT VERIFIED |
 | DBM-009 | Auth version init | Auth state mutation | Not fully inspected | NOT VERIFIED |
@@ -235,12 +235,12 @@ Do not mark migration safety complete until all applicable gates have reproducib
 ## 6. Immediate implementation priorities
 
 1. Add a regression test and a safe execution guard for LEGACY-SQL-001; do not run the historical script against any real dataset.
-2. Complete source-level review and fixtures for DBM-004 and DBM-006.
-3. Add before/after aggregate export and reconciliation assertions for DBM-007.
-4. Add migration failure injection and retry harness for the full startup sequence.
-5. Add disposable SQLite/MySQL/PostgreSQL/ClickHouse services to the test matrix, with independent log DB cases.
-6. Establish migration ledger semantics for future migrations (ID, checksum, source commit, applied time, database identity, result); do not retroactively fabricate ledger entries for old databases.
-7. Publish per-migration recovery classification: reversible, compensatable, forward-fix only, or backup-restore only.
+2. Add DBM-004 fixtures for precision/scale, overflow, PostgreSQL numeric variants, metadata-query failure, and swallowed DDL failure; decide whether the migration must fail startup rather than silently continue.\n3. Add DBM-006 fixtures for empty keys, conflicting duplicate values, concurrent writes, and process interruption between table renames; prove restoration from the legacy table.\n4. Complete source review and fixtures for remaining initializer, audit-log, and ClickHouse TTL migrations.
+5. Add before/after aggregate export and reconciliation assertions for DBM-007.
+6. Add migration failure injection and retry harness for the full startup sequence.
+7. Add disposable SQLite/MySQL/PostgreSQL/ClickHouse services to the test matrix, with independent log DB cases.
+8. Establish migration ledger semantics for future migrations (ID, checksum, source commit, applied time, database identity, result); do not retroactively fabricate ledger entries for old databases.
+9. Publish per-migration recovery classification: reversible, compensatable, forward-fix only, or backup-restore only.
 
 ## 7. Exit criteria
 
