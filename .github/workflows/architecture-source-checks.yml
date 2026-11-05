@@ -70,6 +70,11 @@ jobs:
         env:
           UTER_REPO_ROOT: ${{ github.workspace }}/uter
         run: ruby quality/scripts/architecture/check-database-migrations
+      - name: Test database migration source pin positive and negative controls
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/test-database-migration-source-pin.rb
       - name: Inventory frontend module import graph (boundary policy not yet accepted)
         working-directory: uaes
         env:
