@@ -64,13 +64,21 @@ Global production import-kind totals in the same run: 5,444 runtime, 518 type-on
 
 ### 3.1 Auth contract cycle
 
-The source inspection found a type-level cycle:
+The source inspection was revalidated against Uter PR branch `ai/uaes-uter-integration-2026-11-05`, commit `008ec53adc9652ee454090b4fb1152536dd45bf3`. The exact file blob SHAs at that commit were:
+
+- `web/src/features/auth/types.ts`: `c737d1e87df713723755c0e6050951f6bcb361d7`
+- `web/src/features/auth/secure-verification/types.ts`: `3b116537fabdeea554667fefab220a70800df7a3`
+- `web/src/stores/auth-store.ts`: `5ef322afc2286584cc239e2df3c3bc2d745a33ea`
+
+The imports form a type-level dependency cycle:
 
 - `features/auth/types.ts` imports `AuthBundle` from `stores/auth-store.ts`.
 - `features/auth/secure-verification/types.ts` imports `AuthBundle` from `stores/auth-store.ts`.
 - `stores/auth-store.ts` imports `LoginChallenge` from `features/auth/secure-verification/types.ts`.
 
-The first two imports are type-only, but the direction still couples store contracts to feature-owned types and makes the ownership boundary unclear. Proposed remediation is to establish a neutral `web/src/types/auth.ts` (or equivalent shared contracts location) for `AuthUser`, `LoginSession`, `AuthBundle`, `AuthBootstrapState`, and the minimal persisted pending-verification shape. Verification UI/request orchestration remains inside `features/auth`. Preserve exact runtime and serialized shapes; do not widen types to `any` or weaken discriminated unions.
+All three are written as TypeScript `import type` declarations. This is therefore a compile-time ownership/dependency-direction cycle, not evidence of a JavaScript runtime initialization cycle. The import graph scanner must retain type-only edges for architecture policy; do not describe this finding as a runtime cycle.
+
+The imports are type-only, but the direction still couples store contracts to feature-owned types and makes the ownership boundary unclear. Proposed remediation is to establish a neutral `web/src/types/auth.ts` (or equivalent shared contracts location) for `AuthUser`, `LoginSession`, `AuthBundle`, `AuthBootstrapState`, and the minimal persisted pending-verification shape. Verification UI/request orchestration remains inside `features/auth`. Preserve exact runtime and serialized shapes; do not widen types to `any` or weaken discriminated unions.
 
 `SystemStatus` is also currently declared in `features/auth/types.ts` while consumed by `hooks/use-status.ts` and `lib/oauth.ts`. Extract it to a neutral system contract module and re-export from the legacy feature module during migration if import compatibility is needed.
 
