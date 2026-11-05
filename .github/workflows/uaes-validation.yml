@@ -26,6 +26,10 @@ jobs:
         run: ruby --version
       - name: Validate UAES registries and manifests
         run: ruby quality/scripts/validate-governance.rb
+      - name: Validate P00 Foundation registry invariants
+        run: ruby quality/scripts/validate-p00-foundation.rb
+      - name: Test P00 Foundation positive and negative fixtures
+        run: ruby quality/scripts/test-p00-foundation.rb
       - name: Test skill runtime adapter positive and negative fixtures
         run: ruby quality/scripts/agents/test-skill-runtime-adapters.rb
       - name: Validate canonical skill runtime adapters
