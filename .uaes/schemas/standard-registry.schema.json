@@ -262,6 +262,10 @@
         },
         "approval": {
           "$ref": "#/$defs/approvalRecord"
+        },
+        "shared_with": {
+          "type": "string",
+          "pattern": "^UAES-SCHEMA-[0-9]{2}-[0-9]{3}$"
         }
       }
     },
