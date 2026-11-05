@@ -56,7 +56,7 @@
 - UAES Governance Validation run 42037770079 exposed rule-scanner false positives for registered domain/standard IDs and an unsupported P12 rule suffix; the scanner was revised to distinguish standard references from rule definitions and accept the P12 M### convention. Subsequent P00 rule-ID, exception, lifecycle and task-schema edits are awaiting a new run.
 - UAES Governance Validation run 42037232482 then passed: P00 validator 2,255 checks; P00 regression tests 17 runs / 49 assertions / 0 failures; skill adapter tests 3 runs / 11 assertions / 0 failures; 72 JSON Schemas validated.
 - UAES Governance Validation run #593 succeeded on the preceding revision (2,255 validator checks; P00 tests 17 runs / 49 assertions / 0 failures; skill adapter tests 3 runs / 11 assertions / 0 failures; 72 schemas validated). Subsequent rule-ID scanner, E0 exception model, task-contract schema, and lifecycle-order changes are not yet revalidated. The current P00 suite contains 22 positive/negative test cases; the latest complete run remains #593 on the preceding revision.
-- Uter PR #15 now includes version/status pin checks and negative fixtures; its CI result is also pending.
+- Uter PR #15 CI run 42038650687 passed the UAES integration contract job, including version/status pin negative fixtures and the branch-count guard; other Uter CI jobs are still running.
 
 ## Remaining blockers
 
