@@ -60,7 +60,10 @@ class P00FoundationAuditTest < Minitest::Test
   end
 
   def write_registry(root, registry)
-    File.write(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"), YAML.dump(registry))
+    # JSON round-trip removes shared Ruby object identity so fixtures never
+    # depend on YAML aliases (the production loader intentionally disables them).
+    normalized = JSON.parse(JSON.generate(registry))
+    File.write(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"), YAML.dump(normalized))
   end
 
   def run_audit(root)
