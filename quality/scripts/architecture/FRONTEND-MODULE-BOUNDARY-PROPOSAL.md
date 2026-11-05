@@ -3,7 +3,7 @@
 > Status: **DRAFT / NOT ENFORCED**
 > Source repository: `hu-xulin/uter`
 > Pinned source commit: `008ec53adc9652ee454090b4fb1152536dd45bf3`
-> Evidence run: https://github.com/hu-xulin/uaes/actions/runs/41967181380
+> Latest evidence run: https://github.com/hu-xulin/uaes/actions/runs/41968779803
 > Owner approval: pending
 
 ## 1. Purpose and non-goals
@@ -248,3 +248,24 @@ A targeted source read was performed against the exact Uter PR #15 commit `008ec
 - `web/src/lib/oauth.ts` blob: `297cdc0be2fa3b53600306f2f40722350c2d6a31`.
 
 This section is source-audit evidence only. It does not authorize implementation or enforcement. The proposal remains DRAFT / NOT ENFORCED pending exhaustive branch-pinned search, owner approval, and regression evidence.
+
+
+## 8. Latest CI revalidation — 2026-11-05
+
+The inventory was re-executed by Architecture Source Checks run [41968779803](https://github.com/hu-xulin/uaes/actions/runs/41968779803) against the pinned Uter source commit `008ec53adc9652ee454090b4fb1152536dd45bf3`. The inventory and its positive/negative fixture checks passed in this run.
+
+Latest measured frontend inventory:
+- 1,500 source files: 1,217 production, 282 test, and 1 generated source.
+- 2 generated route-tree imports excluded.
+- Production import kinds: 5,444 runtime, 518 type-only, 16 dynamic.
+- Test import kinds: 698 runtime, 104 type-only, 33 dynamic.
+- Reverse-edge counts remain: components → features 17 runtime; hooks → features 1 type-only; lib → features 1 runtime + 1 type-only; stores → features 1 type-only.
+- Boundary policy remains inventory-only and NOT VERIFIED / NOT ENFORCED.
+
+The same workflow's final live Gin/OpenAPI parity step failed independently of the frontend inventory. It reported exactly two documented operations without a matching static Gin or built-in plugin route:
+- `POST /api/oauth/wechat/bind`
+- `GET /api/verify/status`
+
+The runtime inventory captured 450 static Gin routes and 34 dynamic plugin routes. This failure is tracked as an API contract ownership decision, not as a frontend import-boundary failure. Do not add handlers, delete OpenAPI operations, or weaken the checker without an explicit API owner decision.
+
+**Current acceptance status:** frontend inventory tooling and its fixtures PASS; frontend architecture policy remains DRAFT / NOT ENFORCED; exhaustive symbol-level consumer search remains open; API runtime/OpenAPI parity remains BLOCKED on the two route decisions above.
