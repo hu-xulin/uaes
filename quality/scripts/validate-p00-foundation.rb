@@ -202,7 +202,7 @@ else
   record(exception_ids.uniq.length == exception_ids.length, "exception IDs are unique")
   exceptions.each do |exception|
     id = exception["id"].to_s
-    record(id.match?(/\AUAES-EXC-\\d{4,}\z/), "exception ID format: #{id}")
+    record(id.match?(/\AUAES-EXC-\d{4,}\z/), "exception ID format: #{id}")
     record(%w[REQUESTED RISK_ASSESSED IN_REVIEW NEEDS_REVISION APPROVED ACTIVE REJECTED EXPIRED REVOKED CLOSED].include?(exception["status"]), "#{id} exception status is valid")
     Array(exception["related_rule_ids"]).each do |rule_id|
       record(ids.include?(rule_id) || rule_occurrences.key?(rule_id), "#{id} references a known rule: #{rule_id}")
