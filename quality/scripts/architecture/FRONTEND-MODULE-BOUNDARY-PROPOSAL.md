@@ -2,8 +2,8 @@
 
 > Status: **DRAFT / NOT ENFORCED**
 > Source repository: `hu-xulin/uter`
-> Pinned source commit: `682bb73d728115fc8201e64b0fefddce14c2592d`
-> Evidence run: https://github.com/hu-xulin/uaes/actions/runs/41910992383
+> Pinned source commit: `337485b4b19824f9bee59b6f8226802b455ab0ec`
+> Evidence run: https://github.com/hu-xulin/uaes/actions/runs/41960573825
 > Owner approval: pending
 
 ## 1. Purpose and non-goals
@@ -14,7 +14,7 @@ The current scanner resolves local alias and relative imports, separates product
 
 ## 2. Measured baseline
 
-The pinned scan contains 1,500 source files: 1,217 production, 282 test, and 1 generated source. Two imports targeting generated route-tree files are excluded. All scanned local imports resolved.
+The refreshed scan against Uter `337485b4b19824f9bee59b6f8226802b455ab0ec` contains 1,500 source files: 1,217 production, 282 test, and 1 generated source. Two imports targeting generated route-tree files are excluded. All scanned local imports resolved.
 
 | Production edge | Count | Initial interpretation |
 |---|---:|---|
