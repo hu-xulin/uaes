@@ -35,7 +35,7 @@ Commit `008ec53adc9652ee454090b4fb1152536dd45bf3` adds `model/option_primary_key
 - a legacy backup table is retained;
 - the legacy backup retains all original rows, including empty-key rows.
 
-At the time of this addendum, CI run `41964304811` is still in progress. Electron secret persistence, UAES integration contract, Go dependency vulnerability scan, and UEQE review engine have passed. Backend tests, race detection, coverage, and frontend tests/build have not yet completed. Do not treat the new regression test as passed until the run completes.
+The Uter PR CI run `41964304811` subsequently completed with 8/8 jobs passing at the then-reviewed Uter commit. Separately, UAES database migration matrix run `41965789257` completed successfully against the pinned Uter source commit `008ec53adc9652ee454090b4fb1152536dd45bf3`. Its job `127042361681` passed the selected SQLite, MySQL 8.4.4, and PostgreSQL 17.4 migration test set. Importantly, the options primary-key rebuild regression `TestMigrateOptionPrimaryKeyRebuildsAndPreservesLegacyRows` was executed in that matrix but remains SQLite-only; the MySQL and PostgreSQL services were used for the other selected migration tests. This is test execution evidence, not cross-dialect validation of DBM-006.
 
 ## 2. Remaining DBM-006 risks and evidence gaps
 
@@ -50,7 +50,7 @@ At the time of this addendum, CI run `41964304811` is still in progress. Electro
 
 ## 3. Required next verification
 
-- Complete CI for `008ec53adc9652ee454090b4fb1152536dd45bf3`.
+- Extend DBM-006 itself to MySQL and PostgreSQL integration coverage, including lock ownership/concurrent attempts and dialect-specific table swap behavior; the current successful matrix does not execute the options rebuild test on those two dialects.
 - Add deterministic fixtures for conflicting duplicate values only after the owner chooses the intended conflict policy.
 - Add failure-injection/retry tests for each DDL boundary on each supported dialect.
 - Test concurrent migration attempts using independent connections/processes on MySQL and PostgreSQL.
