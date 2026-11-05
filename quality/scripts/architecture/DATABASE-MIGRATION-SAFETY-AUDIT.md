@@ -159,56 +159,17 @@ When a target option already exists, the migration deletes the legacy source key
 **Severity:** MEDIUM/HIGH (configuration loss)  
 **Required action:** Before release, export source and target values for conflicts, record the chosen authoritative value, and test conflict recovery. Consider preserving a migration archive rather than deleting divergent source values.
 
-### DBM-020 — 2FA secret encryption is resumable but not a rollback
-**Source:** `model/twofa_migration.go#MigrateTwoFASecretsToEncrypted`
+### DBM-020 — 2FA secret encryption has focused tests, with concurrency and database read-back gaps
+**Sources:** `model/twofa_migration.go#MigrateTwoFASecretsToEncrypted`, `model/twofa.go#upgradePlainSecret`, `model/twofa_secret_test.go`
 
-The migration processes batches, uses conditional updates, verifies the encrypted envelope, and leaves failed plaintext records for retry. Already-encrypted rows are skipped. It is operator/explicit-call driven rather than part of the normal DB migration sequence.
+The migration processes batches by primary-key cursor, conditionally updates only when the stored secret still equals the previously read plaintext, skips existing encrypted envelopes, and leaves failed plaintext records unchanged for retry. It is operator/explicit-call driven rather than part of the normal DB migration sequence.
+
+The pinned source **does contain a dedicated test file**, `model/twofa_secret_test.go`. Its tests cover ciphertext-at-rest, encryption round-trip, lazy upgrade, idempotent/stale-snapshot conditional update, rotated/missing keys, batch traversal, mixed plaintext/encrypted records, retry after key recovery, and ciphertext column width. This corrects the earlier audit statement that no dedicated migration test existed.
+
+**Remaining evidence gaps:** no explicit concurrent rebind test, no injected database write failure/partial-batch interruption test, and post-write verification currently checks the in-memory `TwoFA.Secret` value set by `upgradePlainSecret`, not a fresh database read-back. A conditional-update miss is counted as `Encrypted` for this pass and the cursor advances, so a concurrently rebound plaintext value with a larger ID may require a subsequent migration invocation; the current comment's “next round” should not be interpreted as an in-pass rescan.
 
 **Severity:** HIGH (authentication secret confidentiality/availability)  
-**Recovery:** Re-run after fixing key/configuration issues. Decryption/re-encryption recovery requires the correct key material; no plaintext rollback export should be created. Test key rotation, partial batch failure, concurrent rebind, and envelope verification.
-
-
-### DBM-013 — SQLite subscription-plan table repair is additive, not a full schema reconciliation
-**Source:** `model/main.go#ensureSubscriptionPlanTableSQLite`
-
-When the table is absent, the function creates the full table with a primary key. When the table exists, it reads `PRAGMA table_info` and adds only missing columns. It does not reconcile existing column types, nullability, defaults, or primary-key definitions. This can leave a legacy table structurally different from the expected schema even though the function returns success.
-
-**Severity:** MEDIUM/HIGH (subscription purchase and price configuration)  
-**Required action:** Test historical table shapes and compare complete PRAGMA metadata, not just column presence. Verify existing price values, primary-key behavior, and constraints. Treat this as additive repair rather than schema convergence.
-
-### DBM-014 — audit-log schema migration is repeatable but retention and engine behavior need separate proof
-**Source:** `model/audit_log.go#MigrateAuditLogs`
-
-SQLite/MySQL/PostgreSQL use GORM AutoMigrate. ClickHouse uses `CREATE TABLE IF NOT EXISTS` with MergeTree partitioned by month and ordered by (created_at, event_id), with no TTL clause. The existing audit-log test exercises SQLite and optionally MySQL/PostgreSQL, verifies repeated migration, ordering index, existing records and index preservation. This is stronger evidence than a source-only check, but it does not validate ClickHouse creation, upgrades of an existing ClickHouse table, or retention policy.
-
-**Severity:** HIGH (security/audit evidence)  
-**Required action:** Keep audit_logs retention independent from usage-log TTL; add disposable ClickHouse DDL/read/write test and existing-table upgrade test. Verify required fields and indexes after deployment upgrade.
-
-### DBM-015 — ClickHouse usage-log TTL is an active data-deletion policy
-**Source:** `model/main.go#migrateClickHouseLogDB`, `syncClickHouseLogTTL`
-
-A positive `LOG_SQL_CLICKHOUSE_TTL_DAYS` modifies the `logs` table TTL to delete rows older than the configured period. Setting it to zero removes an existing TTL but cannot restore rows already deleted. Reducing the configured number can make historical data eligible for deletion; the deletion is asynchronous ClickHouse mutation behavior, not a reversible schema change. The audit-log table is deliberately created without this TTL.
-
-**Severity:** HIGH (usage evidence, dispute investigation, reporting and retention)  
-**Required action:** Require explicit retention owner approval, record old/new TTL and affected time range, test TTL mutation in disposable ClickHouse, and verify audit_logs is not affected. Document that removal of TTL is forward-only and does not restore deleted records.
-
-### DBM-019 — retired frontend option migration intentionally prefers target and deletes source
-**Source:** `model/frontend_option_migration.go#migrateLegacyOption`, `migrateLegacyUptimeOptions`
-
-Each option group runs in a transaction. If the target key already exists, the migration deletes the legacy source key without comparing values. The test suite explicitly asserts that existing targets (including empty target values) remain authoritative and legacy source keys are removed. This is intentional conflict policy, not an untested accidental branch, but it is lossy when source and target diverge.
-
-Malformed/invalid legacy values are retained and logged; valid values are transformed and moved. The function is invoked from `main.go` after main DB initialization and before option-map initialization, and its errors are logged while startup continues.
-
-**Severity:** MEDIUM (administrative configuration loss)  
-**Required action:** Before running on an unknown historical dataset, export source and target key/value pairs, preserve a conflict report, and confirm target-authoritative policy. Do not auto-merge or overwrite target values.
-
-### DBM-020 — 2FA encryption migration has no colocated migration test file at the pinned source
-**Source:** `model/twofa_migration.go#MigrateTwoFASecretsToEncrypted`
-
-The implementation uses a primary-key cursor, conditional update, batch processing, skips already-encrypted envelopes, verifies the post-write envelope, and retains failed plaintext rows for retry. The pinned source tree has no `model/twofa_migration_test.go`; therefore the claimed retry/concurrency/envelope behavior is not covered by a dedicated migration test file in this source baseline.
-
-**Severity:** HIGH (authentication availability and secret confidentiality)  
-**Required action:** Add tests for empty dataset, mixed plaintext/encrypted records, batch boundary, wrong/missing encryption key, encryption failure, conditional-update miss caused by concurrent rebind, post-write verification, partial failure and rerun. Never export plaintext secrets as a rollback artifact.
+**Recovery:** Re-run after fixing key/configuration issues. Decryption/re-encryption recovery requires the correct key material; no plaintext rollback export should be created. Add concurrent rebind, partial-batch failure, DB read-back verification and replay tests.
 
 ## 4. Current migration risk register
 
@@ -233,7 +194,7 @@ The implementation uses a primary-key cursor, conditional update, batch processi
 | DBM-017 | Redundant log indexes | Index drop | Source + focused test inspected | PARTIAL |
 | DBM-018 | Cache token backfill | Historical log columns rewritten; one-time marker | Source inspected | PARTIAL |
 | DBM-019 | Legacy option migration | Existing target wins and legacy source is deleted without value comparison | Source + explicit conflict-policy tests inspected | PARTIAL |
-| DBM-020 | 2FA encryption | Plaintext replaced with ciphertext; no dedicated migration test file at pinned source | Full function inspected; dedicated migration tests absent | NOT VERIFIED |
+| DBM-020 | 2FA encryption | Plaintext replaced with ciphertext; concurrent rebind and DB read-back verification remain unproven | Dedicated `model/twofa_secret_test.go` covers encryption, retry, key failures, stale snapshots and batching; concurrency/partial interruption/read-back gaps remain | PARTIAL |
 | LEGACY-SQL-001 | v0.2→v0.3 quota transfer | Re-run duplicates credit | SQL inspected | HIGH RISK |
 | LEGACY-SQL-002 | v0.3→v0.4 ability seed | Conditional insert, not full reconciliation | SQL inspected | PARTIAL |
 
@@ -280,7 +241,7 @@ Do not mark migration safety complete until all applicable gates have reproducib
 1. Add a regression test and a safe execution guard for LEGACY-SQL-001; do not run the historical script against any real dataset.
 2. Add DBM-004 fixtures for precision/scale, overflow, PostgreSQL numeric variants, metadata-query failure, and swallowed DDL failure; decide whether the migration must fail startup rather than silently continue. 
 3. Add DBM-006 fixtures for empty keys, conflicting duplicate values, concurrent writes, and process interruption between table renames; prove restoration from the legacy table. 
-4. Add DBM-013 historical SQLite schema fixtures; add DBM-014 ClickHouse audit table tests; validate DBM-015 TTL mutation/retention in disposable ClickHouse; add DBM-020 dedicated migration tests.
+4. Add DBM-013 historical SQLite schema fixtures; add DBM-014 ClickHouse audit table tests; validate DBM-015 TTL mutation/retention in disposable ClickHouse; extend DBM-020 tests for concurrent rebind, partial-batch interruption and fresh DB read-back verification.
 5. Add before/after aggregate export and reconciliation assertions for DBM-007.
 6. Add migration failure injection and retry harness for the full startup sequence.
 7. Add disposable SQLite/MySQL/PostgreSQL/ClickHouse services to the test matrix, with independent log DB cases.
