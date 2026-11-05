@@ -46,7 +46,7 @@ class P00FoundationAuditTest < Minitest::Test
         "status" => "DRAFT", "lifecycle_status" => STATUSES
       },
       "phases" => phases, "standards" => entries, "schemas" => schema_entries,
-      "gates" => [], "acceptance" => [], "system_files" => [], "tool_adapters" => [],
+      "gates" => [], "acceptance" => [], "system_files" => [], "tool_adapters" => [], "exceptions" => [],
       "dependencies" => [
         { "standard" => "UAES-00", "depends_on" => [] },
         { "standard" => "UAES-01", "depends_on" => ["UAES-00"] }
