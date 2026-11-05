@@ -24,13 +24,13 @@ jobs:
         with:
           repository: hu-xulin/uter
           # Keep aligned with the Uter integration PR source baseline.
-          ref: 008ec53adc9652ee454090b4fb1152536dd45bf3
+          ref: 076ea0c2a9fc3eace5dc5c1ccea9d2247fee6db1
           path: uter
       - name: Verify checked out Uter baseline
         working-directory: uter
         run: |
           actual="$(git rev-parse HEAD)"
-          expected="008ec53adc9652ee454090b4fb1152536dd45bf3"
+          expected="076ea0c2a9fc3eace5dc5c1ccea9d2247fee6db1"
           test "$actual" = "$expected" || {
             echo "Uter source baseline mismatch: got $actual, expected $expected"
             exit 1
