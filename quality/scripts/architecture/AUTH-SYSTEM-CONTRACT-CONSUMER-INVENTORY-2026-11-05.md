@@ -138,3 +138,15 @@ Also run frontend typecheck, lint, unit tests, build, and the module import grap
 ## Conclusion
 
 The full lexical inventory over the pinned web source tree completed successfully and exposes 134 occurrences across eight contracts. The evidence supports moving genuinely shared data contracts out of the store and auth feature ownership, but it does **not** justify moving verification orchestration types or changing runtime validation. The next implementation step requires an explicit owner decision on the neutral module ownership and the minimal store-facing `LoginChallenge` shape.
+
+## Field-level contract verification addendum
+
+The pinned Uter source confirms the exact static/runtime mismatch for `LoginChallenge.methods`:
+
+- `web/src/features/auth/secure-verification/types.ts`: `LoginChallenge.methods` is declared as `VerificationRequirements['methods']`.
+- The same file declares `VerificationMethod` as six values: `2fa`, `passkey`, `password`, `email_code`, `oauth`, and `session`.
+- `web/src/features/auth/secure-verification/api.ts` in `isLoginChallenge()` accepts only `2fa` or `passkey`, and requires `available` to be boolean.
+
+A safe future design should introduce a login-specific method type (for example `LoginVerificationMethod = '2fa' | 'passkey'`) and a login-specific methods array contract, while leaving the general `VerificationMethod` and `VerificationRequirements` unchanged for non-login security operations. This is a proposed contract correction, not an implemented change. Before adoption, tests must cover valid 2FA/passkey challenges, rejection of password/email_code/oauth/session login challenge methods, and continued support for those methods in their non-login verification contexts.
+
+The store-facing minimal challenge contract should include only the fields required by persisted pending-login state and secure-verification flow: `require_verification: true`, `flow_token: string`, `expires_at: number`, and the login-specific methods array. Validate whether persistence/rehydration code imposes additional compatibility requirements before moving or narrowing this type.
