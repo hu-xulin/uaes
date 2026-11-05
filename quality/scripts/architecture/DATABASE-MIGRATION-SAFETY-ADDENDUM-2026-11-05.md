@@ -74,3 +74,29 @@ A second run of the selected migration dialect matrix completed successfully aga
 - `TestMigrateOptionPrimaryKeyRebuildsAndPreservesLegacyRows` passed on SQLite only.
 
 This run does not close the DBM-006 gaps in §2–§3: it does not exercise the Options rebuild's MySQL named-lock/atomic-rename path or PostgreSQL advisory-lock/transaction path, does not add interruption/failure-injection or restore tests, and does not resolve duplicate/empty-key semantics or startup fail-open policy. DBM-006 remains HIGH / NOT VERIFIED.
+
+
+## 6. Source-baseline integrity defect found and corrected
+
+During review of Architecture Source Checks run `41968301172`, the migration inventory checker printed source commit `337485b4b19824f9bee59b6f8226802b455ab0ec`, while the workflow had explicitly checked out and verified Uter source `008ec53adc9652ee454090b4fb1152536dd45bf3`.
+
+The previous checker only validated that the inventory value looked like a 40-character SHA; it did not compare it to the actual checked-out Git `HEAD`. This allowed a stale migration inventory to pass against a different source revision.
+
+Corrective changes on the UAES governance branch:
+
+- Updated `.uaes/registry/database-migration-inventory.yaml` to pin `008ec53adc9652ee454090b4fb1152536dd45bf3`.
+- Updated `quality/scripts/architecture/check-database-migrations` to resolve `git rev-parse HEAD` from `UTER_REPO_ROOT` and fail unless it exactly equals the inventory's `source_commit`.
+- Added `quality/scripts/architecture/test-database-migration-source-pin.rb` with a matching-source positive control and a temporary Git repository mismatch negative control.
+- Added that test to Architecture Source Checks and added the migration inventory file itself to the workflow's pull-request path filters.
+
+Commits in the corrective sequence:
+- `0090f1ebdeca3a4e614125d8466f87515ff4179f` — checker comparison added (initial regex escaping was subsequently corrected).
+- `49cbdc456ecaedd55ec5245330caef868872c2cd` — inventory source pin updated.
+- `971d96de6654dbec0fd4a500e789572d86afaad9` — CI test wired.
+- `d7912d2030bc0354693b8f9087a97f8119ecd5f8` — positive/negative test added.
+- `71fbc76c80bc9a400ad1a863a121fbde514300d4` — SHA regex anchors corrected to Ruby's actual `\A...\z` anchors.
+- `3ff76dc411f10291c3b270ede6cbaad528952c05` — workflow path filter now includes the migration inventory.
+
+An intermediate run at `d7912d2` failed because the newly introduced SHA regex was over-escaped; that failure was detected from CI logs and corrected in `71fbc76`. Do not count the intermediate run as validation.
+
+**Acceptance remains pending** until the full Architecture Source Checks run on `3ff76dc411f10291c3b270ede6cbaad528952c05` proves the positive and negative source-pin controls pass and still reproduces/records the separate two-operation router/OpenAPI contract discrepancy. This correction strengthens evidence provenance; it does not certify migration rollback, data recovery, or cross-dialect safety. DBM-006 and DBM-004 remain HIGH / NOT VERIFIED.
