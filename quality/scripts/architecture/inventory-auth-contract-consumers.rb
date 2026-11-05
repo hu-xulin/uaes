@@ -2,6 +2,7 @@
 # Exhaustive lexical occurrence inventory for the auth/system contracts under review.
 # This is deliberately a discovery report, not a semantic TypeScript analyzer.
 require "json"
+require "shellwords"
 
 def stop(message)
   warn "AUTH CONTRACT CONSUMER INVENTORY: FAIL: #{message}"
