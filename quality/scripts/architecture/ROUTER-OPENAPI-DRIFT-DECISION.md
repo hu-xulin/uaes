@@ -1,8 +1,8 @@
 # Uter OpenAPI / Runtime Route Drift — Contract Decision Record
 
 > Status: **BLOCKED — API contract owner decision required**
-> Uter source commit: `337485b4b19824f9bee59b6f8226802b455ab0ec`
-> UAES Architecture Source Checks: https://github.com/hu-xulin/uaes/actions/runs/41960573825
+> Uter source commit: `008ec53adc9652ee454090b4fb1152536dd45bf3`
+> UAES Architecture Source Checks: https://github.com/hu-xulin/uaes/actions/runs/41967181380
 > No runtime API or OpenAPI behavior was changed by this record.
 
 ## 1. Verified discrepancies
@@ -19,6 +19,20 @@ OpenAPI declarations currently describe:
 - Verify status: authenticated User permission.
 
 The architecture checker reports these as missing runtime operations. Its route matcher was additionally hardened so a static route cannot falsely satisfy a parameterized OpenAPI path. The checker fixture suite passed (4 runs, 12 assertions, 0 failures, 0 errors, 0 skips) in the failed live architecture run; the live failure is the two documented operations above.
+
+
+## 1A. Revalidated against the current integration baseline
+
+The previous record was pinned to an older Uter commit. The architecture workflow is now explicitly pinned to `008ec53adc9652ee454090b4fb1152536dd45bf3` and verifies the checked-out SHA before running the inventory. The live run `41967181380` reproduced the same two unmatched operations after capturing 450 static Gin routes and 34 active built-in plugin routes. Therefore, this is confirmed drift on the current integration baseline, not merely a stale-baseline artifact.
+
+Source-level evidence at that exact Uter commit:
+
+- `router/api-router.go`: WeChat website-app login uses `POST /oauth/wechat-web/state`, `GET /oauth/wechat-web/origin`, and `GET /oauth/wechat-web`. The generic OAuth flow also exposes `POST /oauth/state` and `GET /oauth/:provider`; `controller/oauth.go` handles bind intent inside the state/callback flow. This is not proof that the old direct `POST /oauth/wechat/bind` request/response contract is preserved.
+- `controller/wechat_web.go`: the website-app state handler currently accepts only `login` intent. It must not be treated as an implementation of a WeChat account-bind endpoint.
+- `router/api-router.go`: secure verification exposes `GET /verify/methods`, `POST /verify`, and `POST /verify/email_code`; no `GET /verify/status` route is registered.
+- `controller/secure_verification.go`: `GetVerificationMethods` returns operation-scoped verification requirements. This is not necessarily equivalent to a historical status resource.
+
+The route inventory and source review do not establish whether external clients still consume either legacy operation. No implementation or OpenAPI mutation is authorized by this evidence alone.
 
 ## 2. Contract decision options
 
