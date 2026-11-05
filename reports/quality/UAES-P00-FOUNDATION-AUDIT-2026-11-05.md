@@ -27,7 +27,7 @@
 | 00-04 | Schema registry audit | NOT_VERIFIED | All 72 schema files were registered; exception schema was subsequently strengthened and awaits rerun. |
 | 00-05 | Standard dependencies | NOT_VERIFIED | P07/P08 cycle was corrected and passed run #593; latest revision awaits rerun. |
 | 00-06 | Standard lifecycle status | NOT_VERIFIED | Lifecycle alignment passed run #593; latest exception model edits await the current full gate. |
-| 00-07 | Normative priority | NOT_VERIFIED | MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY and P0-P3 vocabularies passed earlier; rule-ID convention was revised and requires rerun plus semantic review. |
+| 00-07 | Normative priority | PASS | P00 review confirmed MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY meanings, P0-P3 priority vocabulary, no-weakening rule, specific-rule precedence, ambiguity escalation, and exception constraints. Automated vocabulary checks passed in run #593. |
 | 00-08 | Standard versioning | NOT_VERIFIED | Registry 1.8.0 and history passed run #593; an additional 1.8.0 reconciliation note was added afterward. |
 | 00-09 | Standard conflict audit | NOT_VERIFIED | Resolved status-vocabulary drift, governance activation-order conflict, rule/standard ID namespace conflict, registry-vs-metadata-schema ambiguity, dependency-type representation ambiguity, P07/P08 dependency conflict, E0 exception semantics, task-contract schema coverage, and Uter/UAES status-result mapping. Uter crosswalk is recorded in docs/ai-specs/CONFLICT-REPORT.md and .uaes/TRACEABILITY.md; full domain-standard semantic review remains open. |
 | 00-10 | Duplicate rule audit | NOT_VERIFIED | Expanded rule definition scanner and duplicate/collision tests were added after run #593; rerun pending. |
