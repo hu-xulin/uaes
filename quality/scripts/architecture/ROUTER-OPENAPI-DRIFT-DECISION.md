@@ -147,4 +147,4 @@ Implemented on Uter PR #15:
 - Added a filter to `docs-web/scripts/sync-upstream-docs.py` so future documentation synchronization cannot reintroduce these paths.
 - No runtime handler, auth semantics, database, payment configuration, production environment, or deployment was changed.
 
-The final Uter source for the fresh parity run is `076ea0c2a9fc3eace5dc5c1ccea9d2247fee6db1`. The UAES Architecture Source Checks workflow and database migration inventory are being repinned to this exact source commit. Acceptance remains pending until the new live parity run passes.
+The final Uter source for the fresh parity run is `422caafffb7a64370700ddd4859a057911f5f9e0`. The UAES Architecture Source Checks workflow and database migration inventory are being repinned to this exact source commit. Acceptance remains pending until the new live parity run passes.
