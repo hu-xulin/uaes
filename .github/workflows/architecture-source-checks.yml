@@ -86,6 +86,11 @@ jobs:
       - name: Run frontend import inventory positive and negative controls
         working-directory: uaes
         run: ruby quality/scripts/architecture/test-frontend-module-inventory.rb
+      - name: Inventory every auth/system contract occurrence on the pinned Uter source
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/inventory-auth-contract-consumers.rb
       # Fixture controls run before the live source gate so known live drift
       # does not prevent the checker itself from receiving positive/negative tests.
       - name: Run router/OpenAPI drift positive and negative controls
