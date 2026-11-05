@@ -21,7 +21,11 @@ def gin_path_covers_openapi?(gin_path, openapi_path)
 
     dynamic = segment.start_with?(":")
     api_dynamic = api_segments[index].match?(/\A\{[^{}]+\}(?::.*)?\z/)
-    return false unless dynamic || segment == api_segments[index] || api_dynamic
+
+    # A Gin parameter can serve a concrete or parameterized OpenAPI segment.
+    # A static Gin segment cannot serve an OpenAPI parameter: it would only
+    # match one literal value and would overstate runtime route coverage.
+    return false unless dynamic || (!api_dynamic && segment == api_segments[index])
 
     index += 1
   end
