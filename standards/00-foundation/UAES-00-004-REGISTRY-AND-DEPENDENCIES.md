@@ -2,7 +2,7 @@
 
 **Standard ID:** UAES-00-004  
 **Standard Name:** Standard Registry & Dependencies  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** DRAFT  
 **Domain:** UAES-00 Foundation  
 **Owner:** Uter Engineering Governance  
@@ -38,31 +38,30 @@
 
 ## 3. Registry Required Fields
 
-每条记录至少包含：
+注册表当前采用分类条目模型。对 standards、schemas、gates、acceptance 四类正式治理条目，注册记录至少必须包含：
 
 - id
-- title
-- domain
-- type
-- version
+- name（若该类型定义名称）
+- file
+- phase
 - status
-- path
-- priority
-- owner
-- dependencies
-- verification
-- effective_date
 
-## 4. Dependency Types
+适用时还应包含 type、priority、provenance、description 等字段。system_files 与 tool_adapters 必须包含 id、file、status；其 phase 字段可不适用。
 
-| Type | Meaning |
-|---|---|
-| REQUIRES | 必须先满足的标准 |
-| EXTENDS | 在基础标准上增加要求 |
-| REFERENCES | 参考但不构成前置条件 |
-| IMPLEMENTS | 将标准转化为工程实现 |
-| VERIFIES | 验证其他标准的执行结果 |
-| CONFLICTS_WITH | 存在潜在冲突，必须治理 |
+注意：standard-metadata.schema.json 定义的是规范化标准元数据对象，不等同于当前 STANDARD-REGISTRY.yaml 的条目结构。不得声称注册表每条记录已经满足该元数据 Schema；只有在元数据对象实际生成并接入校验后，才能作此结论。
+
+## 4. Dependency Types and Current Registry Mapping
+
+| Type | Meaning | Current machine representation |
+|---|---|---|
+| REQUIRES | 必须先满足的标准 | supported by depends_on |
+| EXTENDS | 在基础标准上增加要求 | not yet represented as a typed edge |
+| REFERENCES | 参考但不构成前置条件 | document reference only |
+| IMPLEMENTS | 将标准转化为工程实现 | implementation/traceability evidence |
+| VERIFIES | 验证其他标准的执行结果 | gate/verification mapping |
+| CONFLICTS_WITH | 存在潜在冲突，必须治理 | conflict report and adjudication record |
+
+当前 dependencies[].depends_on 仅表达 REQUIRES。forward_depends_on 表示尚未落地的前向引用，不是第二种依赖类型；coordination 是说明性文本，不是可执行依赖边。其他关系在对应机器可读 Schema 与校验器落地前，必须通过标准文档、ADR 或审计报告记录，不得声称已被依赖图自动验证。
 
 ## 5. Dependency Rules
 
@@ -150,3 +149,11 @@ Agent 加载标准时：
 - 无 REQUIRES 循环。
 - 领域依赖符合基线。
 - Agent 能按任务范围解析并加载标准。
+
+
+## 10. Change History
+
+| Version | Status | Change |
+|---|---|---|
+| 1.0.0 | DRAFT | Initial registry and dependency model |
+| 1.1.0 | DRAFT | Clarify registry entry fields and distinguish typed REQUIRES edges from other documented relationships |
