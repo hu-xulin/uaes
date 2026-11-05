@@ -252,7 +252,7 @@ custom_steps:
     order: MANUAL
     failure_mode: RETURNS_PER_RECORD_FAILURES
     rollback_status: NOT_PROVIDED
-    recovery: "Implementation batches by primary-key cursor, conditionally updates plaintext, skips existing envelopes and retains failed plaintext rows for retry. No dedicated model/twofa_migration_test.go exists at pinned source. Add tests for key failure, concurrency, partial batch, post-write verification and rerun; never export plaintext secrets."
+    recovery: "Implementation batches by primary-key cursor, conditionally updates plaintext, skips existing envelopes and retains failed plaintext rows for retry. Dedicated model/twofa_secret_test.go covers ciphertext-at-rest, round-trip, lazy upgrade, stale-snapshot conditional update, rotated/missing key, multi-batch traversal, mixed rows and retry after key recovery. Remaining gaps: true concurrent rebind, injected DB write/partial-batch failure, fresh DB read-back after write, and same-invocation revisit after a conditional-update miss. Never export plaintext secrets."
 manual_sql:
   - path: bin/migration_v0.2-v0.3.sql
     status: LEGACY_MANUAL
