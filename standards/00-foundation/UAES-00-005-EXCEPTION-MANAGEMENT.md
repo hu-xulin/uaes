@@ -40,7 +40,7 @@
 | E3 | P2/P3 规则例外 | Domain Owner |
 | E4 | 临时工程偏离 | 模块负责人，按领域政策授权 |
 
-审批人必须具有对应权限。AI 不得自行成为其所申请例外的唯一批准人。
+审批人必须具有对应权限。AI 不得自行成为其所申请例外的唯一批准人。E0 例外不得进入 APPROVED 或 ACTIVE；审批权限不能覆盖不可豁免的法律、安全底线和明确授权边界。
 
 ## 4. Exception Request
 
@@ -62,8 +62,8 @@
 - Expiration Date。
 - Rollback Plan。
 - Verification Plan。
-- Approver。
-- Approval Evidence。
+- Approver（仅 APPROVED / ACTIVE 状态必填）。
+- Approval Evidence（仅 APPROVED / ACTIVE 状态必填）。
 
 ## 5. Exception Lifecycle
 
