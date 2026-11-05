@@ -269,3 +269,10 @@ The same workflow's final live Gin/OpenAPI parity step failed independently of t
 The runtime inventory captured 450 static Gin routes and 34 dynamic plugin routes. This failure is tracked as an API contract ownership decision, not as a frontend import-boundary failure. Do not add handlers, delete OpenAPI operations, or weaken the checker without an explicit API owner decision.
 
 **Current acceptance status:** frontend inventory tooling and its fixtures PASS; frontend architecture policy remains DRAFT / NOT ENFORCED; exhaustive symbol-level consumer search remains open; API runtime/OpenAPI parity remains BLOCKED on the two route decisions above.
+
+
+## 9. Revalidation after approved API contract cleanup — 2026-11-05
+
+Architecture Source Checks run [41970798603](https://github.com/hu-xulin/uaes/actions/runs/41970798603) revalidated the frontend import inventory and its positive/negative fixtures against Uter source `422caafffb7a64370700ddd4859a057911f5f9e0`. The inventory and fixture steps passed.
+
+The run also completed live API parity successfully after the two obsolete OpenAPI operations were removed: 197 documented operations were covered by 484 static Gin and built-in plugin routes. This route-parity result is independent of the frontend module-boundary policy: the latter remains DRAFT / NOT ENFORCED, and symbol-level consumer inventory is not exhaustive.
