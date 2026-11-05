@@ -166,6 +166,45 @@ def validate_instance(schema_name: str, instance: dict, label: str):
     except Exception as exc:
         errors.append(f"{label}: schema validation could not run: {exc}")
 
+# Validate the P00 task-contract schema with positive and negative instances.
+try:
+    task_schema = json.loads((ROOT / ".uaes" / "schemas" / "task.schema.json").read_text(encoding="utf-8"))
+    task_validator = validator_for(task_schema)(task_schema)
+    valid_task = {
+        "taskId": "P00-FIXTURE-001",
+        "title": "P00 task contract fixture",
+        "request": "Validate the task contract schema",
+        "requestSource": "automated-test",
+        "intendedOutcome": "Positive and negative schema controls pass",
+        "repository": "hu-xulin/uaes",
+        "baselineCommit": "0123456789abcdef0123456789abcdef01234567",
+        "scope": [".uaes/schemas/task.schema.json"],
+        "nonGoals": ["No production changes"],
+        "taskType": "TEST",
+        "riskLevel": "R0",
+        "dataClassification": "INTERNAL",
+        "requiredInputs": ["registry", "task schema"],
+        "authorization": {"allowedActions": ["read"], "prohibitedActions": ["deploy"]},
+        "acceptanceCriteria": ["Valid task contract accepted"],
+        "verificationPlan": [{"name": "schema validation", "method": "SCHEMA", "required": True}],
+        "expectedEvidence": ["CI log"],
+        "approvalPoints": [{"action": "merge", "approverRole": "repository owner", "required": True}],
+        "delivery": {"branch": "ai/p00-fixture", "format": "pull-request", "commitAllowed": True}
+    }
+    task_errors = list(task_validator.iter_errors(valid_task))
+    if task_errors:
+        errors.extend(f"task.schema.json positive fixture: {issue.message}" for issue in task_errors)
+    else:
+        invalid_task = dict(valid_task)
+        invalid_task.pop("authorization")
+        if list(task_validator.iter_errors(invalid_task)):
+            print("PASS: task-contract positive and negative fixtures")
+        else:
+            errors.append("task.schema.json negative fixture failed: missing authorization was accepted")
+except Exception as exc:
+    errors.append(f"task.schema.json instance validation failed: {exc}")
+
+
 registry = load_yaml_instance(".uaes/STANDARD-REGISTRY.yaml")
 validate_instance("standard-registry.schema.json", registry, ".uaes/STANDARD-REGISTRY.yaml")
 
