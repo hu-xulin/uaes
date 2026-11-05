@@ -166,4 +166,4 @@ Implemented in the isolated branch:
 - Shared status/OAuth/chat/security consumers switched to neutral imports.
 - Login challenge positive/negative regression test added.
 
-**Verification:** GitHub status and workflow-run queries returned no status/run for the current PR head or synthetic merge commit at the time of this update. Typecheck, lint, build, and test success are therefore **NOT VERIFIED**. PR remains DRAFT / NOT MERGED. This implementation is not yet accepted as complete and the frontend module-boundary proposal remains DRAFT / NOT ENFORCED.
+**Verification:** Uter CI run [41975573361](https://github.com/hu-xulin/uter/actions/runs/41975573361) has now been created for the current PR head and is **PENDING**. No job results are available yet. Typecheck, lint, build, and test success are therefore **NOT VERIFIED**. PR remains DRAFT / NOT MERGED. This implementation is not yet accepted as complete and the frontend module-boundary proposal remains DRAFT / NOT ENFORCED.
