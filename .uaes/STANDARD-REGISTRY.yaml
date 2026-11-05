@@ -1884,12 +1884,10 @@ schemas:
     phase: "P6"
     status: "DRAFT"
 
-  - id: "UAES-SCHEMA-08-003"
-    file: ".uaes/schemas/agent-handoff.schema.json"
-    type: "SCHEMA"
-    phase: "P6"
-    status: "DRAFT"
-
+  # UAES-SCHEMA-08-003 (agent-handoff.schema.json) removed 2026-11-05:
+  # the same file is already declared as UAES-SCHEMA-01-003 in the P1 block.
+  # validation.registry.require_unique_file_paths is true; a duplicate path
+  # makes G-023 fail. Keep the P1 entry (it carries name + provenance).
   - id: "UAES-SCHEMA-08-004"
     file: ".uaes/schemas/agent-permission-policy.schema.json"
     type: "SCHEMA"
