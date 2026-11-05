@@ -1,0 +1,86 @@
+#!/usr/bin/env ruby
+require "open3"
+require "yaml"
+
+def stop(message, code = 2)
+  warn "MODULE DEPENDENCY: #{message}"
+  exit code
+end
+
+root = ENV["UTER_REPO_ROOT"]
+stop("UTER_REPO_ROOT is required") if root.nil? || root.empty?
+root = File.expand_path(root)
+stop("source checkout missing: #{root}") unless File.directory?(root)
+
+uaes_root = File.expand_path("../../..", __dir__)
+module_registry = ENV.fetch("UAES_MODULE_REGISTRY", File.join(uaes_root, ".uaes/registry/modules.yaml"))
+rules_file = ENV.fetch("UAES_MODULE_DEPENDENCY_RULES", File.join(uaes_root, ".uaes/registry/module-dependencies.yaml"))
+stop("module registry missing") unless File.file?(module_registry)
+stop("dependency rules missing") unless File.file?(rules_file)
+
+begin
+  registered = YAML.safe_load_file(module_registry, permitted_classes: [], aliases: false)
+  rules = YAML.safe_load_file(rules_file, permitted_classes: [], aliases: false)
+rescue StandardError => e
+  stop("cannot parse registry or dependency rules: #{e.class}: #{e.message}", 1)
+end
+
+modules = registered.fetch("modules", []).select { |m| m["type"] == "go-module" }
+stop("no Go modules are registered") if modules.empty?
+rule_map = rules.fetch("modules", {})
+ids = modules.map { |m| m["id"] }
+stop("dependency rules do not cover every Go module") unless ids.sort == rule_map.keys.sort
+
+modules.each do |mod|
+  allowed = rule_map.fetch(mod["id"]).fetch("allowed_internal_dependencies", [])
+  unknown = allowed - ids
+  stop("#{mod["id"]}: unknown allowed dependency IDs: #{unknown.join(", ")}", 1) unless unknown.empty?
+  stop("#{mod["id"]}: self-dependency is forbidden", 1) if allowed.include?(mod["id"])
+end
+
+owners = modules.sort_by { |m| -m.fetch("module_name").length }
+findings = []
+actual_edges = Hash.new { |h, k| h[k] = [] }
+
+modules.each do |mod|
+  module_dir = File.expand_path(mod.fetch("path"), root)
+  manifest = File.expand_path(mod.fetch("manifest"), root)
+  unless module_dir.start_with?(root + File::SEPARATOR) || module_dir == root
+    stop("#{mod["id"]}: module path escapes source root", 1)
+  end
+  stop("#{mod["id"]}: module directory missing", 1) unless File.directory?(module_dir)
+  stop("#{mod["id"]}: go.mod missing", 1) unless File.file?(manifest)
+
+  output, error, status = Open3.capture3({ "GOWORK" => "off" }, "go", "list", "-f", '{{.ImportPath}}|{{join .Imports " "}}', "./...", chdir: module_dir)
+  unless status.success?
+    warn error
+    stop("#{mod["id"]}: go list failed; dependency graph is unknown")
+  end
+
+  output.each_line do |line|
+    package, import_list = line.strip.split("|", 2)
+    next if import_list.nil? || import_list.empty?
+    import_list.split.each do |import_path|
+      owner = owners.find do |candidate|
+        name = candidate.fetch("module_name")
+        import_path == name || import_path.start_with?(name + "/")
+      end
+      next unless owner
+      next if owner["id"] == mod["id"]
+      actual_edges[mod["id"]] << owner["id"]
+      allowed = rule_map.fetch(mod["id"]).fetch("allowed_internal_dependencies", [])
+      unless allowed.include?(owner["id"])
+        findings << "#{mod["id"]} package #{package} imports #{owner["id"]} package #{import_path}, which is not allowed"
+      end
+    end
+  end
+end
+
+if findings.any?
+  warn "MODULE DEPENDENCY: FAIL (#{findings.length} violation(s))"
+  findings.each { |finding| warn " - #{finding}" }
+  exit 1
+end
+
+actual_edges.each { |source, targets| puts "#{source} -> #{targets.uniq.sort.join(", ")}" }
+puts "MODULE DEPENDENCY: PASS (#{modules.length} Go modules; source=#{root})"

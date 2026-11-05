@@ -6,8 +6,9 @@
 #
 # Registry: .uaes/STANDARD-REGISTRY.yaml
 # System: UTER AI Engineering Standard
-# Version: 1.0.0
-# Scope: P00 - P12 (domains 00-12; all 13 domains registered, see history 1.7.0)
+# Registry schema version: 1.0.0
+# Registry content version: 1.8.0
+# Scope: P00 - P12 (domains 00-12; all 13 domains registered, see history 1.8.0)
 # Build depth: enterprise
 # Delivery mode: all
 # Existing engineering relationship: parallel
@@ -26,7 +27,7 @@ registry:
   id: "UAES-GLOBAL-REGISTRY"
   name: "UTER AI Engineering Standard"
   abbreviation: "UAES"
-  version: "1.7.0"
+  version: "1.8.0"
   schema_version: "1.0.0"
   status: "DRAFT"
 
@@ -50,6 +51,7 @@ registry:
     script_directory: "quality/scripts/"
     acceptance_directory: "quality/acceptance/"
     report_directory: "reports/"
+    skill_registry: "skills/registry.yaml"
     decision_directory: "architecture/decisions/"
 
     rules:
@@ -62,14 +64,18 @@ registry:
       prohibit_implicit_implementation: true
 
   lifecycle_status:
-    - "DRAFT"
     - "PROPOSED"
+    - "DRAFT"
     - "IN_REVIEW"
+    - "NEEDS_REVISION"
     - "APPROVED"
     - "IMPLEMENTED"
     - "VERIFIED"
+    - "ACTIVE"
+    - "REJECTED"
     - "DEPRECATED"
     - "SUPERSEDED"
+    - "RETIRED"
 
   requirement_levels:
     - "MUST"
@@ -90,17 +96,17 @@ registry:
     new: "Newly registered after this registry revision."
 
 # =============================================================================
-# PHASE REGISTRY
+# =============================================================================
+# PHASE REGISTRY — canonical phase IDs P00–P12
 # =============================================================================
 
 phases:
 
-  P0:
-    name: "UAES Foundation"
-    description: "Global governance, registry structure, standard architecture and execution foundations."
+  P00:
+    name: "Foundation"
+    description: "Global governance, registry structure, normative language, lifecycle, dependencies, exceptions, and execution foundations."
     status: "DRAFT"
     provenance: "PARTIALLY_RECOVERED_AND_RECONSTRUCTED"
-
     deliverables:
       - "Global standard architecture"
       - "Standard registry"
@@ -108,26 +114,29 @@ phases:
       - "Standard document conventions"
       - "Global acceptance baseline"
 
-  P1:
-    name: "AI Governance and Knowledge Engineering"
-    description: "AI behavior governance, execution permissions, project knowledge and decision traceability."
+  P01:
+    name: "AI Governance"
+    description: "AI behavior governance, execution permissions, human approval, risk classification, oversight, transparency, and auditability."
     status: "DRAFT"
     provenance: "PARTIALLY_RECOVERED_AND_RECONSTRUCTED"
-
     deliverables:
-      - "AI governance"
-      - "AI execution permissions"
+      - "AI Governance Standard"
+      - "AI governance roles"
+      - "Agent authority and permissions"
       - "Human approval and escalation"
-      - "Knowledge source governance"
-      - "Project context management"
-      - "Decision records and knowledge traceability"
+      - "AI risk classification"
+      - "Human oversight"
+      - "AI transparency and accountability"
+      - "AI data and context governance"
+      - "Model and provider governance"
+      - "AI incident governance"
+      - "AI audit and compliance"
 
-  P2:
+  P02:
     name: "Product Engineering"
-    description: "Requirements, user stories, business rules, product flows and acceptance."
+    description: "Requirements, user stories, business rules, product flows, acceptance criteria, change impact, and requirement traceability."
     status: "DRAFT"
     provenance: "HISTORICAL_ENTRIES_RECOVERED"
-
     deliverables:
       - "Product Engineering Standard"
       - "Requirement Engineering"
@@ -140,12 +149,24 @@ phases:
       - "Requirement Traceability"
       - "Product Engineering Quality Gate"
 
-  P3:
+  P03:
+    name: "Knowledge Engineering"
+    description: "Project context, knowledge sources and provenance, classification, memory lifecycle, decision records, and knowledge traceability."
+    status: "DRAFT"
+    provenance: "HISTORICAL_ENTRIES_RECOVERED_WITH_RECONSTRUCTION"
+    deliverables:
+      - "Knowledge Engineering Standard"
+      - "Project Context Model"
+      - "Knowledge Source and Provenance"
+      - "Knowledge Classification"
+      - "Project Memory Lifecycle"
+      - "Decision and Evidence Traceability"
+
+  P04:
     name: "System Architecture"
-    description: "System architecture, technical decisions, module boundaries, APIs, data and integration."
+    description: "System architecture, technical decisions, module boundaries, APIs, data, integrations, concurrency, consistency, and observability."
     status: "DRAFT"
     provenance: "HISTORICAL_ENTRIES_RECOVERED_WITH_ADR_COMPLETION"
-
     deliverables:
       - "System Architecture Standard"
       - "Architecture Principles"
@@ -162,16 +183,11 @@ phases:
       - "Third-party Integration"
       - "Observability and Architecture Verification"
 
-  # ---------------------------------------------------------------------------
-  # P4: Experience & Design
-  # ---------------------------------------------------------------------------
-
-  P4:
+  P05:
     name: "Experience and Design Engineering"
-    description: "Design system governance, design tokens, visual foundation, components, responsive design, accessibility, visual regression and AI design execution."
+    description: "Design system governance, design tokens, visual foundation, components, responsive design, accessibility, visual regression, and AI design execution."
     status: "DRAFT"
-    provenance: "NEW_P4_INCREMENT"
-
+    provenance: "NEW_P05_INCREMENT"
     deliverables:
       - "Experience and Design Standard"
       - "Design System Governance"
@@ -188,18 +204,29 @@ phases:
       - "AI Design Execution"
       - "Design Documentation and Change Governance"
       - "Experience and Design Quality Gate"
-      - "P4 Acceptance Baseline"
+      - "P05 Acceptance Baseline"
 
-  # ---------------------------------------------------------------------------
-  # P5: Cross-Platform Engineering
-  # ---------------------------------------------------------------------------
-
-  P5:
-    name: "Cross-Platform Engineering"
-    description: "Cross-platform engineering governance: platform declaration, capability matrix, shared code boundaries, Web/H5, Electron, React Native, native Android/iOS integration, HarmonyOS, device lifecycle and permissions, compatibility and release, and cross-platform testing."
+  P06:
+    name: "Software Engineering"
+    description: "Coding principles, repository structure, language-specific engineering (Go/TypeScript/React/Electron), error handling, configuration, code review, and performance engineering."
     status: "DRAFT"
-    provenance: "NEW_P5_INCREMENT"
+    provenance: "DELIVERED_DOCS_2026-11-04"
+    deliverables:
+      - "Software Engineering Standard"
+      - "Repository and Module Structure"
+      - "Go Engineering"
+      - "TypeScript and React Engineering"
+      - "Electron Engineering"
+      - "Error Handling and Observability"
+      - "Configuration and Dependency Management"
+      - "Code Review Practices"
+      - "Performance Engineering"
 
+  P07:
+    name: "Cross-Platform Engineering"
+    description: "Platform declaration, capability matrix, shared-code boundaries, Web/H5, Electron, React Native, native Android/iOS, HarmonyOS, lifecycle, compatibility, release, and cross-platform testing."
+    status: "DRAFT"
+    provenance: "NEW_P07_INCREMENT"
     deliverables:
       - "Cross-Platform Engineering Standard"
       - "Cross-Platform Principles"
@@ -213,20 +240,15 @@ phases:
       - "Compatibility and Release"
       - "Cross-Platform Testing"
       - "Cross-Platform Quality Gate"
-      - "P5 Acceptance Baseline"
+      - "P07 Acceptance Baseline"
 
-  # ---------------------------------------------------------------------------
-  # P6: AI Agent Engineering
-  # ---------------------------------------------------------------------------
-
-  P6:
-    name: "AI Agent Engineering"
-    description: "AI agent engineering governance: agent identity, lifecycle, task planning, tool registry, permissions, context and memory, multi-agent orchestration, handoff, skills and workflows, evaluation, security trust boundaries, and failure recovery."
+  P08:
+    name: "Agent Engineering"
+    description: "Agent identity, lifecycle, planning, tool registry, permissions, context and memory, orchestration, handoff, skills, workflows, evaluation, security, and recovery."
     status: "DRAFT"
-    provenance: "NEW_P6_INCREMENT"
-
+    provenance: "NEW_P08_INCREMENT"
     deliverables:
-      - "AI Agent Engineering Standard"
+      - "Agent Engineering Standard"
       - "Agent Role and Identity"
       - "Agent Lifecycle and State"
       - "Task Planning and Decomposition"
@@ -242,30 +264,28 @@ phases:
       - "Agent Registry"
       - "Default Permission Policy"
       - "Agent Engineering Quality Gate"
-      - "P6 Acceptance Baseline"
-
-  # ---------------------------------------------------------------------------
-  # P10: Security & Reliability Engineering
-  # ---------------------------------------------------------------------------
-
-  P06:
-    name: "Software Engineering"
-    description: "Coding principles, repository structure, language-specific engineering (Go/TypeScript/React/Electron), error handling, configuration, code review and performance engineering."
-    status: "DRAFT"
-    provenance: "DELIVERED_DOCS_2026-11-04"
+      - "P08 Acceptance Baseline"
 
   P09:
     name: "Quality Engineering"
-    description: "Quality model, code review, test strategy and levels, visual/accessibility/performance/security testing, test data, flaky-test maintenance, coverage, defect and regression management, quality reporting."
+    description: "Quality model, code review, test strategy and levels, visual/accessibility/performance/security testing, test data, flaky-test maintenance, coverage, defect and regression management, and quality reporting."
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
+    deliverables:
+      - "Quality Engineering Standard"
+      - "Code Review Standard"
+      - "Automated Testing Standard"
+      - "Auto-Fix Standard"
+      - "Quality Gate Standard"
+      - "Quality Report Schema"
+      - "Quality Gate Automation"
+      - "P09 Acceptance Baseline"
 
   P10:
-    name: "Security & Reliability Engineering"
-    description: "Security and reliability engineering governance: secure SDLC, threat modeling, identity and access, session/token/secret management, data protection, input validation and injection defense, API security, platform and runtime security (Go/React/Electron/infrastructure), dependency and supply chain security with SBOM, cryptography, security testing and vulnerability management, reliability and resilience, backup and recovery, security incident response, financial and payment security, and security exceptions with continuous assurance."
+    name: "Security and Reliability Engineering"
+    description: "Secure SDLC, threat modeling, identity and access, session/token/secret management, data protection, application/runtime security, supply chain, security testing, resilience, recovery, incident response, and financial security."
     status: "DRAFT"
     provenance: "NEW_P10_INCREMENT"
-
     deliverables:
       - "Security & Reliability Engineering Standard"
       - "Security Governance and Secure SDLC"
@@ -288,18 +308,41 @@ phases:
       - "P10 Acceptance Baseline"
 
   P11:
-    name: "DevOps & Delivery Engineering"
-    description: "CI/CD pipelines, build and release management, deployment manifests, delivery evidence and release governance."
+    name: "DevOps and Delivery Engineering"
+    description: "CI/CD pipelines, build and release management, deployment manifests, delivery evidence, environment controls, and release governance."
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
+    deliverables:
+      - "DevOps & Delivery Engineering Standard"
+      - "CI Pipeline Standard"
+      - "Build and Artifact Provenance"
+      - "Release and Deployment Governance"
+      - "Environment and Configuration Promotion"
+      - "Rollback and Recovery Procedure"
+      - "Delivery Evidence and Release Gate"
+      - "P11 Acceptance Baseline"
 
   P12:
-    name: "Lifecycle & Evolution"
-    description: "Product and system lifecycle, technical debt governance, refactoring, dependency lifecycle, architecture evolution, deprecation, data/schema evolution, feature rollout, postmortems, knowledge drift, continuous improvement and decommissioning."
+    name: "Lifecycle and Evolution"
+    description: "Product and system lifecycle, technical debt, refactoring, dependency lifecycle, architecture evolution, deprecation, data/schema evolution, feature rollout, postmortems, and decommissioning."
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
+    deliverables:
+      - "Lifecycle & Evolution Standard"
+      - "Technical Debt Governance"
+      - "Refactoring and Modernization"
+      - "Dependency Lifecycle"
+      - "Architecture Evolution"
+      - "Deprecation and Compatibility"
+      - "Data and Schema Evolution"
+      - "Feature Rollout and Retirement"
+      - "Postmortem and Continuous Improvement"
+      - "P12 Acceptance Baseline"
 
 # =============================================================================
+# STANDARD REGISTRY
+# =============================================================================
+
 # P0 - FOUNDATION STANDARDS
 # =============================================================================
 
@@ -313,7 +356,7 @@ standards:
     name: "UAES Foundation Standard"
     file: "standards/00-foundation/UAES-00-FOUNDATION-STANDARD.md"
     type: "DOMAIN_STANDARD"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -323,7 +366,7 @@ standards:
     name: "Standard Governance"
     file: "standards/00-foundation/UAES-00-001-STANDARD-GOVERNANCE.md"
     type: "STANDARD"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -332,7 +375,7 @@ standards:
     name: "Normative Rules & Interpretation"
     file: "standards/00-foundation/UAES-00-002-NORMATIVE-RULES.md"
     type: "STANDARD"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -341,7 +384,7 @@ standards:
     name: "Standard Lifecycle & Versioning"
     file: "standards/00-foundation/UAES-00-003-STANDARD-LIFECYCLE.md"
     type: "STANDARD"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -350,7 +393,7 @@ standards:
     name: "Registry & Dependencies"
     file: "standards/00-foundation/UAES-00-004-REGISTRY-AND-DEPENDENCIES.md"
     type: "STANDARD"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -359,7 +402,7 @@ standards:
     name: "Exception & Waiver Management"
     file: "standards/00-foundation/UAES-00-005-EXCEPTION-MANAGEMENT.md"
     type: "STANDARD"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -368,7 +411,7 @@ standards:
     name: "AI Engineering Execution Model"
     file: "standards/00-foundation/UAES-00-006-AI-ENGINEERING-EXECUTION-MODEL.md"
     type: "STANDARD"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -381,7 +424,7 @@ standards:
     name: "AI Governance Standard"
     file: "standards/01-ai-governance/UAES-01-AI-GOVERNANCE-STANDARD.md"
     type: "DOMAIN_STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL_PATH_RECOVERED"
@@ -390,7 +433,7 @@ standards:
     name: "AI Governance Roles"
     file: "standards/01-ai-governance/UAES-01-001-AI-GOVERNANCE-ROLES.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -399,7 +442,7 @@ standards:
     name: "Agent Authority and Permissions"
     file: "standards/01-ai-governance/UAES-01-002-AGENT-AUTHORITY-AND-PERMISSIONS.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -408,7 +451,7 @@ standards:
     name: "Human Approval and Escalation"
     file: "standards/01-ai-governance/UAES-01-003-HUMAN-APPROVAL-AND-ESCALATION.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -417,7 +460,7 @@ standards:
     name: "AI Risk Classification"
     file: "standards/01-ai-governance/UAES-01-004-AI-RISK-CLASSIFICATION.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -426,7 +469,7 @@ standards:
     name: "Human Oversight"
     file: "standards/01-ai-governance/UAES-01-005-HUMAN-OVERSIGHT.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -435,7 +478,7 @@ standards:
     name: "AI Transparency and Accountability"
     file: "standards/01-ai-governance/UAES-01-006-AI-TRANSPARENCY-AND-ACCOUNTABILITY.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -443,7 +486,7 @@ standards:
     name: "AI Data and Context Governance"
     file: "standards/01-ai-governance/UAES-01-007-AI-DATA-AND-CONTEXT-GOVERNANCE.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P0"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -452,7 +495,7 @@ standards:
     name: "Model and Provider Governance"
     file: "standards/01-ai-governance/UAES-01-008-MODEL-AND-PROVIDER-GOVERNANCE.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -461,7 +504,7 @@ standards:
     name: "AI Incident Governance"
     file: "standards/01-ai-governance/UAES-01-009-AI-INCIDENT-GOVERNANCE.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -470,7 +513,7 @@ standards:
     name: "AI Audit and Compliance"
     file: "standards/01-ai-governance/UAES-01-010-AI-AUDIT-AND-COMPLIANCE.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -483,7 +526,7 @@ standards:
     name: "Knowledge Engineering Standard"
     file: "standards/03-knowledge-engineering/UAES-03-KNOWLEDGE-ENGINEERING-STANDARD.md"
     type: "DOMAIN_STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL_PATH_RECOVERED"
@@ -492,7 +535,7 @@ standards:
     name: "Project Context Model"
     file: "standards/03-knowledge-engineering/UAES-03-001-PROJECT-CONTEXT-MODEL.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P0"
     provenance: "RECONSTRUCTED"
@@ -501,7 +544,7 @@ standards:
     name: "Knowledge Source and Provenance"
     file: "standards/03-knowledge-engineering/UAES-03-002-KNOWLEDGE-SOURCE-AND-PROVENANCE.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -510,7 +553,7 @@ standards:
     name: "Knowledge Classification"
     file: "standards/03-knowledge-engineering/UAES-03-003-KNOWLEDGE-CLASSIFICATION.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -519,7 +562,7 @@ standards:
     name: "Project Memory Lifecycle"
     file: "standards/03-knowledge-engineering/UAES-03-004-PROJECT-MEMORY-LIFECYCLE.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -528,7 +571,7 @@ standards:
     name: "Knowledge Freshness"
     file: "standards/03-knowledge-engineering/UAES-03-005-KNOWLEDGE-FRESHNESS.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -537,7 +580,7 @@ standards:
     name: "Context Engineering"
     file: "standards/03-knowledge-engineering/UAES-03-006-CONTEXT-ENGINEERING.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "RECONSTRUCTED"
@@ -545,7 +588,7 @@ standards:
     name: "Knowledge Conflict Resolution"
     file: "standards/03-knowledge-engineering/UAES-03-007-KNOWLEDGE-CONFLICT-RESOLUTION.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -554,7 +597,7 @@ standards:
     name: "Knowledge Traceability"
     file: "standards/03-knowledge-engineering/UAES-03-008-KNOWLEDGE-TRACEABILITY.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -563,7 +606,7 @@ standards:
     name: "External Knowledge Ingestion"
     file: "standards/03-knowledge-engineering/UAES-03-009-EXTERNAL-KNOWLEDGE-INGESTION.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -572,7 +615,7 @@ standards:
     name: "Multi-Agent Knowledge Sharing"
     file: "standards/03-knowledge-engineering/UAES-03-010-MULTI-AGENT-KNOWLEDGE-SHARING.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -581,7 +624,7 @@ standards:
     name: "Knowledge Security"
     file: "standards/03-knowledge-engineering/UAES-03-011-KNOWLEDGE-SECURITY.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P0"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -590,7 +633,7 @@ standards:
     name: "Knowledge Repository and Index"
     file: "standards/03-knowledge-engineering/UAES-03-012-KNOWLEDGE-REPOSITORY-AND-INDEX.md"
     type: "STANDARD"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     priority: "P1"
     provenance: "DELIVERED_DOCS_2026-11-04"
@@ -603,7 +646,7 @@ standards:
     name: "Product Engineering Standard"
     file: "standards/02-product-engineering/UAES-02-PRODUCT-ENGINEERING-STANDARD.md"
     type: "DOMAIN_STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -612,7 +655,7 @@ standards:
     name: "Requirement Engineering"
     file: "standards/02-product-engineering/UAES-02-001-REQUIREMENT-ENGINEERING.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -621,7 +664,7 @@ standards:
     name: "User Story"
     file: "standards/02-product-engineering/UAES-02-002-USER-STORY.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -630,7 +673,7 @@ standards:
     name: "Business Rules"
     file: "standards/02-product-engineering/UAES-02-003-BUSINESS-RULES.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -639,7 +682,7 @@ standards:
     name: "Acceptance Criteria"
     file: "standards/02-product-engineering/UAES-02-004-ACCEPTANCE-CRITERIA.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -648,7 +691,7 @@ standards:
     name: "Product Flow and State Machine"
     file: "standards/02-product-engineering/UAES-02-005-PRODUCT-FLOW.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -657,7 +700,7 @@ standards:
     name: "Requirement Change and Impact Analysis"
     file: "standards/02-product-engineering/UAES-02-006-CHANGE-IMPACT.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -666,7 +709,7 @@ standards:
     name: "Product Documentation"
     file: "standards/02-product-engineering/UAES-02-007-PRODUCT-DOCUMENTATION.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -675,7 +718,7 @@ standards:
     name: "Requirement Traceability"
     file: "standards/02-product-engineering/UAES-02-008-REQUIREMENT-TRACEABILITY.md"
     type: "STANDARD"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -688,7 +731,7 @@ standards:
     name: "System Architecture Standard"
     file: "standards/04-system-architecture/UAES-04-SYSTEM-ARCHITECTURE-STANDARD.md"
     type: "DOMAIN_STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -697,7 +740,7 @@ standards:
     name: "Architecture Principles"
     file: "standards/04-system-architecture/UAES-04-001-ARCHITECTURE-PRINCIPLES.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -706,7 +749,7 @@ standards:
     name: "Architecture Decision Record Standard"
     file: "standards/04-system-architecture/UAES-04-002-ARCHITECTURE-DECISION-RECORD.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL_COMPLETED_AFTER_OMISSION"
@@ -715,7 +758,7 @@ standards:
     name: "Module Boundaries"
     file: "standards/04-system-architecture/UAES-04-003-MODULE-BOUNDARIES.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -724,7 +767,7 @@ standards:
     name: "Go Backend Architecture"
     file: "standards/04-system-architecture/UAES-04-004-GO-BACKEND-ARCHITECTURE.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -733,7 +776,7 @@ standards:
     name: "React Frontend Architecture"
     file: "standards/04-system-architecture/UAES-04-005-REACT-FRONTEND-ARCHITECTURE.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -742,7 +785,7 @@ standards:
     name: "Electron Architecture"
     file: "standards/04-system-architecture/UAES-04-006-ELECTRON-ARCHITECTURE.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -751,7 +794,7 @@ standards:
     name: "API Contract"
     file: "standards/04-system-architecture/UAES-04-007-API-CONTRACT.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -760,7 +803,7 @@ standards:
     name: "Database and Data Modeling"
     file: "standards/04-system-architecture/UAES-04-008-DATABASE-AND-DATA-MODELING.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -769,7 +812,7 @@ standards:
     name: "Cache and Consistency"
     file: "standards/04-system-architecture/UAES-04-009-CACHE-AND-CONSISTENCY.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -778,7 +821,7 @@ standards:
     name: "Async and Event Architecture"
     file: "standards/04-system-architecture/UAES-04-010-ASYNC-AND-EVENT-ARCHITECTURE.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -787,7 +830,7 @@ standards:
     name: "Concurrency and Idempotency"
     file: "standards/04-system-architecture/UAES-04-011-CONCURRENCY-AND-IDEMPOTENCY.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P0"
     provenance: "HISTORICAL"
@@ -796,7 +839,7 @@ standards:
     name: "Third-party Integration"
     file: "standards/04-system-architecture/UAES-04-012-THIRD-PARTY-INTEGRATION.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -805,7 +848,7 @@ standards:
     name: "Observability and Architecture Verification"
     file: "standards/04-system-architecture/UAES-04-013-OBSERVABILITY-AND-ARCHITECTURE-VERIFICATION.md"
     type: "STANDARD"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     priority: "P1"
     provenance: "HISTORICAL"
@@ -817,85 +860,85 @@ standards:
   - id: "UAES-05"
     file: "standards/05-experience-design/UAES-05-EXPERIENCE-DESIGN-STANDARD.md"
     type: "DOMAIN_STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-001"
     file: "standards/05-experience-design/UAES-05-001-DESIGN-SYSTEM-GOVERNANCE.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-002"
     file: "standards/05-experience-design/UAES-05-002-DESIGN-TOKEN-ARCHITECTURE.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-003"
     file: "standards/05-experience-design/UAES-05-003-COLOR-AND-CONTRAST.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-004"
     file: "standards/05-experience-design/UAES-05-004-TYPOGRAPHY-AND-CONTENT.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-005"
     file: "standards/05-experience-design/UAES-05-005-SPACING-AND-VISUAL-HIERARCHY.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-006"
     file: "standards/05-experience-design/UAES-05-006-COMPONENT-CONTRACT.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-007"
     file: "standards/05-experience-design/UAES-05-007-INTERACTION-PATTERNS.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-008"
     file: "standards/05-experience-design/UAES-05-008-RESPONSIVE-AND-ADAPTIVE-DESIGN.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-009"
     file: "standards/05-experience-design/UAES-05-009-ACCESSIBILITY.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-010"
     file: "standards/05-experience-design/UAES-05-010-MOTION-AND-ANIMATION.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-011"
     file: "standards/05-experience-design/UAES-05-011-DESIGN-TO-CODE-SYNC.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-012"
     file: "standards/05-experience-design/UAES-05-012-VISUAL-REGRESSION.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-05-013"
     file: "standards/05-experience-design/UAES-05-013-DESIGN-AI-EXECUTION.md"
     type: "STANDARD"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   # ---------------------------------------------------------------------------
@@ -908,84 +951,84 @@ standards:
     file: "standards/07-cross-platform/UAES-07-CROSS-PLATFORM-STANDARD.md"
     type: "DOMAIN_STANDARD"
     priority: "P0"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-001"
     file: "standards/07-cross-platform/UAES-07-001-PLATFORM-CAPABILITY-MATRIX.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-002"
     file: "standards/07-cross-platform/UAES-07-002-SHARED-CORE-AND-PLATFORM-ADAPTER.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-003"
     file: "standards/07-cross-platform/UAES-07-003-PLATFORM-APPLICATION-ARCHITECTURE.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-004"
     file: "standards/07-cross-platform/UAES-07-004-ROUTING-AND-NAVIGATION.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-005"
     file: "standards/07-cross-platform/UAES-07-005-RESPONSIVE-AND-ADAPTIVE-ENGINEERING.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-006"
     file: "standards/07-cross-platform/UAES-07-006-DEVICE-AND-PLATFORM-API.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-007"
     file: "standards/07-cross-platform/UAES-07-007-OFFLINE-AND-PERSISTENCE.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-008"
     file: "standards/07-cross-platform/UAES-07-008-DEVICE-COMPATIBILITY.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-009"
     file: "standards/07-cross-platform/UAES-07-009-INPUT-AND-ACCESSIBILITY-ADAPTATION.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-010"
     file: "standards/07-cross-platform/UAES-07-010-LOCALIZATION-AND-INTERNATIONALIZATION.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
   - id: "UAES-07-011"
     file: "standards/07-cross-platform/UAES-07-011-PLATFORM-BUILD-AND-PACKAGING.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-012"
     file: "standards/07-cross-platform/UAES-07-012-PLATFORM-INTEGRATION-AND-COMPATIBILITY.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-07-013"
     file: "standards/07-cross-platform/UAES-07-013-CROSS-PLATFORM-AI-EXECUTION.md"
     type: "STANDARD"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   # ---------------------------------------------------------------------------
@@ -998,90 +1041,90 @@ standards:
     file: "standards/08-agent-engineering/UAES-08-AGENT-ENGINEERING-STANDARD.md"
     type: "DOMAIN_STANDARD"
     priority: "P0"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-001"
     file: "standards/08-agent-engineering/UAES-08-001-AGENT-IDENTITY-AND-LIFECYCLE.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-002"
     file: "standards/08-agent-engineering/UAES-08-002-AGENT-MANIFEST-AND-REGISTRY.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-003"
     file: "standards/08-agent-engineering/UAES-08-003-SKILL-ENGINEERING.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-004"
     file: "standards/08-agent-engineering/UAES-08-004-TOOL-AND-MCP-CONTRACT.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-005"
     file: "standards/08-agent-engineering/UAES-08-005-TASK-PLANNING-AND-DECOMPOSITION.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-006"
     file: "standards/08-agent-engineering/UAES-08-006-AGENT-ROUTING-AND-HANDOFF.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-007"
     file: "standards/08-agent-engineering/UAES-08-007-MULTI-AGENT-ORCHESTRATION.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-008"
     file: "standards/08-agent-engineering/UAES-08-008-CONTEXT-LOADING-AND-BUDGET.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-009"
     file: "standards/08-agent-engineering/UAES-08-009-EXECUTION-WORKSPACE-ISOLATION.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-010"
     file: "standards/08-agent-engineering/UAES-08-010-EXECUTION-STATE-AND-RECOVERY.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-011"
     file: "standards/08-agent-engineering/UAES-08-011-AGENT-MEMORY-AND-STATE.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-012"
     file: "standards/08-agent-engineering/UAES-08-012-TOOL-SAFETY-AND-PROMPT-INJECTION.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
   - id: "UAES-08-013"
     file: "standards/08-agent-engineering/UAES-08-013-AGENT-EVALUATION-AND-TESTING.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-08-014"
     file: "standards/08-agent-engineering/UAES-08-014-AGENT-OBSERVABILITY-AND-AUDIT.md"
     type: "STANDARD"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
 
@@ -1668,14 +1711,14 @@ schemas:
   - id: "UAES-SCHEMA-00-001"
     name: "Standard Registry Schema"
     file: ".uaes/schemas/standard-registry.schema.json"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-SCHEMA-00-002"
     name: "Standard Metadata Schema"
     file: ".uaes/schemas/standard-metadata.schema.json"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
@@ -1683,63 +1726,63 @@ schemas:
   - id: "UAES-SCHEMA-01-001"
     name: "AI Task Schema"
     file: ".uaes/schemas/ai-task.schema.json"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-SCHEMA-01-002"
     name: "AI Permission Schema"
     file: ".uaes/schemas/ai-permission.schema.json"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-SCHEMA-01-003"
     name: "Agent Handoff Schema"
     file: ".uaes/schemas/agent-handoff.schema.json"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-SCHEMA-01-004"
     name: "Knowledge Source Schema"
     file: ".uaes/schemas/knowledge-source.schema.json"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-SCHEMA-01-005"
     name: "Decision Record Schema"
     file: ".uaes/schemas/decision.schema.json"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-SCHEMA-01-006"
     file: ".uaes/schemas/agent-authorization.schema.json"
     type: "SCHEMA"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-SCHEMA-01-007"
     file: ".uaes/schemas/ai-risk-assessment.schema.json"
     type: "SCHEMA"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-SCHEMA-03-001"
     file: ".uaes/schemas/knowledge-item.schema.json"
     type: "SCHEMA"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-SCHEMA-03-002"
     file: ".uaes/schemas/knowledge-conflict.schema.json"
     type: "SCHEMA"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
@@ -1747,28 +1790,28 @@ schemas:
   - id: "UAES-SCHEMA-02-001"
     name: "Requirement Schema"
     file: ".uaes/schemas/requirement.schema.json"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
   - id: "UAES-SCHEMA-02-002"
     name: "Business Rule Schema"
     file: ".uaes/schemas/business-rule.schema.json"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
   - id: "UAES-SCHEMA-02-003"
     name: "Acceptance Criteria Schema"
     file: ".uaes/schemas/acceptance-criteria.schema.json"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
   - id: "UAES-SCHEMA-02-004"
     name: "Change Impact Schema"
     file: ".uaes/schemas/change.schema.json"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
@@ -1776,28 +1819,28 @@ schemas:
   - id: "UAES-SCHEMA-04-001"
     name: "Architecture Decision Schema"
     file: ".uaes/schemas/architecture-decision.schema.json"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
   - id: "UAES-SCHEMA-04-002"
     name: "Module Manifest Schema"
     file: ".uaes/schemas/module-manifest.schema.json"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
   - id: "UAES-SCHEMA-04-003"
     name: "API Contract Schema"
     file: ".uaes/schemas/api-contract.schema.json"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
   - id: "UAES-SCHEMA-04-004"
     name: "Data Migration Schema"
     file: ".uaes/schemas/data-migration.schema.json"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
@@ -1808,37 +1851,37 @@ schemas:
   - id: "UAES-SCHEMA-05-001"
     file: ".uaes/schemas/design-token.schema.json"
     type: "SCHEMA"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-05-002"
     file: ".uaes/schemas/design-system-manifest.schema.json"
     type: "SCHEMA"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-05-003"
     file: ".uaes/schemas/component-contract.schema.json"
     type: "SCHEMA"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-05-004"
     file: ".uaes/schemas/design-audit.schema.json"
     type: "SCHEMA"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-05-005"
     file: ".uaes/schemas/visual-regression.schema.json"
     type: "SCHEMA"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-05-006"
     file: ".uaes/schemas/design-asset.schema.json"
     type: "SCHEMA"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
@@ -1851,19 +1894,19 @@ schemas:
   - id: "UAES-SCHEMA-07-001"
     file: ".uaes/schemas/platform-manifest.schema.json"
     type: "SCHEMA"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-07-002"
     file: ".uaes/schemas/platform-capability.schema.json"
     type: "SCHEMA"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-07-003"
     file: ".uaes/schemas/compatibility-matrix.schema.json"
     type: "SCHEMA"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   # ---------------------------------------------------------------------------
@@ -1875,49 +1918,50 @@ schemas:
   - id: "UAES-SCHEMA-08-001"
     file: ".uaes/schemas/agent-manifest.schema.json"
     type: "SCHEMA"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-08-002"
     file: ".uaes/schemas/agent-task.schema.json"
     type: "SCHEMA"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
-  # UAES-SCHEMA-08-003 (agent-handoff.schema.json) removed 2026-11-05:
+  # UAES-SCHEMA-08-003 (agent-handoff.schema.json) removed 2026-11-06:
   # the same file is already declared as UAES-SCHEMA-01-003 in the P1 block.
   # validation.registry.require_unique_file_paths is true; a duplicate path
   # makes G-023 fail. Keep the P1 entry (it carries name + provenance).
+
   - id: "UAES-SCHEMA-08-004"
     file: ".uaes/schemas/agent-permission-policy.schema.json"
     type: "SCHEMA"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-08-005"
     file: ".uaes/schemas/agent-evaluation.schema.json"
     type: "SCHEMA"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-SCHEMA-07-004"
     file: ".uaes/schemas/platform-compatibility-evidence.schema.json"
     type: "SCHEMA"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-SCHEMA-08-006"
     file: ".uaes/schemas/skill-manifest.schema.json"
     type: "SCHEMA"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-SCHEMA-08-007"
     file: ".uaes/schemas/tool-manifest.schema.json"
     type: "SCHEMA"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
@@ -1966,7 +2010,7 @@ schemas:
   - id: "UAES-SCHEMA-08-008"
     file: ".uaes/schemas/context-manifest.schema.json"
     type: "SCHEMA"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
@@ -2087,13 +2131,109 @@ schemas:
 # QUALITY GATES
 # =============================================================================
 
+
+  - id: "UAES-SCHEMA-08-009"
+    name: "Agent Result Schema"
+    file: ".uaes/schemas/agent-result.schema.json"
+    type: "SCHEMA"
+    phase: "P08"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-04-005"
+    name: "Architecture Review Schema"
+    file: ".uaes/schemas/architecture-review.schema.json"
+    type: "SCHEMA"
+    phase: "P04"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-12-006"
+    name: "Change Impact Schema"
+    file: ".uaes/schemas/change-impact.schema.json"
+    type: "SCHEMA"
+    phase: "P12"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-03-003"
+    name: "Knowledge Fact Schema"
+    file: ".uaes/schemas/fact.schema.json"
+    type: "SCHEMA"
+    phase: "P03"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-09-005"
+    name: "Gate Registry Schema"
+    file: ".uaes/schemas/gate-registry.schema.json"
+    type: "SCHEMA"
+    phase: "P09"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-03-004"
+    name: "Knowledge Record Schema"
+    file: ".uaes/schemas/knowledge.schema.json"
+    type: "SCHEMA"
+    phase: "P03"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-04-006"
+    name: "Module Registry Schema"
+    file: ".uaes/schemas/module-registry.schema.json"
+    type: "SCHEMA"
+    phase: "P04"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-03-005"
+    name: "Project Status Schema"
+    file: ".uaes/schemas/project-status.schema.json"
+    type: "SCHEMA"
+    phase: "P03"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-09-006"
+    name: "Engineering Report Schema"
+    file: ".uaes/schemas/report.schema.json"
+    type: "SCHEMA"
+    phase: "P09"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-04-007"
+    name: "Repository Inventory Schema"
+    file: ".uaes/schemas/repository-inventory.schema.json"
+    type: "SCHEMA"
+    phase: "P04"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-09-007"
+    name: "Standard Mapping Schema"
+    file: ".uaes/schemas/standard-mapping.schema.json"
+    type: "SCHEMA"
+    phase: "P09"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-00-003"
+    name: "Engineering Task Contract Schema"
+    file: ".uaes/schemas/task.schema.json"
+    type: "SCHEMA"
+    phase: "P00"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
 gates:
 
   # P0
   - id: "UAES-00-GATE-001"
     name: "UAES Foundation Gate"
     file: "quality/gates/UAES-00-GATE-001-FOUNDATION-GATE.md"
-    phase: "P0"
+    phase: "P00"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
@@ -2101,14 +2241,14 @@ gates:
   - id: "UAES-01-GATE-001"
     name: "AI Governance Gate"
     file: "quality/gates/UAES-01-GATE-001-AI-GOVERNANCE-GATE.md"
-    phase: "P1"
+    phase: "P01"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-03-GATE-001"
     name: "Knowledge Engineering Gate"
     file: "quality/gates/UAES-03-GATE-001-KNOWLEDGE-ENGINEERING-GATE.md"
-    phase: "P1"
+    phase: "P03"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
@@ -2116,7 +2256,7 @@ gates:
   - id: "UAES-02-GATE-001"
     name: "Product Engineering Quality Gate"
     file: "quality/gates/UAES-02-GATE-001-PRODUCT-ENGINEERING-GATE.md"
-    phase: "P2"
+    phase: "P02"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
@@ -2124,7 +2264,7 @@ gates:
   - id: "UAES-04-GATE-001"
     name: "Architecture Gate"
     file: "quality/gates/UAES-04-GATE-001-ARCHITECTURE-GATE.md"
-    phase: "P3"
+    phase: "P04"
     status: "DRAFT"
     provenance: "HISTORICAL"
 
@@ -2135,7 +2275,7 @@ gates:
   - id: "UAES-05-GATE-001"
     file: "quality/gates/UAES-05-GATE-001-DESIGN-QUALITY-GATE.md"
     type: "QUALITY_GATE"
-    phase: "P4"
+    phase: "P05"
     status: "DRAFT"
 
   # ---------------------------------------------------------------------------
@@ -2147,7 +2287,7 @@ gates:
   - id: "UAES-07-GATE-001"
     file: "quality/gates/UAES-07-GATE-001-CROSS-PLATFORM-GATE.md"
     type: "QUALITY_GATE"
-    phase: "P5"
+    phase: "P07"
     status: "DRAFT"
 
   # ---------------------------------------------------------------------------
@@ -2159,7 +2299,7 @@ gates:
   - id: "UAES-08-GATE-001"
     file: "quality/gates/UAES-08-GATE-001-AGENT-ENGINEERING-GATE.md"
     type: "QUALITY_GATE"
-    phase: "P6"
+    phase: "P08"
     status: "DRAFT"
 
   - id: "UAES-06-GATE-001"
@@ -2205,35 +2345,35 @@ acceptance:
   - id: "UAES-P00-ACCEPTANCE-BASELINE"
     name: "P0 Foundation Acceptance Baseline"
     file: "quality/acceptance/UAES-P00-ACCEPTANCE-BASELINE.md"
-    phase: "P0"
+    phase: "P12"
     status: "DRAFT"
     provenance: "RECONSTRUCTED"
 
   - id: "UAES-P01-ACCEPTANCE-BASELINE"
     name: "P01 AI Governance Acceptance Baseline"
     file: "quality/acceptance/UAES-P01-ACCEPTANCE-BASELINE.md"
-    phase: "P1"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-P03-ACCEPTANCE-BASELINE"
     name: "P03 Knowledge Engineering Acceptance Baseline"
     file: "quality/acceptance/UAES-P03-ACCEPTANCE-BASELINE.md"
-    phase: "P1"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-P02-ACCEPTANCE-BASELINE"
     name: "P02 Product Engineering Acceptance Baseline"
     file: "quality/acceptance/UAES-P02-ACCEPTANCE-BASELINE.md"
-    phase: "P2"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-P04-ACCEPTANCE-BASELINE"
     name: "P04 System Architecture Acceptance Baseline"
     file: "quality/acceptance/UAES-P04-ACCEPTANCE-BASELINE.md"
-    phase: "P3"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
@@ -2244,7 +2384,7 @@ acceptance:
   - id: "UAES-P05-ACCEPTANCE-BASELINE"
     file: "quality/acceptance/UAES-P05-ACCEPTANCE-BASELINE.md"
     type: "ACCEPTANCE_BASELINE"
-    phase: "P4"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
@@ -2257,7 +2397,7 @@ acceptance:
   - id: "UAES-P07-ACCEPTANCE-BASELINE"
     file: "quality/acceptance/UAES-P07-ACCEPTANCE-BASELINE.md"
     type: "ACCEPTANCE_BASELINE"
-    phase: "P5"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
@@ -2270,28 +2410,28 @@ acceptance:
   - id: "UAES-P08-ACCEPTANCE-BASELINE"
     file: "quality/acceptance/UAES-P08-ACCEPTANCE-BASELINE.md"
     type: "ACCEPTANCE_BASELINE"
-    phase: "P6"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-P06-ACCEPTANCE-BASELINE"
     file: "quality/acceptance/UAES-P06-ACCEPTANCE-BASELINE.md"
     type: "ACCEPTANCE_BASELINE"
-    phase: "P06"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-P09-ACCEPTANCE-BASELINE"
     file: "quality/acceptance/UAES-P09-ACCEPTANCE-BASELINE.md"
     type: "ACCEPTANCE_BASELINE"
-    phase: "P09"
+    phase: "P12"
     status: "DRAFT"
     provenance: "DELIVERED_DOCS_2026-11-04"
 
   - id: "UAES-P10-ACCEPTANCE-BASELINE"
     file: "quality/acceptance/UAES-P10-ACCEPTANCE-BASELINE.md"
     type: "ACCEPTANCE_BASELINE"
-    phase: "P10"
+    phase: "P12"
     status: "DRAFT"
 
   - id: "UAES-P12-ACCEPTANCE-BASELINE"
@@ -2305,7 +2445,7 @@ acceptance:
     name: "P11 DevOps & Delivery Acceptance Baseline"
     file: "quality/acceptance/UAES-P11-ACCEPTANCE-BASELINE.md"
     type: "ACCEPTANCE_BASELINE"
-    phase: "P11"
+    phase: "P12"
     status: "DRAFT"
 
 # =============================================================================
@@ -2404,6 +2544,8 @@ tool_adapters:
 # =============================================================================
 # STANDARD DEPENDENCIES
 # =============================================================================
+
+exceptions: []
 
 dependencies:
 
@@ -2606,22 +2748,14 @@ dependencies:
   # P5: Cross-Platform Engineering (per supplied P5 dependency table)
 
   - standard: "UAES-07"
-    # depends_on lists references resolvable in THIS registry.
-    # forward_depends_on records the remaining P5 dependency-table entries whose
-    # phases (P6 / P8-P12) are not yet registered; they MUST be moved into
-    # depends_on when those phases land (see reject_dangling_dependencies).
     depends_on:
-      - "UAES-00"   # REG-003 domain dependency baseline
+      - "UAES-00"
+      - "UAES-01"
       - "UAES-02"
+      - "UAES-03"
       - "UAES-04"
       - "UAES-05"
-      - "UAES-06"   # promoted from forward_depends_on when P06 documents landed (2026-11-04)
-      - "UAES-08"   # promoted from forward_depends_on when P6 landed
-      - "UAES-12"   # promoted from forward_depends_on when P12 documents landed (2026-11-04)
-      - "UAES-10"   # promoted from forward_depends_on when P10 landed
-    forward_depends_on:
-      - "UAES-09"
-      - "UAES-11"
+      - "UAES-06"
 
   # ---------------------------------------------------------------------------
   # P6: AI Agent Engineering
@@ -2631,17 +2765,12 @@ dependencies:
 
   - standard: "UAES-08"
     depends_on:
-      - "UAES-00"   # REG-003 domain dependency baseline
+      - "UAES-00"
       - "UAES-01"
       - "UAES-02"
+      - "UAES-03"
       - "UAES-04"
-      - "UAES-05"
-      - "UAES-07"
-      - "UAES-09"   # promoted from forward_depends_on when P09 documents landed (2026-11-04)
-      - "UAES-10"   # promoted from forward_depends_on when P10 landed
-      - "UAES-12"   # promoted from forward_depends_on when P12 documents landed (2026-11-04)
-    forward_depends_on:
-      - "UAES-11"
+      - "UAES-06"
 
   - standard: "UAES-08-001"
     depends_on:
@@ -2952,3 +3081,16 @@ history:
       - "UAES-12 depends_on follows the delivered increment required-table minus UAES-11 (domain 11 standards not yet registered); UAES-11 recorded in forward_depends_on."
       - "UAES-12 promoted from forward_depends_on of UAES-07/08 into their depends_on per prior annotations."
       - "Old UAES-12-GATE-001-LIFECYCLE-GATE.md replaced by the delivered UAES-12-GATE-001-LIFECYCLE-EVOLUTION-GATE.md; old file archived."
+
+  - version: "1.8.0"
+    date: "2026-11-05"
+    change: "P00 foundation audit tooling added; lifecycle states reconciled across registry and schemas; automated positive/negative controls introduced."
+    scope:
+      - "P00 Foundation registry validation"
+    notes:
+      - "The registry remains DRAFT; this version increment does not approve or activate UAES."
+      - "Status vocabulary is aligned across registry, standard metadata schema, registry schema, and UAES-00-003."
+      - "P00 audit registered 12 previously unregistered JSON schemas, declared the shared agent-handoff schema, and corrected the P07/P08 dependency cycle."
+      - "Rule ID namespaces are collision-safe; governance workflow states align with the lifecycle model."
+      - "Exception classes E0-E4 and complete approval evidence are enforced; E0 is non-waivable."
+      - "Task contract schema includes data classification, required inputs, expected evidence, and approval points with positive/negative validation."

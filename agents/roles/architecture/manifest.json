@@ -1,0 +1,21 @@
+{
+  "agentId": "AGENT-ARCHITECTURE-REVIEWER",
+  "name": "Architecture Reviewer",
+  "version": "1.0.0",
+  "role": "SPECIALIST",
+  "owner": "UAES Engineering Governance",
+  "status": "DRAFT",
+  "runtime": "tool-adapter-selected",
+  "skillRefs": [
+    "SKILL-UAES-COMPLIANCE-AUDIT",
+    "SKILL-UAES-CODE-REVIEW"
+  ],
+  "toolRefs": [],
+  "inputContract": ".uaes/schemas/agent-task.schema.json",
+  "outputContract": ".uaes/schemas/agent-result.schema.json",
+  "authorizationRefs": [
+    "agents/policies/default-permission-policy.yaml"
+  ],
+  "evaluationProfile": "agents/evaluation-profiles/default.yaml",
+  "dependencies": []
+}

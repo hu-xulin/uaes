@@ -1,0 +1,98 @@
+name: Database Migration Dialect Matrix
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "quality/scripts/architecture/**"
+      - ".uaes/registry/database-migration-inventory.yaml"
+      - ".github/workflows/database-migration-matrix.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  migration-dialect-matrix:
+    name: SQLite, MySQL and PostgreSQL migration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      mysql:
+        image: mysql:8.4.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: uaes_migration_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+      postgres:
+        image: postgres:17.4
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: uaes_migration_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d uaes_migration_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+    steps:
+      - name: Checkout UAES
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          path: uaes
+      - name: Checkout pinned Uter source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: hu-xulin/uter
+          # Keep this aligned with the Uter source baseline reviewed by this UAES change.
+          ref: 008ec53adc9652ee454090b4fb1152536dd45bf3
+          path: uter
+      - name: Verify checked out Uter baseline
+        working-directory: uter
+        run: |
+          actual="$(git rev-parse HEAD)"
+          expected="008ec53adc9652ee454090b4fb1152536dd45bf3"
+          test "$actual" = "$expected" || {
+            echo "Uter source baseline mismatch: got $actual, expected $expected"
+            exit 1
+          }
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: uter/go.mod
+          cache-dependency-path: uter/go.sum
+      - name: Run migration schema and custom migration dialect tests
+        working-directory: uter
+        env:
+          GOWORK: off
+          TEST_MYSQL_DSN: root:root@tcp(127.0.0.1:3306)/uaes_migration_test?parseTime=true&multiStatements=true
+          TEST_POSTGRES_DSN: postgres://postgres:postgres@127.0.0.1:5432/uaes_migration_test?sslmode=disable
+        run: |
+          set -o pipefail
+          go test ./model \
+            -run 'TestMigrationSchemaStability|TestMigratePrefillGroupUniqueness|TestMigrateTokenKeyUniqueness|TestUserSessionPreviousRefreshHashMigration|TestMigrateOptionPrimaryKeyRebuildsAndPreservesLegacyRows' \
+            -count=1 -v | tee "$RUNNER_TEMP/migration-dialect-tests.log"
+          for expected in \
+            TestMigrationSchemaStability \
+            TestMigratePrefillGroupUniquenessMySQL \
+            TestMigratePrefillGroupUniquenessPostgreSQL \
+            TestMigrateTokenKeyUniquenessMySQL \
+            TestMigrateTokenKeyUniquenessPostgreSQL \
+            TestUserSessionPreviousRefreshHashMigrationConfiguredDatabases \
+            TestMigrateOptionPrimaryKeyRebuildsAndPreservesLegacyRows; do
+            grep -q "$expected" "$RUNNER_TEMP/migration-dialect-tests.log" || {
+              echo "Expected migration test did not execute: $expected"
+              exit 1
+            }
+          done
+      - name: Record scope limitation
+        run: |
+          echo "This matrix verifies selected schema/custom migration paths on SQLite, MySQL and PostgreSQL."
+          echo "The options primary-key rebuild regression currently executes on SQLite only."
+          echo "This is not full production-schema migration replay, rollback certification, or ClickHouse log-database coverage."

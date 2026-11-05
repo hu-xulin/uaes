@@ -1,0 +1,72 @@
+version: "1.0.0"
+status: "DRAFT"
+registry:
+  id: "UAES-SKILL-REGISTRY"
+  source_of_truth: "skills/registry.yaml"
+  manifest_schema: ".uaes/schemas/skill-manifest.schema.json"
+  runtime_adapters:
+    claude_code: ".claude/skills/"
+    agents_runtime: ".agents/skills/"
+governance:
+  default_status: "DRAFT"
+  require_manifest: true
+  require_input_output_schema: true
+  require_permission_review: true
+  default_permission_effect: "deny"
+skills:
+  - id: "SKILL-UAES-COMPLIANCE-AUDIT"
+    name: "uaes-compliance-audit"
+    skill: "skills/uaes-compliance-audit/SKILL.md"
+    manifest: "skills/uaes-compliance-audit/manifest.json"
+    status: "DRAFT"
+    sideEffects: "READ_ONLY"
+    standards: ["UAES-00", "UAES-01", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "SKILL-UAES-STANDARD-AUTHORING"
+    name: "uaes-standard-authoring"
+    skill: "skills/uaes-standard-authoring/SKILL.md"
+    manifest: "skills/uaes-standard-authoring/manifest.json"
+    status: "DRAFT"
+    sideEffects: "REVERSIBLE_WRITE"
+    standards: ["UAES-00", "UAES-01"]
+  - id: "SKILL-UAES-UTER-INTEGRATION"
+    name: "uaes-uter-integration"
+    skill: "skills/uaes-uter-integration/SKILL.md"
+    manifest: "skills/uaes-uter-integration/manifest.json"
+    status: "DRAFT"
+    sideEffects: "REVERSIBLE_WRITE"
+    standards: ["UAES-00", "UAES-01", "UAES-06", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "SKILL-UAES-CODE-REVIEW"
+    name: "uaes-code-review"
+    skill: "skills/uaes-code-review/SKILL.md"
+    manifest: "skills/uaes-code-review/manifest.json"
+    status: "DRAFT"
+    sideEffects: "READ_ONLY"
+    standards: ["UAES-00", "UAES-01", "UAES-04", "UAES-06", "UAES-09", "UAES-10"]
+  - id: "SKILL-UAES-TEST-ENGINEERING"
+    name: "uaes-test-engineering"
+    skill: "skills/uaes-test-engineering/SKILL.md"
+    manifest: "skills/uaes-test-engineering/manifest.json"
+    status: "DRAFT"
+    sideEffects: "REVERSIBLE_WRITE"
+    standards: ["UAES-00", "UAES-04", "UAES-06", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "SKILL-UAES-AUTO-FIX"
+    name: "uaes-auto-fix"
+    skill: "skills/uaes-auto-fix/SKILL.md"
+    manifest: "skills/uaes-auto-fix/manifest.json"
+    status: "DRAFT"
+    sideEffects: "REVERSIBLE_WRITE"
+    standards: ["UAES-00", "UAES-01", "UAES-06", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "SKILL-UAES-SECURITY-AUDIT"
+    name: "uaes-security-audit"
+    skill: "skills/uaes-security-audit/SKILL.md"
+    manifest: "skills/uaes-security-audit/manifest.json"
+    status: "DRAFT"
+    sideEffects: "READ_ONLY"
+    standards: ["UAES-00", "UAES-01", "UAES-04", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "SKILL-UAES-DESIGN-SYSTEM-AUDIT"
+    name: "uaes-design-system-audit"
+    skill: "skills/uaes-design-system-audit/SKILL.md"
+    manifest: "skills/uaes-design-system-audit/manifest.json"
+    status: "DRAFT"
+    sideEffects: "READ_ONLY"
+    standards: ["UAES-00", "UAES-05", "UAES-06", "UAES-07", "UAES-09", "UAES-10"]

@@ -1,0 +1,230 @@
+#!/usr/bin/env ruby
+require "json"
+
+def stop(message, code = 2)
+  warn "API CONTRACT: #{message}"
+  exit code
+end
+
+root = ENV["UTER_REPO_ROOT"]
+stop("UTER_REPO_ROOT is required") if root.nil? || root.empty?
+root = File.expand_path(root)
+stop("Uter source checkout missing") unless File.directory?(root)
+
+uaes_root = File.expand_path("../../..", __dir__)
+baseline_path = ENV.fetch("UAES_API_CONTRACT_BASELINE", File.join(uaes_root, ".uaes/registry/api-contract-baseline.json"))
+stop("API compatibility baseline missing: #{baseline_path}") unless File.file?(baseline_path)
+baseline = JSON.parse(File.read(baseline_path))
+documents = baseline.fetch("documents", {})
+approvals_path = ENV.fetch("UAES_API_BREAKING_CHANGE_APPROVALS", File.join(uaes_root, ".uaes/registry/api-breaking-change-approvals.json"))
+stop("API breaking-change approval registry missing: #{approvals_path}") unless File.file?(approvals_path)
+approval_registry = JSON.parse(File.read(approvals_path))
+approved_removals = Array(approval_registry.fetch("approvals", []))
+required_approval_fields = %w[id document operation decision approved_at approved_by reason consumer_audit baseline_source_commit implementation_source_commit]
+approval_ids = []
+approval_keys = []
+approved_removals.each do |approval|
+  unless approval.is_a?(Hash) && required_approval_fields.all? { |field| approval[field].is_a?(String) && !approval[field].empty? }
+    stop("invalid API breaking-change approval entry: all required fields must be non-empty strings")
+  end
+  stop("unsupported API breaking-change decision #{approval["decision"].inspect}") unless approval["decision"] == "OPTION_B_APPROVED"
+  approval_ids << approval["id"]
+  approval_keys << [approval["document"], approval["operation"]]
+end
+stop("duplicate API breaking-change approval id") unless approval_ids.uniq.length == approval_ids.length
+stop("duplicate API breaking-change approval operation") unless approval_keys.uniq.length == approval_keys.length
+unknown_approval_documents = approved_removals.map { |approval| approval["document"] }.uniq - documents.keys
+stop("API breaking-change approval references unknown baseline document(s): #{unknown_approval_documents.join(", ")}") unless unknown_approval_documents.empty?
+if baseline["source_commit"]
+  mismatched_baseline_approvals = approved_removals.reject { |approval| approval["baseline_source_commit"] == baseline["source_commit"] }
+  stop("API breaking-change approval baseline source_commit does not match the pinned compatibility baseline") unless mismatched_baseline_approvals.empty?
+end
+stop("baseline contains no OpenAPI documents") if documents.empty?
+
+METHODS = %w[get post put patch delete options head trace].freeze
+
+def resolve_pointer(document, ref)
+  return nil unless ref.start_with?("#/")
+  ref.delete_prefix("#/").split("/").reduce(document) do |node, token|
+    key = token.gsub("~1", "/").gsub("~0", "~")
+    if node.is_a?(Hash)
+      node[key]
+    elsif node.is_a?(Array) && key.match?(/\A\d+\z/)
+      node[key.to_i]
+    end
+  end
+end
+
+def collect_refs(value, refs = [])
+  if value.is_a?(Hash)
+    value.each do |key, child|
+      if key == "$ref" && child.is_a?(String) && child.start_with?("#/")
+        refs << child
+      else
+        collect_refs(child, refs)
+      end
+    end
+  elsif value.is_a?(Array)
+    value.each { |child| collect_refs(child, refs) }
+  end
+  refs
+end
+
+def current_operations(document)
+  result = {}
+  (document["paths"] || {}).each do |path, item|
+    (item || {}).each do |method, operation|
+      next unless METHODS.include?(method)
+      result["#{method.upcase} #{path}"] = operation
+    end
+  end
+  result
+end
+
+errors = []
+documents.each do |relative_path, old_contract|
+  file = File.join(root, relative_path)
+  unless File.file?(file)
+    errors << "#{relative_path}: OpenAPI document missing"
+    next
+  end
+
+  begin
+    document = JSON.parse(File.read(file))
+  rescue JSON::ParserError => e
+    errors << "#{relative_path}: invalid JSON: #{e.message}"
+    next
+  end
+
+  unless document["openapi"].is_a?(String) && document["openapi"].start_with?("3.")
+    errors << "#{relative_path}: OpenAPI 3.x version is required"
+  end
+  unless document["paths"].is_a?(Hash) && !document["paths"].empty?
+    errors << "#{relative_path}: paths must be a non-empty object"
+    next
+  end
+
+  refs = collect_refs(document)
+  refs.each do |ref|
+    errors << "#{relative_path}: unresolved local reference #{ref}" if resolve_pointer(document, ref).nil?
+  end
+
+  schemes = document.dig("components", "securitySchemes") || {}
+  current = current_operations(document)
+  operation_ids = {}
+  current.each do |key, operation|
+    unless operation.is_a?(Hash) && operation["responses"].is_a?(Hash) && !operation["responses"].empty?
+      errors << "#{relative_path}: #{key} must define at least one response"
+      next
+    end
+
+    operation_id = operation["operationId"]
+    if operation_id && !operation_id.empty?
+      (operation_ids[operation_id] ||= []) << key
+    end
+
+    Array(operation["security"]).each do |requirement|
+      next unless requirement.is_a?(Hash)
+      requirement.each_key do |scheme|
+        errors << "#{relative_path}: #{key} references undefined security scheme #{scheme}" unless schemes.key?(scheme)
+      end
+    end
+  end
+  operation_ids.each do |id, operations|
+    errors << "#{relative_path}: duplicate operationId #{id}: #{operations.join("; ")}" if operations.length > 1
+  end
+
+  old_ops = old_contract.fetch("operations", {})
+  document_approvals = approved_removals.select { |approval| approval["document"] == relative_path }
+  document_approvals.each do |approval|
+    unless old_ops.key?(approval["operation"])
+      errors << "#{relative_path}: approval #{approval["id"]} references an operation absent from the pinned baseline: #{approval["operation"]}"
+    end
+    if current.key?(approval["operation"])
+      errors << "#{relative_path}: approved removal #{approval["id"]} is stale because #{approval["operation"]} is still present"
+    end
+  end
+  missing_ops = old_ops.keys - current.keys
+  missing_ops.each do |key|
+    approval = document_approvals.find { |entry| entry["operation"] == key }
+    if approval
+      puts "API CONTRACT: approved breaking change #{approval["id"]}: removed #{key}"
+    else
+      errors << "#{relative_path}: breaking change removed operation #{key}"
+    end
+  end
+
+  old_ops.each do |key, old_op|
+    operation = current[key]
+    next unless operation
+    old_id = old_op["operationId"]
+    new_id = operation["operationId"]
+    if old_id && !old_id.empty? && old_id != new_id
+      errors << "#{relative_path}: #{key} changed operationId #{old_id.inspect} to #{new_id.inspect}"
+    end
+
+    old_required_params = Array(old_op["requiredParameters"])
+    new_required_params = Array(operation["parameters"]).select { |p| p["required"] }.map { |p| "#{p["in"]}:#{p["name"]}" }
+    (new_required_params - old_required_params).each do |param|
+      errors << "#{relative_path}: #{key} added required parameter #{param}"
+    end
+
+    new_required_body = []
+    (operation.dig("requestBody", "content") || {}).each_value do |media|
+      new_required_body.concat(Array(media.dig("schema", "required")))
+    end
+    (new_required_body.uniq - Array(old_op["requiredBodyProperties"])).each do |field|
+      errors << "#{relative_path}: #{key} added required request-body field #{field}"
+    end
+
+    old_refs = Array(old_op["responseSchemaRefs"])
+    new_refs = collect_refs(operation["responses"] || {})
+    (old_refs - new_refs).each do |ref|
+      errors << "#{relative_path}: #{key} removed response schema reference #{ref}"
+    end
+
+    old_codes = Array(old_op["responseCodes"])
+    new_codes = Array(operation["responses"]&.keys)
+    (old_codes - new_codes).each do |code|
+      errors << "#{relative_path}: #{key} removed response code #{code}"
+    end
+  end
+
+  old_schemas = old_contract.fetch("schemas", {})
+  new_schemas = document.dig("components", "schemas") || {}
+  old_schemas.each do |name, old_schema|
+    schema = new_schemas[name]
+    unless schema
+      errors << "#{relative_path}: breaking change removed schema #{name}"
+      next
+    end
+    old_properties = Array(old_schema["properties"])
+    new_properties = (schema["properties"] || {}).keys
+    (old_properties - new_properties).each do |property|
+      errors << "#{relative_path}: breaking change removed #{name}.#{property}"
+    end
+    new_required = Array(schema["required"])
+    (new_required - Array(old_schema["required"])).each do |property|
+      errors << "#{relative_path}: breaking change added required #{name}.#{property}"
+    end
+    old_type = old_schema["type"]
+    if old_type && schema["type"] && old_type != schema["type"]
+      errors << "#{relative_path}: breaking change changed #{name} type #{old_type} to #{schema["type"]}"
+    end
+    old_enum = old_schema["enum"]
+    new_enum = schema["enum"]
+    if old_enum && new_enum && !(old_enum - new_enum).empty?
+      errors << "#{relative_path}: breaking change removed enum values from #{name}"
+    end
+  end
+
+  puts "API CONTRACT: #{relative_path} (#{current.length} operations, #{new_schemas.length} schemas)"
+end
+
+if errors.any?
+  warn "API CONTRACT: FAIL (#{errors.length} finding(s))"
+  errors.each { |error| warn " - #{error}" }
+  exit 1
+end
+
+puts "API CONTRACT: PASS (#{documents.length} OpenAPI documents; no detected breaking changes)"

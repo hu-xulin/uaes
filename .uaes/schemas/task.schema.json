@@ -159,9 +159,66 @@
         },
         "deployAllowed": {
           "type": "boolean"
+        },
+        "format": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "additionalProperties": false
+    },
+    "requestSource": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intendedOutcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dataClassification": {
+      "enum": [
+        "PUBLIC",
+        "INTERNAL",
+        "CONFIDENTIAL",
+        "RESTRICTED",
+        "REGULATED"
+      ]
+    },
+    "requiredInputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "approvalPoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "approverRole"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "approverRole": {
+            "type": "string",
+            "minLength": 1
+          },
+          "required": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "expectedEvidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "additionalProperties": false

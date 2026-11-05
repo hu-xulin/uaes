@@ -1,0 +1,43 @@
+version: "1.0.0"
+status: "DRAFT"
+registry:
+  id: "UAES-WORKFLOW-REGISTRY"
+  source_of_truth: "workflows/registry.yaml"
+  default_permission_effect: "deny"
+governance:
+  require_owner: true
+  require_trigger: true
+  require_inputs_outputs: true
+  require_stop_conditions: true
+  require_evidence: true
+workflows:
+  - id: "UAES-WF-FEATURE"
+    name: "Feature Development"
+    path: "workflows/feature-development/WORKFLOW.md"
+    status: "DRAFT"
+    trigger: "New product capability or behavior change."
+    standards: ["UAES-00", "UAES-01", "UAES-02", "UAES-03", "UAES-04", "UAES-06", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "UAES-WF-BUGFIX"
+    name: "Bug Fix"
+    path: "workflows/bug-fix/WORKFLOW.md"
+    status: "DRAFT"
+    trigger: "Confirmed defect, regression, or production issue requiring a code fix."
+    standards: ["UAES-00", "UAES-01", "UAES-04", "UAES-06", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]
+  - id: "UAES-WF-EMERGENCY"
+    name: "Emergency Response"
+    path: "workflows/emergency-response/WORKFLOW.md"
+    status: "DRAFT"
+    trigger: "Critical incident, suspected compromise, data integrity event, or severe service outage."
+    standards: ["UAES-00", "UAES-01", "UAES-03", "UAES-08", "UAES-09", "UAES-10", "UAES-11", "UAES-12"]
+  - id: "UAES-WF-RELEASE"
+    name: "Release Validation"
+    path: "workflows/release/WORKFLOW.md"
+    status: "DRAFT"
+    trigger: "Candidate release, deployment readiness, or rollback preparation."
+    standards: ["UAES-00", "UAES-01", "UAES-09", "UAES-10", "UAES-11", "UAES-12"]
+  - id: "UAES-WF-SECURITY-AUDIT"
+    name: "Security Audit"
+    path: "workflows/security-audit/WORKFLOW.md"
+    status: "DRAFT"
+    trigger: "Scheduled or change-triggered security and supply-chain assessment."
+    standards: ["UAES-00", "UAES-01", "UAES-08", "UAES-09", "UAES-10", "UAES-11"]

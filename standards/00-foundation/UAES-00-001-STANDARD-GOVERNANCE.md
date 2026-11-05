@@ -2,7 +2,7 @@
 
 **Standard ID:** UAES-00-001  
 **Standard Name:** Standard Governance  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** DRAFT  
 **Domain:** UAES-00 Foundation  
 **Owner:** Uter Engineering Governance  
@@ -49,7 +49,7 @@
 
 ### UAES-GOV-003 — Review Before Activation
 
-**MUST**：DRAFT 标准进入 ACTIVE 前必须完成：
+**MUST**：DRAFT 标准必须依照 UAES-00-003 的生命周期顺序，经 APPROVED、IMPLEMENTED、VERIFIED 后才能进入 ACTIVE；进入 ACTIVE 前必须完成：
 
 1. 内容完整性审查。
 2. 规则 ID 冲突检查。
@@ -87,19 +87,18 @@ IMPACT_ANALYSIS
     ↓
 DRAFT
     ↓
-REVIEW
-    ↓
-REVISION（如需）
-    ↓
-APPROVAL
-    ↓
-ACTIVATION
-    ↓
-IMPLEMENTATION
-    ↓
-VERIFICATION
-    ↓
-AUDIT
+IN_REVIEW
+    ├── NEEDS_REVISION → DRAFT
+    ├── REJECTED
+    └── APPROVED
+           ↓
+       IMPLEMENTED
+           ↓
+        VERIFIED
+           ↓
+         ACTIVE
+           ↓
+         AUDIT
 ```
 
 任一阶段失败：
@@ -107,7 +106,7 @@ AUDIT
 - 保留失败记录。
 - 不得跳过审批。
 - 不得将状态推进到未满足条件的阶段。
-- 必要时进入 BLOCKED。
+- 如果前置条件、审批或验证未满足，将变更请求结果标记为 BLOCKED，并保留当前生命周期状态；BLOCKED 是任务/验收结果，不是标准生命周期状态。
 
 ## 6. Cross-Domain Governance
 
@@ -167,3 +166,11 @@ AI MUST NOT：
 - 跨领域变更具有影响分析。
 - 审批角色与实施角色的权限边界明确。
 - AI 无法通过普通任务指令绕过治理约束。
+
+
+## 10. Change History
+
+| Version | Status | Change |
+|---|---|---|
+| 1.0.0 | DRAFT | Initial governance model |
+| 1.1.0 | DRAFT | Align approval, implementation, verification and activation order with UAES-00-003; clarify BLOCKED result semantics |

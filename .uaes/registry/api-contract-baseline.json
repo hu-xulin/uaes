@@ -1,0 +1,2879 @@
+{
+  "version": "1.0.0",
+  "source_repository": "hu-xulin/uter",
+  "source_commit": "442ddb5a7c234f2ee2d78651e0882407e9371c91",
+  "documents": {
+    "docs-dev/openapi/api.json": {
+      "openapi": "3.0.1",
+      "operations": {
+        "GET /api/setup": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/setup": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/status": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/status/test": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/uptime/status": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/notice": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user-agreement": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/privacy-policy": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/about": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/home_page_content": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/pricing": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/models": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/ratio_config": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/verification": {
+          "operationId": null,
+          "requiredParameters": [
+            "query:email"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/reset_password": {
+          "operationId": null,
+          "requiredParameters": [
+            "query:email"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/reset": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/register": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/login": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/AuthSessionIssuanceError",
+            "#/components/schemas/AuthSessionIssuanceError"
+          ]
+        },
+        "POST /api/user/login/2fa": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/AuthSessionIssuanceError",
+            "#/components/schemas/AuthSessionIssuanceError"
+          ]
+        },
+        "POST /api/user/auth/refresh": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/auth/logout": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/sessions": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/user/sessions/{sid}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:sid"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/sessions/revoke-others": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/groups": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/passkey/login/begin": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/passkey/login/finish": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/AuthSessionIssuanceError",
+            "#/components/schemas/AuthSessionIssuanceError"
+          ]
+        },
+        "GET /api/oauth/github": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/responses/AuthSessionIssuanceLimit",
+            "#/components/responses/AuthSessionLimit"
+          ]
+        },
+        "GET /api/oauth/discord": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/responses/AuthSessionIssuanceLimit",
+            "#/components/responses/AuthSessionLimit"
+          ]
+        },
+        "GET /api/oauth/oidc": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/responses/AuthSessionIssuanceLimit",
+            "#/components/responses/AuthSessionLimit"
+          ]
+        },
+        "GET /api/oauth/linuxdo": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/responses/AuthSessionIssuanceLimit",
+            "#/components/responses/AuthSessionLimit"
+          ]
+        },
+        "POST /api/oauth/state": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [
+            "intent",
+            "provider"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/oauth/wechat": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/responses/AuthSessionIssuanceLimit",
+            "#/components/responses/AuthSessionLimit"
+          ]
+        },
+        "POST /api/oauth/wechat/bind": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [
+            "code"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/oauth/email/bind": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [
+            "code",
+            "email"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/oauth/telegram/login": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "409",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/responses/AuthSessionIssuanceLimit",
+            "#/components/responses/AuthSessionLimit"
+          ]
+        },
+        "POST /api/oauth/telegram/bind/start": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/oauth/telegram/bind/{flow_token}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:flow_token"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "302"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/self/groups": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/user/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/user/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/models": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/token": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/passkey": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/user/passkey": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/passkey/register/begin": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/passkey/register/finish": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/passkey/verify/begin": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/passkey/verify/finish": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/aff": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/aff_transfer": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/user/setting": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/topup": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/user/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/topup/complete": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/user/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/user/{id}/reset_passkey": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/user/{id}/2fa": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/manage": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/topup/info": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/topup/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/pay": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/amount": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/stripe/pay": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/stripe/amount": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/creem/pay": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/epay/notify": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/stripe/webhook": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/creem/webhook": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/2fa/status": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/2fa/setup": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/2fa/enable": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/2fa/disable": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/user/2fa/backup_codes": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/user/2fa/stats": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/verify": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/verify/status": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/channel/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/models": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/models_enabled": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/channel/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/{id}/key": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/test": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/test/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/update_balance": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/update_balance/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/channel/disabled": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/batch": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/fix": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/fetch_models/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/fetch_models": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/batch/tag": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/channel/tag/models": {
+          "operationId": null,
+          "requiredParameters": [
+            "query:tag"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/tag/disabled": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/tag/enabled": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/channel/tag": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/copy/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/channel/multi_key/manage": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/token/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/token/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/token/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/token/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/token/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/token/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/token/batch": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/usage/token/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/redemption/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/redemption/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/redemption/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/redemption/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/redemption/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/redemption/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/redemption/invalid": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/log/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/system-task/log-cleanup": {
+          "operationId": null,
+          "requiredParameters": [
+            "query:target_timestamp"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/log/stat": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/log/self/stat": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/log/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/log/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/log/self/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/log/token": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/data/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/data/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/group/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/prefill_group/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/prefill_group/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/prefill_group/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/prefill_group/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/mj/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/mj/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/task/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/task/self": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/vendors/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/vendors/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/vendors/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/vendors/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/vendors/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/vendors/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/models/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/models/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/models/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/models/search": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/models/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "DELETE /api/models/{id}": {
+          "operationId": null,
+          "requiredParameters": [
+            "path:id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/models/sync_upstream/preview": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/models/sync_upstream": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/models/missing": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/option/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "PUT /api/option/": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/option/rest_model_ratio": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "GET /api/ratio_sync/channels": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /api/ratio_sync/fetch": {
+          "operationId": null,
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        }
+      },
+      "schemas": {
+        "ApiResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "data",
+            "message",
+            "success"
+          ],
+          "enum": null
+        },
+        "AuthSessionIssuanceError": {
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "success"
+          ],
+          "properties": [
+            "code",
+            "message",
+            "success"
+          ],
+          "enum": null
+        },
+        "PageInfo": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "items",
+            "page",
+            "page_size",
+            "total"
+          ],
+          "enum": null
+        },
+        "Log": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "content",
+            "created_at",
+            "id",
+            "type",
+            "user_id"
+          ],
+          "enum": null
+        },
+        "User": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "display_name",
+            "email",
+            "group",
+            "id",
+            "quota",
+            "request_count",
+            "role",
+            "status",
+            "used_quota",
+            "username"
+          ],
+          "enum": null
+        },
+        "Channel": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "base_url",
+            "groups",
+            "id",
+            "models",
+            "name",
+            "priority",
+            "status",
+            "tag",
+            "type",
+            "weight"
+          ],
+          "enum": null
+        },
+        "Token": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "expired_time",
+            "id",
+            "key",
+            "name",
+            "remain_quota",
+            "status",
+            "unlimited_quota",
+            "user_id"
+          ],
+          "enum": null
+        },
+        "Redemption": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "created_time",
+            "id",
+            "key",
+            "name",
+            "quota",
+            "redeemed_time",
+            "status"
+          ],
+          "enum": null
+        }
+      }
+    },
+    "docs-dev/openapi/relay.json": {
+      "openapi": "3.0.1",
+      "operations": {
+        "GET /v1/models": {
+          "operationId": "listModels",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "401"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/ModelsResponse"
+          ]
+        },
+        "GET /v1beta/models": {
+          "operationId": "listModelsGemini",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/GeminiModelsResponse"
+          ]
+        },
+        "POST /v1/chat/completions": {
+          "operationId": "createChatCompletion",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "400",
+            "429"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ChatCompletionResponse",
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "POST /v1/responses": {
+          "operationId": "createResponse",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ResponsesResponse"
+          ]
+        },
+        "POST /v1/responses/compact": {
+          "operationId": "compactResponse",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ResponsesCompactionResponse"
+          ]
+        },
+        "POST /v1/images/generations": {
+          "operationId": "createImage",
+          "requiredParameters": [],
+          "requiredBodyProperties": [
+            "input",
+            "model"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ImageResponse"
+          ]
+        },
+        "POST /v1/images/edits": {
+          "operationId": "editImage",
+          "requiredParameters": [],
+          "requiredBodyProperties": [
+            "input",
+            "model"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ImageResponse"
+          ]
+        },
+        "POST /v1/videos": {
+          "operationId": "createVideo",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "400"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/OpenAIVideoError"
+          ]
+        },
+        "GET /v1/videos/{task_id}": {
+          "operationId": "getVideo",
+          "requiredParameters": [
+            "path:task_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "404"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "GET /v1/videos/{task_id}/content": {
+          "operationId": "getVideoContent",
+          "requiredParameters": [
+            "path:task_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "404"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "POST /kling/v1/videos/text2video": {
+          "operationId": "createKlingText2Video",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "400"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/VideoResponse"
+          ]
+        },
+        "GET /kling/v1/videos/text2video/{task_id}": {
+          "operationId": "getKlingText2Video",
+          "requiredParameters": [
+            "path:task_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "404"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/VideoTaskResponse"
+          ]
+        },
+        "POST /kling/v1/videos/image2video": {
+          "operationId": "createKlingImage2Video",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "400"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/VideoResponse"
+          ]
+        },
+        "GET /kling/v1/videos/image2video/{task_id}": {
+          "operationId": "getKlingImage2Video",
+          "requiredParameters": [
+            "path:task_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "404"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/VideoTaskResponse"
+          ]
+        },
+        "POST /jimeng/": {
+          "operationId": "createJimengVideo",
+          "requiredParameters": [
+            "query:Action",
+            "query:Version"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "400"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "POST /v1/video/generations": {
+          "operationId": "createVideoGeneration",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "400"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/VideoResponse"
+          ]
+        },
+        "GET /v1/video/generations/{task_id}": {
+          "operationId": "getVideoGeneration",
+          "requiredParameters": [
+            "path:task_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200",
+            "404"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse",
+            "#/components/schemas/VideoTaskResponse"
+          ]
+        },
+        "POST /v1/messages": {
+          "operationId": "createMessage",
+          "requiredParameters": [
+            "header:anthropic-version"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ClaudeResponse"
+          ]
+        },
+        "POST /v1beta/models/{model}:generateContent": {
+          "operationId": "geminiRelayV1Beta",
+          "requiredParameters": [
+            "path:model"
+          ],
+          "requiredBodyProperties": [
+            "contents",
+            "generationConfig"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/GeminiResponse"
+          ]
+        },
+        "POST /v1/engines/{model}/embeddings": {
+          "operationId": "createEngineEmbedding",
+          "requiredParameters": [
+            "path:model"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/EmbeddingResponse"
+          ]
+        },
+        "POST /v1/embeddings": {
+          "operationId": "createEmbedding",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/EmbeddingResponse"
+          ]
+        },
+        "POST /v1/completions": {
+          "operationId": "createCompletion",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/CompletionResponse"
+          ]
+        },
+        "POST /v1/audio/transcriptions": {
+          "operationId": "createTranscription",
+          "requiredParameters": [],
+          "requiredBodyProperties": [
+            "file",
+            "model"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/AudioTranscriptionResponse"
+          ]
+        },
+        "POST /v1/audio/translations": {
+          "operationId": "createTranslation",
+          "requiredParameters": [],
+          "requiredBodyProperties": [
+            "file",
+            "model"
+          ],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/AudioTranscriptionResponse"
+          ]
+        },
+        "POST /v1/audio/speech": {
+          "operationId": "createSpeech",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": []
+        },
+        "POST /v1/rerank": {
+          "operationId": "createRerank",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/RerankResponse"
+          ]
+        },
+        "POST /v1/moderations": {
+          "operationId": "createModeration",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "200"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ModerationResponse"
+          ]
+        },
+        "GET /v1/realtime": {
+          "operationId": "createRealtimeSession",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "101",
+            "400"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "GET /v1/fine-tunes": {
+          "operationId": "listFineTunes",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "POST /v1/fine-tunes": {
+          "operationId": "createFineTune",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "GET /v1/fine-tunes/{fine_tune_id}": {
+          "operationId": "retrieveFineTune",
+          "requiredParameters": [
+            "path:fine_tune_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "POST /v1/fine-tunes/{fine_tune_id}/cancel": {
+          "operationId": "cancelFineTune",
+          "requiredParameters": [
+            "path:fine_tune_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "GET /v1/fine-tunes/{fine_tune_id}/events": {
+          "operationId": "listFineTuneEvents",
+          "requiredParameters": [
+            "path:fine_tune_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "GET /v1/files": {
+          "operationId": "listFiles",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "POST /v1/files": {
+          "operationId": "createFile",
+          "requiredParameters": [],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "GET /v1/files/{file_id}": {
+          "operationId": "retrieveFile",
+          "requiredParameters": [
+            "path:file_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "DELETE /v1/files/{file_id}": {
+          "operationId": "deleteFile",
+          "requiredParameters": [
+            "path:file_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        },
+        "GET /v1/files/{file_id}/content": {
+          "operationId": "downloadFile",
+          "requiredParameters": [
+            "path:file_id"
+          ],
+          "requiredBodyProperties": [],
+          "responseCodes": [
+            "501"
+          ],
+          "responseSchemaRefs": [
+            "#/components/schemas/ErrorResponse"
+          ]
+        }
+      },
+      "schemas": {
+        "ErrorResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "error"
+          ],
+          "enum": null
+        },
+        "Usage": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "enum": null
+        },
+        "Model": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "created",
+            "id",
+            "object",
+            "owned_by"
+          ],
+          "enum": null
+        },
+        "ModelsResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "data",
+            "object"
+          ],
+          "enum": null
+        },
+        "GeminiModelsResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "models"
+          ],
+          "enum": null
+        },
+        "Message": {
+          "type": "object",
+          "required": [
+            "content",
+            "role"
+          ],
+          "properties": [
+            "content",
+            "name",
+            "reasoning_content",
+            "role",
+            "tool_call_id",
+            "tool_calls"
+          ],
+          "enum": null
+        },
+        "MessageContent": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "file",
+            "image_url",
+            "input_audio",
+            "text",
+            "type",
+            "video_url"
+          ],
+          "enum": null
+        },
+        "ToolCall": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "function",
+            "id",
+            "type"
+          ],
+          "enum": null
+        },
+        "Tool": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "function",
+            "type"
+          ],
+          "enum": null
+        },
+        "ResponseFormat": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "json_schema",
+            "type"
+          ],
+          "enum": null
+        },
+        "ChatCompletionRequest": {
+          "type": "object",
+          "required": [
+            "messages",
+            "model"
+          ],
+          "properties": [
+            "audio",
+            "frequency_penalty",
+            "logit_bias",
+            "max_completion_tokens",
+            "max_tokens",
+            "messages",
+            "modalities",
+            "model",
+            "n",
+            "presence_penalty",
+            "reasoning_effort",
+            "response_format",
+            "seed",
+            "stop",
+            "stream",
+            "stream_options",
+            "temperature",
+            "tool_choice",
+            "tools",
+            "top_p",
+            "user"
+          ],
+          "enum": null
+        },
+        "ChatCompletionResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "choices",
+            "created",
+            "id",
+            "model",
+            "object",
+            "system_fingerprint",
+            "usage"
+          ],
+          "enum": null
+        },
+        "ChatCompletionStreamResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "choices",
+            "created",
+            "id",
+            "model",
+            "object",
+            "usage"
+          ],
+          "enum": null
+        },
+        "CompletionRequest": {
+          "type": "object",
+          "required": [
+            "model",
+            "prompt"
+          ],
+          "properties": [
+            "echo",
+            "max_tokens",
+            "model",
+            "n",
+            "prompt",
+            "stop",
+            "stream",
+            "suffix",
+            "temperature",
+            "top_p"
+          ],
+          "enum": null
+        },
+        "CompletionResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "choices",
+            "created",
+            "id",
+            "model",
+            "object",
+            "usage"
+          ],
+          "enum": null
+        },
+        "ResponsesRequest": {
+          "type": "object",
+          "required": [
+            "model"
+          ],
+          "properties": [
+            "input",
+            "instructions",
+            "max_output_tokens",
+            "model",
+            "previous_response_id",
+            "reasoning",
+            "stream",
+            "temperature",
+            "tool_choice",
+            "tools",
+            "top_p",
+            "truncation"
+          ],
+          "enum": null
+        },
+        "ResponsesResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "created_at",
+            "id",
+            "model",
+            "object",
+            "output",
+            "status",
+            "usage"
+          ],
+          "enum": null
+        },
+        "ResponsesCompactionResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "created_at",
+            "error",
+            "id",
+            "object",
+            "output",
+            "usage"
+          ],
+          "enum": null
+        },
+        "ResponsesCompactionRequest": {
+          "type": "object",
+          "required": [
+            "model"
+          ],
+          "properties": [
+            "input",
+            "instructions",
+            "model",
+            "previous_response_id"
+          ],
+          "enum": null
+        },
+        "ResponsesStreamResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "delta",
+            "item",
+            "response",
+            "type"
+          ],
+          "enum": null
+        },
+        "ClaudeRequest": {
+          "type": "object",
+          "required": [
+            "max_tokens",
+            "messages",
+            "model"
+          ],
+          "properties": [
+            "cache_control",
+            "container",
+            "context_management",
+            "inference_geo",
+            "max_tokens",
+            "mcp_servers",
+            "messages",
+            "metadata",
+            "model",
+            "output_config",
+            "output_format",
+            "service_tier",
+            "speed",
+            "stop_sequences",
+            "stream",
+            "system",
+            "temperature",
+            "thinking",
+            "tool_choice",
+            "tools",
+            "top_k",
+            "top_p"
+          ],
+          "enum": null
+        },
+        "ClaudeMessage": {
+          "type": "object",
+          "required": [
+            "content",
+            "role"
+          ],
+          "properties": [
+            "content",
+            "role"
+          ],
+          "enum": null
+        },
+        "ClaudeResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "content",
+            "id",
+            "model",
+            "role",
+            "stop_reason",
+            "type",
+            "usage"
+          ],
+          "enum": null
+        },
+        "EmbeddingRequest": {
+          "type": "object",
+          "required": [
+            "input",
+            "model"
+          ],
+          "properties": [
+            "dimensions",
+            "encoding_format",
+            "input",
+            "model"
+          ],
+          "enum": null
+        },
+        "EmbeddingResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "data",
+            "model",
+            "object",
+            "usage"
+          ],
+          "enum": null
+        },
+        "ImageGenerationRequest": {
+          "type": "object",
+          "required": [
+            "prompt"
+          ],
+          "properties": [
+            "model",
+            "n",
+            "prompt",
+            "quality",
+            "response_format",
+            "size",
+            "style",
+            "user"
+          ],
+          "enum": null
+        },
+        "ImageEditRequest": {
+          "type": "object",
+          "required": [
+            "image",
+            "prompt"
+          ],
+          "properties": [
+            "image",
+            "mask",
+            "model",
+            "n",
+            "prompt",
+            "response_format",
+            "size"
+          ],
+          "enum": null
+        },
+        "ImageResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "created",
+            "data"
+          ],
+          "enum": null
+        },
+        "AudioTranscriptionRequest": {
+          "type": "object",
+          "required": [
+            "file",
+            "model"
+          ],
+          "properties": [
+            "file",
+            "language",
+            "model",
+            "prompt",
+            "response_format",
+            "temperature",
+            "timestamp_granularities"
+          ],
+          "enum": null
+        },
+        "AudioTranslationRequest": {
+          "type": "object",
+          "required": [
+            "file",
+            "model"
+          ],
+          "properties": [
+            "file",
+            "model",
+            "prompt",
+            "response_format",
+            "temperature"
+          ],
+          "enum": null
+        },
+        "AudioTranscriptionResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "text"
+          ],
+          "enum": null
+        },
+        "SpeechRequest": {
+          "type": "object",
+          "required": [
+            "input",
+            "model",
+            "voice"
+          ],
+          "properties": [
+            "input",
+            "model",
+            "response_format",
+            "speed",
+            "voice"
+          ],
+          "enum": null
+        },
+        "RerankRequest": {
+          "type": "object",
+          "required": [
+            "documents",
+            "model",
+            "query"
+          ],
+          "properties": [
+            "documents",
+            "model",
+            "query",
+            "return_documents",
+            "top_n"
+          ],
+          "enum": null
+        },
+        "RerankResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "id",
+            "meta",
+            "results"
+          ],
+          "enum": null
+        },
+        "ModerationRequest": {
+          "type": "object",
+          "required": [
+            "input"
+          ],
+          "properties": [
+            "input",
+            "model"
+          ],
+          "enum": null
+        },
+        "ModerationResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "id",
+            "model",
+            "results"
+          ],
+          "enum": null
+        },
+        "GeminiRequest": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "contents",
+            "generationConfig",
+            "safetySettings",
+            "systemInstruction",
+            "tools"
+          ],
+          "enum": null
+        },
+        "GeminiResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "candidates",
+            "usageMetadata"
+          ],
+          "enum": null
+        },
+        "VideoRequest": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "duration",
+            "fps",
+            "height",
+            "image",
+            "metadata",
+            "model",
+            "n",
+            "prompt",
+            "response_format",
+            "seed",
+            "user",
+            "width"
+          ],
+          "enum": null
+        },
+        "VideoResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "status",
+            "task_id"
+          ],
+          "enum": null
+        },
+        "VideoTaskResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "error",
+            "format",
+            "metadata",
+            "status",
+            "task_id",
+            "url"
+          ],
+          "enum": null
+        },
+        "VideoTaskMetadata": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "duration",
+            "fps",
+            "height",
+            "seed",
+            "width"
+          ],
+          "enum": null
+        },
+        "VideoTaskError": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "code",
+            "message"
+          ],
+          "enum": null
+        },
+        "OpenAIVideo": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "completed_at",
+            "created_at",
+            "error",
+            "expires_at",
+            "id",
+            "metadata",
+            "model",
+            "object",
+            "progress",
+            "remixed_from_video_id",
+            "seconds",
+            "size",
+            "status",
+            "task_id"
+          ],
+          "enum": null
+        },
+        "OpenAIVideoError": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "code",
+            "message"
+          ],
+          "enum": null
+        },
+        "ApiResponse": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "data",
+            "message",
+            "success"
+          ],
+          "enum": null
+        },
+        "PageInfo": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "items",
+            "page",
+            "page_size",
+            "total"
+          ],
+          "enum": null
+        },
+        "User": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "display_name",
+            "email",
+            "group",
+            "id",
+            "quota",
+            "request_count",
+            "role",
+            "status",
+            "used_quota",
+            "username"
+          ],
+          "enum": null
+        },
+        "Channel": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "base_url",
+            "groups",
+            "id",
+            "models",
+            "name",
+            "priority",
+            "status",
+            "tag",
+            "type",
+            "weight"
+          ],
+          "enum": null
+        },
+        "Token": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "expired_time",
+            "id",
+            "key",
+            "name",
+            "remain_quota",
+            "status",
+            "unlimited_quota",
+            "user_id"
+          ],
+          "enum": null
+        },
+        "Redemption": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "created_time",
+            "id",
+            "key",
+            "name",
+            "quota",
+            "redeemed_time",
+            "status"
+          ],
+          "enum": null
+        },
+        "Log": {
+          "type": "object",
+          "required": [],
+          "properties": [
+            "content",
+            "created_at",
+            "id",
+            "type",
+            "user_id"
+          ],
+          "enum": null
+        }
+      }
+    }
+  }
+}

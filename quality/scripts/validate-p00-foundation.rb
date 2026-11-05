@@ -34,6 +34,13 @@ def nonempty?(root, path)
   File.file?(full) && File.size(full).positive?
 end
 
+def valid_datetime?(value)
+  DateTime.iso8601(value.to_s)
+  true
+rescue ArgumentError
+  false
+end
+
 def valid_local_json_pointer?(document, pointer)
   return true unless pointer.start_with?("#/")
   current = document
@@ -83,6 +90,7 @@ else
   if %w[APPROVED IMPLEMENTED VERIFIED ACTIVE].include?(identity["status"])
     approval = identity["approval"].is_a?(Hash) ? identity["approval"] : {}
     %w[approver approved_at evidence change_request].each { |key| record(!approval[key].to_s.empty?, "global registry approval record includes #{key}") }
+    record(valid_datetime?(approval["approved_at"]), "global registry approval timestamp is ISO-8601")
   end
 
   expected_phases = (0..12).map { |n| format("P%02d", n) }.to_set
@@ -93,6 +101,7 @@ else
     if %w[APPROVED IMPLEMENTED VERIFIED ACTIVE].include?(value["status"])
       approval = value["approval"].is_a?(Hash) ? value["approval"] : {}
       %w[approver approved_at evidence change_request].each { |key| record(!approval[key].to_s.empty?, "#{phase} approval record includes #{key}") }
+      record(valid_datetime?(approval["approved_at"]), "#{phase} approval timestamp is ISO-8601")
     end
   end
 
@@ -141,6 +150,7 @@ else
     if %w[APPROVED IMPLEMENTED VERIFIED ACTIVE].include?(entry["status"])
       approval = entry["approval"].is_a?(Hash) ? entry["approval"] : {}
       %w[approver approved_at evidence change_request].each { |key| record(!approval[key].to_s.empty?, "#{id} approval record includes #{key}") }
+      record(valid_datetime?(approval["approved_at"]), "#{id} approval timestamp is ISO-8601")
     end
     if kind == "schemas"
       record(path.start_with?(".uaes/schemas/"), "#{id} schema path is under .uaes/schemas/")
@@ -211,13 +221,12 @@ else
               line.match(/^\s*(?:[-*]\s*)?\*\*(UAES-[A-Z0-9-]+)\s*(?:[—-]|\*\*)/)
       next unless match
       rule_id = match[1]
+      rule_format = /\AUAES-(?:(?:0[0-9]|1[0-2])-[A-Z][A-Z0-9]*-\d{3}|(?:0[0-9]|1[0-2])-\d{3}-(?:[A-Z]{1,4})?\d{3}|[A-Z][A-Z0-9]*-\d{3})\z/
+      next unless rule_id.match?(rule_format)
       if ids.include?(rule_id)
-        record(false, "rule ID collides with registered ID: #{rule_id}")
+        record(false, "rule ID collides with registered ID: #{rule_id}") if heading_match
         next
       end
-      rule_format = /\AUAES-(?:(?:0[0-9]|1[0-2])-(?:[A-Z]{1,8}-)?[A-Z]?\d{3}(?:-[A-Z]?\d{3})?|[A-Z][A-Z0-9]*-\d{3})\z/
-      record(rule_id.match?(rule_format), "rule ID uses a collision-safe format: #{rule_id}")
-      next unless rule_id.match?(rule_format)
       rule_occurrences[rule_id] << "#{entry["file"]}:#{index + 1}"
     end
   end
@@ -258,10 +267,12 @@ else
     Array(exception["related_rule_ids"]).each do |rule_id|
       record(ids.include?(rule_id) || rule_occurrences.key?(rule_id), "#{id} references a known rule: #{rule_id}")
     end
+    record(valid_datetime?(exception["expires_at"]), "#{id} exception expiry is ISO-8601")
     if %w[APPROVED ACTIVE].include?(exception["status"])
       %w[requester reason approver approved_at approval_evidence expires_at risk_assessment rollback_plan verification_plan].each do |key|
         record(!exception[key].to_s.empty?, "#{id} approved exception includes #{key}")
       end
+      record(valid_datetime?(exception["approved_at"]), "#{id} approval timestamp is ISO-8601")
       record(Array(exception["compensating_controls"]).any?, "#{id} approved exception has compensating controls")
       begin
         expiry = DateTime.iso8601(exception["expires_at"].to_s)

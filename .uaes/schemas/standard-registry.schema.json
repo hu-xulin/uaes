@@ -12,6 +12,7 @@
     "schemas",
     "gates",
     "acceptance",
+    "exceptions",
     "dependencies",
     "history"
   ],
@@ -28,9 +29,18 @@
         "status"
       ],
       "properties": {
-        "id": { "type": "string", "minLength": 3 },
-        "name": { "type": "string", "minLength": 3 },
-        "abbreviation": { "type": "string", "minLength": 2 },
+        "id": {
+          "type": "string",
+          "minLength": 3
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "abbreviation": {
+          "type": "string",
+          "minLength": 2
+        },
         "version": {
           "type": "string",
           "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
@@ -39,107 +49,233 @@
           "type": "string",
           "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
         },
-        "status": { "$ref": "#/$defs/lifecycleStatus" },
-        "project": { "type": "object" },
-        "governance": { "type": "object" },
+        "status": {
+          "$ref": "#/$defs/lifecycleStatus"
+        },
+        "project": {
+          "type": "object"
+        },
+        "governance": {
+          "type": "object"
+        },
         "lifecycle_status": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "requirement_levels": {
           "type": "array",
-          "items": { "enum": ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"] }
+          "items": {
+            "enum": [
+              "MUST",
+              "MUST_NOT",
+              "SHOULD",
+              "SHOULD_NOT",
+              "MAY"
+            ]
+          }
+        },
+        "priority_levels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "historical": {
+              "type": "string"
+            },
+            "reconstructed": {
+              "type": "string"
+            },
+            "new": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "historical",
+            "reconstructed",
+            "new"
+          ],
+          "additionalProperties": false
         }
       }
     },
     "phases": {
       "type": "object",
-      "additionalProperties": { "$ref": "#/$defs/phase" }
+      "additionalProperties": {
+        "$ref": "#/$defs/phase"
+      }
     },
     "standards": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "schemas": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "gates": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "acceptance": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "system_files": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "tool_adapters": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "dependencies": {
       "type": "array",
-      "items": { "$ref": "#/$defs/dependency" }
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
     },
-    "validation": { "type": "object" },
+    "validation": {
+      "type": "object"
+    },
     "history": {
       "type": "array",
-      "items": { "$ref": "#/$defs/historyRecord" }
+      "items": {
+        "$ref": "#/$defs/historyRecord"
+      }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exceptionRecord"
+      }
     }
   },
   "$defs": {
     "lifecycleStatus": {
       "enum": [
-        "DRAFT",
         "PROPOSED",
+        "DRAFT",
         "IN_REVIEW",
+        "NEEDS_REVISION",
         "APPROVED",
         "IMPLEMENTED",
         "VERIFIED",
+        "ACTIVE",
+        "REJECTED",
         "DEPRECATED",
-        "SUPERSEDED"
+        "SUPERSEDED",
+        "RETIRED"
       ]
     },
     "phase": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "description", "status"],
+      "required": [
+        "name",
+        "description",
+        "status"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 3 },
-        "description": { "type": "string", "minLength": 3 },
-        "status": { "$ref": "#/$defs/lifecycleStatus" },
-        "provenance": { "type": "string" },
+        "name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "description": {
+          "type": "string",
+          "minLength": 3
+        },
+        "status": {
+          "$ref": "#/$defs/lifecycleStatus"
+        },
+        "provenance": {
+          "type": "string"
+        },
         "deliverables": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
+        },
+        "approval": {
+          "$ref": "#/$defs/approvalRecord"
         }
       }
     },
     "entry": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "file"],
+      "required": [
+        "id",
+        "file",
+        "status"
+      ],
       "properties": {
         "id": {
           "type": "string",
           "pattern": "^UAES-[A-Z0-9]+(-[A-Z0-9]+)*$"
         },
-        "name": { "type": "string" },
-        "file": { "type": "string", "minLength": 3 },
-        "type": { "type": "string" },
-        "phase": { "type": "string" },
-        "status": { "$ref": "#/$defs/lifecycleStatus" },
-        "priority": { "type": "string" },
-        "provenance": { "type": "string" }
+        "name": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string",
+          "minLength": 3
+        },
+        "type": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/lifecycleStatus"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "provenance": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "approval": {
+          "$ref": "#/$defs/approvalRecord"
+        },
+        "shared_with": {
+          "type": "string",
+          "pattern": "^UAES-SCHEMA-[0-9]{2}-[0-9]{3}$"
+        }
       }
     },
     "dependency": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["standard", "depends_on"],
+      "required": [
+        "standard",
+        "depends_on"
+      ],
       "properties": {
         "standard": {
           "type": "string",
@@ -158,13 +294,23 @@
             "type": "string",
             "pattern": "^UAES-[A-Z0-9]+(-[A-Z0-9]+)*$"
           }
+        },
+        "coordination": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "historyRecord": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["version", "date", "change"],
+      "required": [
+        "version",
+        "date",
+        "change"
+      ],
       "properties": {
         "version": {
           "type": "string",
@@ -174,14 +320,232 @@
           "type": "string",
           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
         },
-        "change": { "type": "string", "minLength": 3 },
+        "change": {
+          "type": "string",
+          "minLength": 3
+        },
         "scope": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "notes": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "exceptionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "exception_class",
+        "related_rule_ids",
+        "status",
+        "requester",
+        "reason",
+        "business_justification",
+        "technical_constraints",
+        "risk_assessment",
+        "affected_components",
+        "security_impact",
+        "data_impact",
+        "financial_impact",
+        "compensating_controls",
+        "expires_at",
+        "rollback_plan",
+        "verification_plan"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^UAES-EXC-[0-9]{4,}$"
+        },
+        "related_rule_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "enum": [
+            "REQUESTED",
+            "RISK_ASSESSED",
+            "IN_REVIEW",
+            "NEEDS_REVISION",
+            "APPROVED",
+            "ACTIVE",
+            "REJECTED",
+            "EXPIRED",
+            "REVOKED",
+            "CLOSED"
+          ]
+        },
+        "requester": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "business_justification": {
+          "type": "string"
+        },
+        "risk_assessment": {
+          "type": "string"
+        },
+        "compensating_controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "approver": {
+          "type": "string"
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "approval_evidence": {
+          "type": "string"
+        },
+        "rollback_plan": {
+          "type": "string"
+        },
+        "verification_plan": {
+          "type": "string"
+        },
+        "pull_request": {
+          "type": "string"
+        },
+        "exception_class": {
+          "enum": [
+            "E0",
+            "E1",
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        "technical_constraints": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "security_impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data_impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "financial_impact": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "APPROVED",
+                  "ACTIVE"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "approver",
+              "approved_at",
+              "approval_evidence",
+              "expires_at",
+              "risk_assessment",
+              "compensating_controls",
+              "rollback_plan",
+              "verification_plan"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "exception_class": {
+                "const": "E0"
+              }
+            },
+            "required": [
+              "exception_class"
+            ]
+          },
+          "then": {
+            "not": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "APPROVED",
+                    "ACTIVE"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "approvalRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approver",
+        "approved_at",
+        "evidence",
+        "change_request"
+      ],
+      "properties": {
+        "approver": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "change_request": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }

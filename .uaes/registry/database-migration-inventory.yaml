@@ -1,0 +1,268 @@
+version: "1.0.0"
+source_repository: hu-xulin/uter
+source_commit: "422caafffb7a64370700ddd4859a057911f5f9e0"
+migration_system:
+  main_database: "GORM AutoMigrate plus ordered custom migration functions"
+  log_database: "MigrateAuditLogs plus ClickHouse native DDL or GORM AutoMigrate"
+  supported_main_databases: [sqlite, mysql, postgresql]
+  supported_log_databases: [sqlite, mysql, postgresql, clickhouse]
+  independent_migration_ledger: false
+  rollback_harness: NOT_PROVIDED
+  cross_database_migration_matrix: NOT_VERIFIED
+auto_migrate:
+  entrypoint: model/main.go#migrateDB
+  models:
+    - Channel
+    - Token
+    - User
+    - UserSession
+    - AuthFlow
+    - ExternalIdentityClaim
+    - PasskeyCredential
+    - Option
+    - LoginEncryptionKey
+    - Redemption
+    - Ability
+    - Log
+    - Midjourney
+    - TopUp
+    - QuotaData
+    - Task
+    - TaskPlugin
+    - Model
+    - Vendor
+    - VendorMergeRule
+    - PrefillGroup
+    - Setup
+    - Organization
+    - RefundIntent
+    - TwoFA
+    - TwoFABackupCode
+    - Checkin
+    - SubscriptionOrder
+    - UserSubscription
+    - SubscriptionPreConsumeRecord
+    - CustomOAuthProvider
+    - UserOAuthBinding
+    - PerfMetric
+    - SystemInstance
+    - SystemTask
+    - SystemTaskLock
+    - CasbinRule
+    - AuthzRole
+    - UserAccessToken
+    - EmailQuotaUsage
+custom_steps:
+  - id: DBM-001
+    scope: main
+    source: model/main.go
+    function: ensureUserQuotaColumns
+    invoked_from: model/main.go#InitDB
+    phase: preflight
+    order: 1
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Operator must migrate legacy 32-bit wallet columns to 64-bit before startup; SKIP_64BIT_QUOTA_SCHEMA_CHECK is an explicit bypass."
+  - id: DBM-002
+    scope: main
+    source: model/token_migration.go
+    function: migrateTokenKeyUniqueness
+    invoked_from: model/main.go#migrateDB
+    phase: before_auto_migrate
+    order: 10
+    failure_mode: STOP_STARTUP
+    rollback_status: TRANSACTIONAL_DDL_WHERE_SUPPORTED
+    recovery: "Inspect existing PostgreSQL unique constraints and index definitions; preserve unknown constraints and investigate manually."
+  - id: DBM-003
+    scope: main
+    source: model/prefill_group_migration.go
+    function: migratePrefillGroupUniqueness
+    invoked_from: model/main.go#migrateDB
+    phase: before_auto_migrate
+    order: 20
+    failure_mode: STOP_STARTUP
+    rollback_status: TRANSACTIONAL_DDL_WHERE_SUPPORTED
+    recovery: "Inspect global uniqueness constraints and partial unique index definition before retry."
+  - id: DBM-004
+    scope: main
+    source: model/main.go
+    function: migrateSubscriptionPlanPriceAmount
+    invoked_from: model/main.go#migrateDB
+    phase: before_auto_migrate
+    order: 30
+    failure_mode: LOG_AND_CONTINUE
+    rollback_status: NOT_PROVIDED
+    recovery: "Verify subscription_plans.price_amount type, precision, scale, range, and exact values per database dialect. PostgreSQL numeric type check currently accepts any numeric precision/scale; conversion to decimal(10,6) may round or overflow. Metadata and DDL errors are logged and swallowed; verify actual schema before retry."
+  - id: DBM-005
+    scope: main
+    source: model/main.go
+    function: migrateTokenModelLimitsToText
+    invoked_from: model/main.go#migrateDB
+    phase: before_auto_migrate
+    order: 40
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Verify tokens.model_limits type and preserve existing contents before retry."
+  - id: DBM-006
+    scope: main
+    source: model/option_primary_key_migration.go
+    function: migrateOptionPrimaryKey
+    invoked_from: model/main.go#migrateDB
+    phase: before_auto_migrate
+    order: 50
+    failure_mode: LOG_AND_CONTINUE
+    rollback_status: BACKUP_TABLE_CREATED
+    recovery: "Inspect options_legacy_* backup table and rebuilt options primary key; empty keys are omitted and conflicting duplicate values collapse to the last encountered value. Test failures between table renames and restore from the retained legacy table; do not drop backup without independent verification."
+  - id: DBM-007
+    scope: main
+    source: model/usedata_migration.go
+    function: dedupeQuotaDataAggregatesOnce
+    invoked_from: model/main.go#migrateDB
+    phase: before_auto_migrate
+    order: 60
+    failure_mode: LOG_AND_CONTINUE
+    rollback_status: NOT_PROVIDED
+    recovery: "Reconcile quota_data aggregate totals before retry; operation merges duplicate groups and removes duplicate rows."
+  - id: DBM-008
+    scope: main
+    source: model/main.go
+    function: AutoMigrate
+    invoked_from: model/main.go#migrateDB
+    phase: schema
+    order: 70
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Use verified database backup and dialect-specific schema inspection; GORM AutoMigrate is not treated as reversible."
+  - id: DBM-009
+    scope: main
+    source: model/main.go
+    function: InitializeUserAuthVersions
+    invoked_from: model/main.go#migrateDB
+    phase: data
+    order: 80
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Inspect affected user authentication version fields and rerun idempotent initializer after correction."
+  - id: DBM-010
+    scope: main
+    source: model/user_email_migration.go
+    function: migrateUserEmailNormalization
+    invoked_from: model/main.go#migrateDB
+    phase: data
+    order: 90
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Resolve case-insensitive duplicate email groups before retry; function intentionally skips normalization when duplicates exist."
+  - id: DBM-011
+    scope: main
+    source: model/main.go
+    function: EnsureLegacyAccessTokenRetireAt
+    invoked_from: model/main.go#migrateDB
+    phase: data
+    order: 100
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Inspect access-token retirement timestamps and rerun initializer."
+  - id: DBM-012
+    scope: main
+    source: model/main.go
+    function: InitializeExternalIdentityClaims
+    invoked_from: model/main.go#migrateDB
+    phase: data
+    order: 110
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Inspect external identity claim records and uniqueness constraints before retry."
+  - id: DBM-013
+    scope: main
+    source: model/main.go
+    function: ensureSubscriptionPlanTableSQLite
+    invoked_from: model/main.go#migrateDB
+    phase: sqlite_specific
+    order: 120
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "Existing-table path only adds missing columns; it does not reconcile types, nullability, defaults, or primary key. Compare full PRAGMA table_info metadata against historical fixtures and preserve price values."
+  - id: DBM-014
+    scope: log
+    source: model/audit_log.go
+    function: MigrateAuditLogs
+    invoked_from: model/main.go#InitLogDB
+    phase: schema
+    order: 10
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "SQLite/MySQL/PostgreSQL use GORM AutoMigrate; ClickHouse uses MergeTree DDL without TTL. Existing tests cover SQLite and optional MySQL/PostgreSQL repeat migration, indexes and row preservation, but no ClickHouse table create/upgrade test is present. Keep audit_logs retention independent of usage-log TTL."
+  - id: DBM-015
+    scope: log
+    source: model/main.go
+    function: migrateClickHouseLogDB
+    invoked_from: model/main.go#migrateLOGDB
+    phase: clickhouse_schema
+    order: 20
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "LOG_SQL_CLICKHOUSE_TTL_DAYS > 0 applies active deletion TTL to usage logs. Lowering the period can delete history; setting zero removes TTL but cannot restore deleted rows. Require explicit retention approval and disposable ClickHouse mutation test. audit_logs is created without TTL."
+  - id: DBM-016
+    scope: log
+    source: model/main.go
+    function: AutoMigrate
+    invoked_from: model/main.go#migrateLOGDB
+    phase: schema
+    order: 30
+    failure_mode: STOP_STARTUP
+    rollback_status: NOT_PROVIDED
+    recovery: "GORM AutoMigrate for logs table; use verified backup and dialect-specific inspection."
+  - id: DBM-017
+    scope: log
+    source: model/log_index_migration.go
+    function: migrateLogIndexRedundancy
+    invoked_from: model/main.go#migrateLOGDB
+    phase: index
+    order: 40
+    failure_mode: LOG_AND_CONTINUE
+    rollback_status: RECREATE_INDEX_FROM_MODEL
+    recovery: "Recreate idx_logs_user_id or idx_logs_model_name only after confirming composite-index coverage and query plans."
+  - id: DBM-018
+    scope: log
+    source: model/main.go
+    function: runLogCacheTokenBackfillOnce
+    invoked_from: model/main.go#InitLogDB
+    phase: backfill
+    order: 50
+    failure_mode: LOG_AND_RETRY_ON_NEXT_START
+    rollback_status: NOT_PROVIDED
+    recovery: "Check options marker log_cache_tokens_backfilled and compare cache token columns against other JSON before rerun."
+  - id: DBM-019
+    scope: main
+    source: model/frontend_option_migration.go
+    function: MigrateRetiredFrontendOptions
+    invoked_from: main.go#main
+    phase: legacy_data
+    order: 130
+    failure_mode: LOG_AND_CONTINUE
+    rollback_status: TRANSACTION_PER_OPTION
+    recovery: "Existing target is authoritative; legacy source key is deleted without comparing divergent values (including when target is empty). Existing tests assert this policy. Export and review source/target pairs before migration; malformed legacy values remain and are logged. Caller logs errors and continues startup."
+  - id: DBM-020
+    scope: main
+    source: model/twofa_migration.go
+    function: MigrateTwoFASecretsToEncrypted
+    invoked_from: operator_or_explicit_call
+    phase: security_data
+    order: MANUAL
+    failure_mode: RETURNS_PER_RECORD_FAILURES
+    rollback_status: NOT_PROVIDED
+    recovery: "Implementation batches by primary-key cursor, conditionally updates plaintext, skips existing envelopes and retains failed plaintext rows for retry. Dedicated model/twofa_secret_test.go covers ciphertext-at-rest, round-trip, lazy upgrade, stale-snapshot conditional update, rotated/missing key, multi-batch traversal, mixed rows and retry after key recovery. Remaining gaps: true concurrent rebind, injected DB write/partial-batch failure, fresh DB read-back after write, and same-invocation revisit after a conditional-update miss. Never export plaintext secrets."
+manual_sql:
+  - path: bin/migration_v0.2-v0.3.sql
+    status: LEGACY_MANUAL
+    rollback_status: NOT_PROVIDED
+    recovery: "NON-IDEMPOTENT: re-execution adds token remain_quota to user quota again and can double-credit. Never rerun when execution status is unknown. Require verified backup, per-user reconciliation, and owner-approved one-time execution evidence."
+  - path: bin/migration_v0.3-v0.4.sql
+    status: LEGACY_MANUAL
+    rollback_status: NOT_PROVIDED
+    recovery: "NOT EXISTS prevents identical tuple reinsertion, but does not reconcile existing disabled or semantically divergent rows. Verify expected ability tuples and enabled state; note the script uses MySQL-style identifier quoting."
+
+# Detailed source-level findings and validation programme:
+# quality/scripts/architecture/DATABASE-MIGRATION-SAFETY-AUDIT.md
+# Overall status remains DATABASE MIGRATION SAFETY: NOT_VERIFIED.

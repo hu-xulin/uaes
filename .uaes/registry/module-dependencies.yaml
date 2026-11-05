@@ -1,0 +1,20 @@
+# Explicit allowlist for imports between registered Go modules.
+# Module ownership is resolved by the longest matching module_path prefix.
+version: "1.0.0"
+source_repository: REPO-UTER
+source_commit: "442ddb5a7c234f2ee2d78651e0882407e9371c91"
+modules:
+  MOD-GO-ROOT:
+    allowed_internal_dependencies:
+      - MOD-RELAYKIT
+      - MOD-TOKENKIT
+    rationale: "Root gateway explicitly requires and replaces the two reusable modules in its go.mod."
+  MOD-RELAYKIT:
+    allowed_internal_dependencies: []
+    rationale: "Protocol conversion library must remain independent of host modules."
+  MOD-TOKENKIT:
+    allowed_internal_dependencies: []
+    rationale: "Token counting module must remain independent of the gateway and relay modules."
+  MOD-TOKENKIT-INNER:
+    allowed_internal_dependencies: []
+    rationale: "Nested upstream-compatible TokenKit module is independently versioned and must not couple to Uter host modules."

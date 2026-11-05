@@ -1,0 +1,20 @@
+{
+  "agentId": "AGENT-TEST-ENGINEER",
+  "name": "Testing Agent",
+  "version": "1.0.0",
+  "role": "TESTER",
+  "owner": "UAES Engineering Governance",
+  "status": "DRAFT",
+  "runtime": "tool-adapter-selected",
+  "skillRefs": [
+    "SKILL-UAES-TEST-ENGINEERING"
+  ],
+  "toolRefs": [],
+  "inputContract": ".uaes/schemas/agent-task.schema.json",
+  "outputContract": ".uaes/schemas/agent-result.schema.json",
+  "authorizationRefs": [
+    "agents/policies/default-permission-policy.yaml"
+  ],
+  "evaluationProfile": "agents/evaluation-profiles/default.yaml",
+  "dependencies": []
+}

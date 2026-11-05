@@ -3,7 +3,7 @@
 **Standard ID:** UAES-00  
 **Standard Name:** Foundation Standard  
 **System:** UTER AI Engineering Standard  
-**Version:** 1.0.0  
+**Version:** 1.2.0  
 **Status:** DRAFT  
 **Normative Level:** P0  
 **Owner:** Uter Engineering Governance  
@@ -206,21 +206,26 @@ AI 不得将 MUST 降级为 SHOULD，也不得将 MUST NOT 解释为可自由选
 
 ## 8. Standard Status
 
-标准状态：
+标准生命周期统一由 UAES-00-003 定义，注册表与 Schema 必须使用完全相同的状态集合：
 
+- PROPOSED：已提出，尚未正式起草。
 - DRAFT：草案。
 - IN_REVIEW：审查中。
-- APPROVED：已批准。
+- NEEDS_REVISION：需要修改并返回 DRAFT。
+- APPROVED：已批准，尚未完成实施与验证。
+- IMPLEMENTED：已完成工程实施，仍需验证。
+- VERIFIED：已通过规定验证，等待正式生效。
 - ACTIVE：正式生效。
-- DEPRECATED：不建议继续使用。
+- REJECTED：被拒绝。
+- DEPRECATED：不建议新任务继续采用。
+- SUPERSEDED：已被新标准或版本替代。
 - RETIRED：已退役。
-- SUPERSEDED：已被新版本替代。
 
-只有 ACTIVE 标准可以作为当前正式执行基线。DRAFT 标准可以用于试运行，但必须明确标识。
+只有 ACTIVE 标准可以作为当前正式执行基线。DRAFT、PROPOSED、IN_REVIEW、APPROVED、IMPLEMENTED 和 VERIFIED 均不得被误认为已正式生效。任何进入 APPROVED、IMPLEMENTED、VERIFIED 或 ACTIVE 的状态变更，都必须附带可追溯的审批记录；AI 不得自行伪造审批。
 
 ## 9. Mandatory Engineering Principles
 
-### UAES-00-001 — Single Source of Truth
+### UAES-00-PRIN-001 — Single Source of Truth
 
 **MUST**：每个正式规则必须具有唯一权威定义位置。
 
@@ -228,7 +233,7 @@ AI 不得将 MUST 降级为 SHOULD，也不得将 MUST NOT 解释为可自由选
 
 其他文件可以引用规则 ID，但不得自行修改其含义。
 
-### UAES-00-002 — Machine Verifiability
+### UAES-00-PRIN-002 — Machine Verifiability
 
 **MUST**：每条 MUST / MUST NOT 规则必须定义验证方式。
 
@@ -236,7 +241,7 @@ AI 不得将 MUST 降级为 SHOULD，也不得将 MUST NOT 解释为可自由选
 
 **MUST NOT**：仅凭 AI 声称「已遵守规范」判定规则通过。
 
-### UAES-00-003 — Evidence-Based Acceptance
+### UAES-00-PRIN-003 — Evidence-Based Acceptance
 
 **MUST**：所有验收结论必须具有证据。
 
@@ -251,25 +256,25 @@ AI 不得将 MUST 降级为 SHOULD，也不得将 MUST NOT 解释为可自由选
 - Schema 校验结果。
 - 可复现的人工验收记录。
 
-### UAES-00-004 — Least Privilege
+### UAES-00-PRIN-004 — Least Privilege
 
 **MUST**：Agent 仅获得当前任务所需的最小权限。
 
 **MUST NOT**：Agent 不得将代码修改授权解释为生产部署、生产数据库修改或真实支付配置修改授权。
 
-### UAES-00-005 — Change Isolation
+### UAES-00-PRIN-005 — Change Isolation
 
 **MUST**：涉及代码变更的任务必须明确工作区、分支、基线 Commit 和变更范围。
 
 **MUST NOT**：不得覆盖用户未提交的本地修改。
 
-### UAES-00-006 — Fail Closed
+### UAES-00-PRIN-006 — Fail Closed
 
 **MUST**：关键安全、权限、资金和数据完整性验证缺失或失败时，相关操作必须停止或进入 BLOCKED。
 
 不得通过忽略错误、跳过检查或伪造结果取得 PASS。
 
-### UAES-00-007 — Traceability
+### UAES-00-PRIN-007 — Traceability
 
 **MUST**：重要需求、架构决策、代码变更、测试和验收结果之间必须建立可追踪关系。
 
@@ -389,3 +394,5 @@ UAES 体系只有同时满足以下条件，才可宣布完成：
 | Version | Status | Change |
 |---|---|---|
 | 1.0.0 | DRAFT | Initial UAES Foundation |
+| 1.1.0 | DRAFT | Namespace principle IDs to avoid collisions with registered standard IDs |
+| 1.2.0 | DRAFT | Align Foundation status vocabulary with UAES-00-003 and the global registry |

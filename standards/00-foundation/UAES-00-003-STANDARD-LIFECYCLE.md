@@ -2,7 +2,7 @@
 
 **Standard ID:** UAES-00-003  
 **Standard Name:** Standard Lifecycle & Versioning  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** DRAFT  
 **Domain:** UAES-00 Foundation  
 **Owner:** Uter Engineering Governance  
@@ -26,14 +26,18 @@ IN_REVIEW
    ├── REJECTED
    └── APPROVED
           ↓
-        ACTIVE
+      IMPLEMENTED
+          ↓
+       VERIFIED
+          ↓
+         ACTIVE
           ↓
       DEPRECATED
           ↓
         RETIRED
 ```
 
-SUPERSEDED 表示该标准已被另一个标准或版本替代，可作为历史记录保留。
+SUPERSEDED 表示该标准已被另一个标准或版本替代，可作为历史记录保留。IMPLEMENTED 与 VERIFIED 是批准后的实施和验证状态；只有满足发布条件并完成正式生效记录后才能进入 ACTIVE。
 
 ## 3. Status Definitions
 
@@ -43,12 +47,16 @@ SUPERSEDED 表示该标准已被另一个标准或版本替代，可作为历史
 | DRAFT | 草案 |
 | IN_REVIEW | 正在审查 |
 | NEEDS_REVISION | 需要修改 |
-| APPROVED | 已批准，尚未正式生效 |
+| APPROVED | 已批准，尚未完成实施与验证，不代表已经生效 |
+| IMPLEMENTED | 已完成规范要求的工程实施，仍需验证 |
+| VERIFIED | 已通过规定的验证与证据审查，等待正式生效 |
 | ACTIVE | 正式生效 |
 | REJECTED | 被拒绝 |
 | DEPRECATED | 不建议新任务继续采用 |
 | SUPERSEDED | 已由新版本替代 |
 | RETIRED | 已退役 |
+
+状态集合必须与 `.uaes/STANDARD-REGISTRY.yaml`、`standard-registry.schema.json` 和 `standard-metadata.schema.json` 完全一致。任何状态集合变化都必须同步更新以上资产并运行 P00 正向、负向测试。
 
 ## 4. Semantic Versioning
 

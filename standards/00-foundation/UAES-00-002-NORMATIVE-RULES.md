@@ -2,7 +2,7 @@
 
 **Standard ID:** UAES-00-002  
 **Standard Name:** Normative Rules & Interpretation  
-**Version:** 1.0.0  
+**Version:** 1.2.0  
 **Status:** DRAFT  
 **Domain:** UAES-00 Foundation  
 **Owner:** Uter Engineering Governance  
@@ -26,18 +26,17 @@
 
 ## 3. Rule ID Convention
 
-规则 ID 格式：
+规则 ID 必须与 Standard ID 使用不同的命名空间，禁止规则 ID 与标准注册 ID 冲突。
 
-```text
-UAES-{DOMAIN}-{SEQUENCE}
-```
+允许以下三种形式：
 
-示例：
+1. Domain-scoped rule：UAES-{DOMAIN}-{CATEGORY}-{SEQUENCE}，例如 UAES-00-PRIN-001。
+2. Standard-scoped rule：UAES-{DOMAIN}-{STANDARD-SEQUENCE}-{RULE-SEQUENCE}，例如 UAES-06-001-001。若所属标准明确采用类型化规则分组，RULE-SEQUENCE 可带 1–4 位大写类型前缀，例如 UAES-12-005-M003；类型前缀必须在该标准中定义，完整 ID 仍须全局唯一。
+3. Named governance namespace：UAES-{NAMESPACE}-{SEQUENCE}，例如 UAES-NORM-001、UAES-REG-001、UAES-EXC-001。
 
-- UAES-00-001
-- UAES-01-001
-- UAES-04-002
-- UAES-09-015
+Standard ID 保留 UAES-{DOMAIN} 与 UAES-{DOMAIN}-{STANDARD-SEQUENCE} 形式，例如 UAES-00、UAES-00-001。
+
+**MUST NOT**：规则 ID 不得使用 UAES-{DOMAIN}-{SEQUENCE} 这种与 Standard ID 完全相同的形式。新增规则必须通过注册表与规则 ID 扫描器检查后才能合并。
 
 领域级 Gate：
 

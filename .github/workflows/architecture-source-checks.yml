@@ -1,0 +1,103 @@
+name: Architecture Source Checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "quality/scripts/architecture/**"
+      - ".uaes/registry/modules.yaml"
+      - ".uaes/registry/database-migration-inventory.yaml"
+      - ".uaes/registry/api-contract-baseline.json"
+      - ".uaes/registry/api-breaking-change-approvals.json"
+      - ".github/workflows/architecture-source-checks.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          path: uaes
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: hu-xulin/uter
+          # Keep aligned with the Uter integration PR source baseline.
+          ref: 422caafffb7a64370700ddd4859a057911f5f9e0
+          path: uter
+      - name: Verify checked out Uter baseline
+        working-directory: uter
+        run: |
+          actual="$(git rev-parse HEAD)"
+          expected="422caafffb7a64370700ddd4859a057911f5f9e0"
+          test "$actual" = "$expected" || {
+            echo "Uter source baseline mismatch: got $actual, expected $expected"
+            exit 1
+          }
+      - name: Validate module manifests
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-architecture-manifests
+      - name: Validate RelayKit module boundary
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-module-boundaries
+      - name: Run RelayKit boundary positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-module-boundaries.rb
+      - name: Prepare generated embed path for package discovery
+        run: mkdir -p uter/web/dist/docs-content/_next && touch uter/web/dist/index.html uter/web/dist/uaes-architecture-placeholder.html uter/web/dist/docs-content/_next/uaes-architecture-placeholder.html
+      - name: Validate Go module dependency allowlist
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-dependency-rules
+      - name: Run dependency allowlist positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-dependency-rules.rb
+      - name: Validate OpenAPI contracts and compatibility
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-api-contracts
+      - name: Run API contract positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-api-contracts.rb
+      - name: Validate database migration inventory integrity (not rollback acceptance)
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-database-migrations
+      - name: Test database migration source pin positive and negative controls
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/test-database-migration-source-pin.rb
+      - name: Inventory frontend module import graph (boundary policy not yet accepted)
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-frontend-module-inventory
+      - name: Run frontend import inventory positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-frontend-module-inventory.rb
+      - name: Inventory every auth/system contract occurrence on the pinned Uter source
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/inventory-auth-contract-consumers.rb
+      # Fixture controls run before the live source gate so known live drift
+      # does not prevent the checker itself from receiving positive/negative tests.
+      - name: Run router/OpenAPI drift positive and negative controls
+        working-directory: uaes
+        run: ruby quality/scripts/architecture/test-router-openapi-drift.rb
+      - name: Validate runtime Gin routes against OpenAPI operations
+        working-directory: uaes
+        env:
+          UTER_REPO_ROOT: ${{ github.workspace }}/uter
+        run: ruby quality/scripts/architecture/check-router-openapi-drift

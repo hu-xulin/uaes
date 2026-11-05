@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "approvals": [
+    {
+      "id": "API-BREAK-2026-11-05-001",
+      "document": "docs-dev/openapi/api.json",
+      "operation": "POST /api/oauth/wechat/bind",
+      "decision": "OPTION_B_APPROVED",
+      "approved_at": "2026-11-05",
+      "approved_by": "Uter API contract owner (explicit approval)",
+      "reason": "Legacy direct WeChat bind operation is obsolete; no current runtime route or repository-local frontend consumer exists. The current WeChat website-app flow is login-only and is not claimed as a semantic replacement.",
+      "consumer_audit": ".uaes/API-LEGACY-ENDPOINT-DEPRECATION-AUDIT-2026-11-05.md",
+      "baseline_source_commit": "442ddb5a7c234f2ee2d78651e0882407e9371c91",
+      "implementation_source_commit": "422caafffb7a64370700ddd4859a057911f5f9e0"
+    },
+    {
+      "id": "API-BREAK-2026-11-05-002",
+      "document": "docs-dev/openapi/api.json",
+      "operation": "GET /api/verify/status",
+      "decision": "OPTION_B_APPROVED",
+      "approved_at": "2026-11-05",
+      "approved_by": "Uter API contract owner (explicit approval)",
+      "reason": "Legacy verification-status operation is obsolete; no current runtime route or repository-local frontend consumer exists. Current verification is operation-scoped through methods and proof submission, not a one-to-one status resource.",
+      "consumer_audit": ".uaes/API-LEGACY-ENDPOINT-DEPRECATION-AUDIT-2026-11-05.md",
+      "baseline_source_commit": "442ddb5a7c234f2ee2d78651e0882407e9371c91",
+      "implementation_source_commit": "422caafffb7a64370700ddd4859a057911f5f9e0"
+    }
+  ]
+}
