@@ -7,8 +7,8 @@
 # Registry: .uaes/STANDARD-REGISTRY.yaml
 # System: UTER AI Engineering Standard
 # Registry schema version: 1.0.0
-# Registry content version: 1.7.0
-# Scope: P00 - P12 (domains 00-12; all 13 domains registered, see history 1.7.0)
+# Registry content version: 1.8.0
+# Scope: P00 - P12 (domains 00-12; all 13 domains registered, see history 1.8.0)
 # Build depth: enterprise
 # Delivery mode: all
 # Existing engineering relationship: parallel
@@ -27,7 +27,7 @@ registry:
   id: "UAES-GLOBAL-REGISTRY"
   name: "UTER AI Engineering Standard"
   abbreviation: "UAES"
-  version: "1.7.0"
+  version: "1.8.0"
   schema_version: "1.0.0"
   status: "DRAFT"
 
@@ -64,14 +64,18 @@ registry:
       prohibit_implicit_implementation: true
 
   lifecycle_status:
-    - "DRAFT"
     - "PROPOSED"
+    - "DRAFT"
     - "IN_REVIEW"
+    - "NEEDS_REVISION"
     - "APPROVED"
     - "IMPLEMENTED"
     - "VERIFIED"
+    - "ACTIVE"
+    - "REJECTED"
     - "DEPRECATED"
     - "SUPERSEDED"
+    - "RETIRED"
 
   requirement_levels:
     - "MUST"
@@ -2993,3 +2997,12 @@ history:
       - "UAES-12 depends_on follows the delivered increment required-table minus UAES-11 (domain 11 standards not yet registered); UAES-11 recorded in forward_depends_on."
       - "UAES-12 promoted from forward_depends_on of UAES-07/08 into their depends_on per prior annotations."
       - "Old UAES-12-GATE-001-LIFECYCLE-GATE.md replaced by the delivered UAES-12-GATE-001-LIFECYCLE-EVOLUTION-GATE.md; old file archived."
+
+  - version: "1.8.0"
+    date: "2026-11-05"
+    change: "P00 foundation audit tooling added; lifecycle states reconciled across registry and schemas; automated positive/negative controls introduced."
+    scope:
+      - "P00 Foundation registry validation"
+    notes:
+      - "The registry remains DRAFT; this version increment does not approve or activate UAES."
+      - "Status vocabulary is aligned across registry, standard metadata schema, registry schema, and UAES-00-003."
