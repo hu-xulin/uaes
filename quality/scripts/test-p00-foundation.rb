@@ -236,4 +236,22 @@ class P00FoundationAuditTest < Minitest::Test
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
 
+  def test_rejects_standard_file_status_mismatch
+    root = fixture
+    path = File.join(root, "standards/00-foundation/UAES-00.md")
+    File.write(path, "# UAES-00\n\n**Status:** APPROVED\n")
+    assert_audit_fails(root, "file status matches registry status")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_standard_file_without_status_metadata
+    root = fixture
+    path = File.join(root, "standards/00-foundation/UAES-00.md")
+    File.write(path, "# UAES-00\n")
+    assert_audit_fails(root, "file status matches registry status")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
 end
