@@ -6,6 +6,7 @@ on:
     paths:
       - "quality/scripts/architecture/**"
       - ".uaes/registry/modules.yaml"
+      - ".uaes/registry/database-migration-inventory.yaml"
       - ".github/workflows/architecture-source-checks.yml"
 
 permissions:
