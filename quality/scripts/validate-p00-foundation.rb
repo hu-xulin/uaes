@@ -100,8 +100,23 @@ else
   entries = collections.flat_map { |key| Array(registry[key]).map { |entry| [key, entry] } }
   ids = entries.map { |_kind, entry| entry["id"] }.compact
   record(ids.uniq.length == ids.length, "registered IDs are globally unique")
-  paths = entries.map { |_kind, entry| entry["file"] }.compact
-  record(paths.uniq.length == paths.length, "registered file paths are globally unique")
+  path_groups = entries.group_by { |_kind, entry| entry["file"] }.reject { |path, _group| path.nil? || path.empty? }
+  duplicate_path_groups = path_groups.select { |_path, group| group.length > 1 }
+  duplicate_path_groups.each do |path, group|
+    canonical_id = group.first[1]["id"]
+    group.drop(1).each do |kind, entry|
+      record(kind == "schemas" && entry["shared_with"] == canonical_id,
+             "duplicate path #{path} is explicitly shared with #{canonical_id}")
+    end
+  end
+  record(duplicate_path_groups.values.all? { |group| group.drop(1).all? { |kind, entry| kind == "schemas" && entry["shared_with"] == group.first[1]["id"] } },
+         "registered file paths are unique or explicitly shared")
+  entries.each do |kind, entry|
+    next unless entry["shared_with"]
+    target = entries.find { |_target_kind, candidate| candidate["id"] == entry["shared_with"] }
+    record(kind == "schemas" && target && target[1]["file"] == entry["file"],
+           "#{entry["id"]} shared_with points to a registered schema with the same path")
+  end
 
   standard_entries = Array(registry["standards"])
   standard_ids = standard_entries.map { |entry| entry["id"] }.compact.to_set
