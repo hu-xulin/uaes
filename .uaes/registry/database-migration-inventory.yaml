@@ -182,7 +182,7 @@ custom_steps:
     order: 120
     failure_mode: STOP_STARTUP
     rollback_status: NOT_PROVIDED
-    recovery: "Compare subscription_plans columns with the SQLite DDL and preserve existing values."
+    recovery: "Existing-table path only adds missing columns; it does not reconcile types, nullability, defaults, or primary key. Compare full PRAGMA table_info metadata against historical fixtures and preserve price values."
   - id: DBM-014
     scope: log
     source: model/audit_log.go
@@ -192,7 +192,7 @@ custom_steps:
     order: 10
     failure_mode: STOP_STARTUP
     rollback_status: NOT_PROVIDED
-    recovery: "Inspect audit_logs schema or ClickHouse table DDL and retained audit records."
+    recovery: "SQLite/MySQL/PostgreSQL use GORM AutoMigrate; ClickHouse uses MergeTree DDL without TTL. Existing tests cover SQLite and optional MySQL/PostgreSQL repeat migration, indexes and row preservation, but no ClickHouse table create/upgrade test is present. Keep audit_logs retention independent of usage-log TTL."
   - id: DBM-015
     scope: log
     source: model/main.go
@@ -202,7 +202,7 @@ custom_steps:
     order: 20
     failure_mode: STOP_STARTUP
     rollback_status: NOT_PROVIDED
-    recovery: "Inspect MergeTree DDL and TTL expression; preserve audit and usage log retention requirements."
+    recovery: "LOG_SQL_CLICKHOUSE_TTL_DAYS > 0 applies active deletion TTL to usage logs. Lowering the period can delete history; setting zero removes TTL but cannot restore deleted rows. Require explicit retention approval and disposable ClickHouse mutation test. audit_logs is created without TTL."
   - id: DBM-016
     scope: log
     source: model/main.go
@@ -242,7 +242,7 @@ custom_steps:
     order: 130
     failure_mode: LOG_AND_CONTINUE
     rollback_status: TRANSACTION_PER_OPTION
-    recovery: "Inspect source and target option keys; malformed legacy values are retained and logged."
+    recovery: "Existing target is authoritative; legacy source key is deleted without comparing divergent values (including when target is empty). Existing tests assert this policy. Export and review source/target pairs before migration; malformed legacy values remain and are logged. Caller logs errors and continues startup."
   - id: DBM-020
     scope: main
     source: model/twofa_migration.go
@@ -252,7 +252,7 @@ custom_steps:
     order: MANUAL
     failure_mode: RETURNS_PER_RECORD_FAILURES
     rollback_status: NOT_PROVIDED
-    recovery: "Failed plaintext secrets are retained for retry; verify encryption envelope and failed IDs before rerun."
+    recovery: "Implementation batches by primary-key cursor, conditionally updates plaintext, skips existing envelopes and retains failed plaintext rows for retry. No dedicated model/twofa_migration_test.go exists at pinned source. Add tests for key failure, concurrency, partial batch, post-write verification and rerun; never export plaintext secrets."
 manual_sql:
   - path: bin/migration_v0.2-v0.3.sql
     status: LEGACY_MANUAL
