@@ -87,3 +87,24 @@ Until approved:
 - Do not delete or rewrite OpenAPI operations.
 - Keep router/OpenAPI parity gate blocking.
 - Keep Uter migration status pending.
+
+
+## 1B. Final CI evidence — run 41967574900
+
+The corrected-baseline Architecture Source Checks run completed with **FAIL** on 2026-11-05. The workflow checked out and verified Uter source `008ec53adc9652ee454090b4fb1152536dd45bf3` before executing the checks.
+
+Completed steps before the final parity gate:
+- module manifests, RelayKit boundary and positive/negative controls: PASS;
+- Go dependency allowlist and positive/negative controls: PASS;
+- OpenAPI contract/compatibility validation and positive/negative controls: PASS;
+- database migration inventory integrity check (not rollback acceptance): PASS;
+- frontend import inventory and positive/negative controls: PASS;
+- router/OpenAPI drift checker positive/negative controls: PASS.
+
+The final live inventory captured **450 static Gin routes and 34 dynamic plugin routes**. It failed with exactly these two unmatched documented operations:
+- `POST /api/oauth/wechat/bind`
+- `GET /api/verify/status`
+
+Run: https://github.com/hu-xulin/uaes/actions/runs/41967574900
+
+This is a confirmed blocking contract discrepancy at the pinned integration baseline. It is not a checker-fixture failure. The gate remains blocking; no runtime handler or OpenAPI declaration has been changed. The API contract owner must select Option A, B, or C in §2/§4 before remediation.
