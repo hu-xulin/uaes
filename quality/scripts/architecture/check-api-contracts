@@ -16,6 +16,23 @@ baseline_path = ENV.fetch("UAES_API_CONTRACT_BASELINE", File.join(uaes_root, ".u
 stop("API compatibility baseline missing: #{baseline_path}") unless File.file?(baseline_path)
 baseline = JSON.parse(File.read(baseline_path))
 documents = baseline.fetch("documents", {})
+approvals_path = ENV.fetch("UAES_API_BREAKING_CHANGE_APPROVALS", File.join(uaes_root, ".uaes/registry/api-breaking-change-approvals.json"))
+stop("API breaking-change approval registry missing: #{approvals_path}") unless File.file?(approvals_path)
+approval_registry = JSON.parse(File.read(approvals_path))
+approved_removals = Array(approval_registry.fetch("approvals", []))
+required_approval_fields = %w[id document operation decision approved_at approved_by reason consumer_audit baseline_source_commit implementation_source_commit]
+approval_ids = []
+approval_keys = []
+approved_removals.each do |approval|
+  unless approval.is_a?(Hash) && required_approval_fields.all? { |field| approval[field].is_a?(String) && !approval[field].empty? }
+    stop("invalid API breaking-change approval entry: all required fields must be non-empty strings")
+  end
+  stop("unsupported API breaking-change decision #{approval["decision"].inspect}") unless approval["decision"] == "OPTION_B_APPROVED"
+  approval_ids << approval["id"]
+  approval_keys << [approval["document"], approval["operation"]]
+end
+stop("duplicate API breaking-change approval id") unless approval_ids.uniq.length == approval_ids.length
+stop("duplicate API breaking-change approval operation") unless approval_keys.uniq.length == approval_keys.length
 stop("baseline contains no OpenAPI documents") if documents.empty?
 
 METHODS = %w[get post put patch delete options head trace].freeze
@@ -112,8 +129,24 @@ documents.each do |relative_path, old_contract|
   end
 
   old_ops = old_contract.fetch("operations", {})
+  document_approvals = approved_removals.select { |approval| approval["document"] == relative_path }
+  document_approvals.each do |approval|
+    unless old_ops.key?(approval["operation"])
+      errors << "#{relative_path}: approval #{approval["id"]} references an operation absent from the pinned baseline: #{approval["operation"]}"
+    end
+    if current.key?(approval["operation"])
+      errors << "#{relative_path}: approved removal #{approval["id"]} is stale because #{approval["operation"]} is still present"
+    end
+  end
   missing_ops = old_ops.keys - current.keys
-  missing_ops.each { |key| errors << "#{relative_path}: breaking change removed operation #{key}" }
+  missing_ops.each do |key|
+    approval = document_approvals.find { |entry| entry["operation"] == key }
+    if approval
+      puts "API CONTRACT: approved breaking change #{approval["id"]}: removed #{key}"
+    else
+      errors << "#{relative_path}: breaking change removed operation #{key}"
+    end
+  end
 
   old_ops.each do |key, old_op|
     operation = current[key]
