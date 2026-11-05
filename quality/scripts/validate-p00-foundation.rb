@@ -144,24 +144,6 @@ else
     record(schema_paths.include?(relative), "schema file is registered: #{relative}")
   end
 
-  exceptions = Array(registry["exceptions"])
-  exception_ids = exceptions.map { |item| item["id"] }
-  record(exception_ids.uniq.length == exception_ids.length, "exception IDs are unique")
-  exceptions.each do |exception|
-    id = exception["id"].to_s
-    record(id.match?(/\\AUAES-EXC-\\d{4,}\\z/), "exception ID format: #{id}")
-    record(%w[REQUESTED RISK_ASSESSED IN_REVIEW NEEDS_REVISION APPROVED ACTIVE REJECTED EXPIRED REVOKED CLOSED].include?(exception["status"]), "#{id} exception status is valid")
-    Array(exception["related_rule_ids"]).each do |rule_id|
-      record(ids.include?(rule_id) || rule_occurrences.key?(rule_id), "#{id} references a known rule: #{rule_id}")
-    end
-    if %w[APPROVED ACTIVE].include?(exception["status"])
-      %w[requester reason approver approved_at approval_evidence expires_at risk_assessment rollback_plan verification_plan].each do |key|
-        record(!exception[key].to_s.empty?, "#{id} approved exception includes #{key}")
-      end
-      record(Array(exception["compensating_controls"]).any?, "#{id} approved exception has compensating controls")
-    end
-  end
-
   dependency_records = Array(registry["dependencies"])
   dependency_sources = dependency_records.map { |item| item["standard"] }
   record(dependency_sources.uniq.length == dependency_sources.length, "dependency source IDs are unique")
@@ -200,6 +182,39 @@ else
   record(duplicate_rules.empty?, "rule IDs in standard headings are unique#{duplicate_rules.empty? ? "" : ": #{duplicate_rules.keys.join(", ")}"}")
   collisions = rule_occurrences.keys & ids
   record(collisions.empty?, "rule IDs do not collide with registered standard/schema/gate IDs#{collisions.empty? ? "" : ": #{collisions.join(", ")}"}")
+
+
+  requirement_levels = Array(identity["requirement_levels"])
+  expected_requirement_levels = %w[MUST MUST_NOT SHOULD SHOULD_NOT MAY]
+  record(requirement_levels.to_set == expected_requirement_levels.to_set, "normative requirement levels match MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY")
+  priority_levels = Array(identity["priority_levels"])
+  record(priority_levels.to_set == %w[P0 P1 P2 P3].to_set, "priority levels match P0-P3")
+
+  dependency_map = dependency_records.to_h { |item| [item["standard"], Array(item["depends_on"])] }
+  standard_entries.each do |entry|
+    if entry["id"].to_s.match?(/\\AUAES-(?:0[1-9]|1[0-2])\\z/)
+      record(dependency_map.fetch(entry["id"], []).include?("UAES-00"), "#{entry["id"]} domain standard depends on UAES-00")
+    end
+  end
+
+  exceptions = Array(registry["exceptions"])
+  exception_ids = exceptions.map { |item| item["id"] }
+  record(exception_ids.uniq.length == exception_ids.length, "exception IDs are unique")
+  exceptions.each do |exception|
+    id = exception["id"].to_s
+    record(id.match?(/\\AUAES-EXC-\\d{4,}\\z/), "exception ID format: #{id}")
+    record(%w[REQUESTED RISK_ASSESSED IN_REVIEW NEEDS_REVISION APPROVED ACTIVE REJECTED EXPIRED REVOKED CLOSED].include?(exception["status"]), "#{id} exception status is valid")
+    Array(exception["related_rule_ids"]).each do |rule_id|
+      record(ids.include?(rule_id) || rule_occurrences.key?(rule_id), "#{id} references a known rule: #{rule_id}")
+    end
+    if %w[APPROVED ACTIVE].include?(exception["status"])
+      %w[requester reason approver approved_at approval_evidence expires_at risk_assessment rollback_plan verification_plan].each do |key|
+        record(!exception[key].to_s.empty?, "#{id} approved exception includes #{key}")
+      end
+      record(Array(exception["compensating_controls"]).any?, "#{id} approved exception has compensating controls")
+    end
+  end
+
 
   history = Array(registry["history"])
   history_versions = history.map { |item| item["version"] }
