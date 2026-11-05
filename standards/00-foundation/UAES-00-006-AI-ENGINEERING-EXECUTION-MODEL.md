@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Standard ID | UAES-00-006 |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Status | DRAFT |
 | Normative Level | P0 |
 | Owner | UAES Engineering Governance |
@@ -47,6 +47,7 @@ Every non-trivial task SHOULD be represented by a task contract containing:
 - Task ID and title.
 - Request source and intended outcome.
 - Repository, branch, and baseline commit.
+- Data classification and required inputs.
 - Scope and explicit non-goals.
 - Task type and affected standard IDs.
 - Risk level and data classification.
@@ -54,7 +55,7 @@ Every non-trivial task SHOULD be represented by a task contract containing:
 - Required inputs and dependencies.
 - Acceptance criteria.
 - Verification plan and expected evidence.
-- Delivery format and human approval points.
+- Delivery format and human approval points (approval action and approver role).
 
 The task contract MUST be validated against the applicable task schema when one exists. Missing mandatory authorization or acceptance criteria is a stop condition.
 
@@ -140,3 +141,11 @@ Verify this model through task-contract schema validation, permission-negative t
 | Version | Status | Change |
 |---|---|---|
 | 1.0.0 | DRAFT | Initial execution lifecycle and evidence model |
+
+
+## 14. Change History
+
+| Version | Status | Change |
+|---|---|---|
+| 1.0.0 | DRAFT | Initial AI engineering execution model |
+| 1.1.0 | DRAFT | Align task-contract schema fields with request source, outcome, data classification, inputs, evidence, delivery format and approval points |
