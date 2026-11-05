@@ -199,18 +199,24 @@ else
   graph.keys.each { |node| visit_dependency(node, graph, Set.new, visited, cycles) }
   record(cycles.empty?, "required dependency graph has no cycles#{cycles.empty? ? "" : ": #{cycles.uniq.join(", ")}"}")
 
-  # Rule IDs declared in standard headings are audited separately from registry entry IDs.
+  # Rule definitions may be headings, bold labels, or the first cell of a rule table.
   rule_occurrences = Hash.new { |hash, key| hash[key] = [] }
   standard_entries.each do |entry|
     path = File.join(ROOT, entry["file"].to_s)
     next unless File.file?(path)
     File.readlines(path, chomp: true).each_with_index do |line, index|
-      match = line.match(/^\s*\#{3,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/)
-      rule_occurrences[match[1]] << "#{entry["file"]}:#{index + 1}" if match
+      match = line.match(/^\s*\#{3,6}\s+(UAES-[A-Z0-9-]+)\s*(?:[—-]|$)/) ||
+              line.match(/^\s*\|\s*(UAES-[A-Z0-9-]+)\s*\|/) ||
+              line.match(/^\s*(?:[-*]\s*)?\*\*(UAES-[A-Z0-9-]+)\s*(?:[—-]|\*\*)/)
+      next unless match
+      rule_id = match[1]
+      rule_occurrences[rule_id] << "#{entry["file"]}:#{index + 1}"
+      record(rule_id.match?(/\AUAES-(?:[A-Z][A-Z0-9]*-\d{3}|(?:0[0-9]|1[0-2])-[A-Z][A-Z0-9]*-\d{3}|(?:0[0-9]|1[0-2])-\d{3}-\d{3})\z/),
+             "rule ID uses a collision-safe format: #{rule_id}")
     end
   end
   duplicate_rules = rule_occurrences.select { |_id, locations| locations.length > 1 }
-  record(duplicate_rules.empty?, "rule IDs in standard headings are unique#{duplicate_rules.empty? ? "" : ": #{duplicate_rules.keys.join(", ")}"}")
+  record(duplicate_rules.empty?, "normative rule definitions are unique#{duplicate_rules.empty? ? "" : ": #{duplicate_rules.keys.join(", ")}"}")
   collisions = rule_occurrences.keys & ids
   record(collisions.empty?, "rule IDs do not collide with registered standard/schema/gate IDs#{collisions.empty? ? "" : ": #{collisions.join(", ")}"}")
 
