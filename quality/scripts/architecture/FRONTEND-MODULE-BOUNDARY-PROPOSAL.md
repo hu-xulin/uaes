@@ -100,6 +100,13 @@ The Uter source at `008ec53adc9652ee454090b4fb1152536dd45bf3` was additionally c
 
 Do **not** move `VerificationOperation`, `RequestVerificationOptions`, `SecureVerificationState`, security-proof orchestration, or feature UI contracts into the shared store contract module. Those remain feature-owned. The neutral login challenge contract should contain only the serializable server challenge shape needed by the auth store; feature-specific adapters may refine it without introducing a reverse dependency.
 
+**Source-level refinements from exact file inspection**
+
+- `LoginChallenge.methods` currently references `VerificationRequirements['methods']`. That type's `VerificationMethod` union also includes `password`, `email_code`, `oauth`, and `session`, while the login challenge runtime validator accepts only `2fa` and `passkey`. The neutral persisted/wire contract should therefore use the exact login challenge method subset (`'2fa' | 'passkey'`) and a structurally compatible availability item, rather than importing the broad feature verification union. Add a compile-time compatibility assertion and runtime fixture to prevent widening the accepted login methods accidentally.
+- `SystemStatus` currently references `CustomOAuthProviderInfo[]` in its nested and direct properties. If `SystemStatus` moves to `web/src/types/system.ts`, its `CustomOAuthProviderInfo` dependency must move with it (or be extracted into a neutral OAuth/system contract). Do not leave a shared contract importing a feature-owned type.
+- `AuthBundle` is consumed by the secure-verification API as well as auth API response declarations. Keep a single canonical type and preserve existing import compatibility during the migration.
+- `auth-store.ts` also imports `AdminCapabilities` from `@/lib/admin-permissions`. This is not the identified feature-to-store cycle, but its direction and ownership must be included in the import graph review; do not move admin permission policy into the auth contract merely to make the graph appear clean.
+
 **Required compatibility bridge**
 
 - During migration, the existing feature type modules may re-export neutral contracts so existing imports do not need to change in one large patch.
