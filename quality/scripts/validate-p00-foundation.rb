@@ -64,7 +64,7 @@ unless nonempty?(ROOT, REGISTRY_PATH)
   ERRORS << "registry missing or empty: #{REGISTRY_PATH}"
 else
   registry = load_yaml(ROOT, REGISTRY_PATH)
-  required_keys = %w[registry phases standards schemas gates acceptance system_files tool_adapters dependencies validation history]
+  required_keys = %w[registry phases standards schemas gates acceptance system_files tool_adapters exceptions dependencies validation history]
   required_keys.each { |key| record(registry.key?(key), "registry top-level key exists: #{key}") }
 
   identity = registry["registry"].is_a?(Hash) ? registry["registry"] : {}
@@ -85,6 +85,10 @@ else
   record(phases.keys.to_set == expected_phases, "phase registry contains exactly P00-P12")
   phases.each do |phase, value|
     record(valid_statuses.include?(value["status"]), "#{phase} has a registered lifecycle status")
+    if %w[APPROVED IMPLEMENTED VERIFIED ACTIVE].include?(value["status"])
+      approval = value["approval"].is_a?(Hash) ? value["approval"] : {}
+      %w[approver approved_at evidence change_request].each { |key| record(!approval[key].to_s.empty?, "#{phase} approval record includes #{key}") }
+    end
   end
 
   collections = %w[standards schemas gates acceptance system_files tool_adapters]
@@ -103,6 +107,10 @@ else
     record(!path.empty? && !path.start_with?("/") && !path.split("/").include?(".."), "#{id} uses a safe relative file path")
     record(nonempty?(ROOT, path), "#{id} file exists and is non-empty: #{path}")
     record(valid_statuses.include?(entry["status"]), "#{id} lifecycle status is valid") if entry.key?("status")
+    if %w[APPROVED IMPLEMENTED VERIFIED ACTIVE].include?(entry["status"])
+      approval = entry["approval"].is_a?(Hash) ? entry["approval"] : {}
+      %w[approver approved_at evidence change_request].each { |key| record(!approval[key].to_s.empty?, "#{id} approval record includes #{key}") }
+    end
     if kind == "schemas"
       record(path.start_with?(".uaes/schemas/"), "#{id} schema path is under .uaes/schemas/")
       if nonempty?(ROOT, path)
@@ -134,6 +142,24 @@ else
   Dir.glob(File.join(ROOT, ".uaes/schemas/**/*.json")).each do |full|
     relative = full.delete_prefix(ROOT + "/")
     record(schema_paths.include?(relative), "schema file is registered: #{relative}")
+  end
+
+  exceptions = Array(registry["exceptions"])
+  exception_ids = exceptions.map { |item| item["id"] }
+  record(exception_ids.uniq.length == exception_ids.length, "exception IDs are unique")
+  exceptions.each do |exception|
+    id = exception["id"].to_s
+    record(id.match?(/\\AUAES-EXC-\\d{4,}\\z/), "exception ID format: #{id}")
+    record(%w[REQUESTED RISK_ASSESSED IN_REVIEW NEEDS_REVISION APPROVED ACTIVE REJECTED EXPIRED REVOKED CLOSED].include?(exception["status"]), "#{id} exception status is valid")
+    Array(exception["related_rule_ids"]).each do |rule_id|
+      record(ids.include?(rule_id) || rule_occurrences.key?(rule_id), "#{id} references a known rule: #{rule_id}")
+    end
+    if %w[APPROVED ACTIVE].include?(exception["status"])
+      %w[requester reason approver approved_at approval_evidence expires_at risk_assessment rollback_plan verification_plan].each do |key|
+        record(!exception[key].to_s.empty?, "#{id} approved exception includes #{key}")
+      end
+      record(Array(exception["compensating_controls"]).any?, "#{id} approved exception has compensating controls")
+    end
   end
 
   dependency_records = Array(registry["dependencies"])
