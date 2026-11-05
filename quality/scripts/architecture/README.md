@@ -33,13 +33,13 @@ ruby quality/scripts/architecture/test-router-openapi-drift.rb
 
 Pinned source: Uter PR #15 head `442ddb5a7c234f2ee2d78651e0882407e9371c91`.
 
-Latest UAES revision at this evidence refresh: `7bf0c82f6e9c70a267dd7168426cf7736449012c`.
+Latest UAES revision at this evidence refresh: `fd3553c053c5623fc45997f738cc274627efb84c`.
 
-- Governance Validation: PASS — https://github.com/hu-xulin/uaes/actions/runs/41910274728
-- Database Migration Dialect Matrix: PASS — https://github.com/hu-xulin/uaes/actions/runs/41910274713
-- Architecture Source Checks: expected blocking failure on the live route/OpenAPI comparison — https://github.com/hu-xulin/uaes/actions/runs/41910274727
+- Governance Validation: PASS — https://github.com/hu-xulin/uaes/actions/runs/41910991337
+- Database Migration Dialect Matrix against pinned Uter source `682bb73d728115fc8201e64b0fefddce14c2592d`: PASS — https://github.com/hu-xulin/uaes/actions/runs/41911813787
+- Architecture Source Checks against the same pinned Uter source: BLOCKED only at live router/OpenAPI comparison — https://github.com/hu-xulin/uaes/actions/runs/41911813789
 
-The latest Architecture Source Checks run completed all preceding checks successfully: module manifests, RelayKit boundary and fixtures, Go module dependency allowlist and fixtures, API contract compatibility and fixtures, database migration inventory integrity, frontend production/test inventory and fixtures (including per-edge import-kind classification), and router/OpenAPI positive/negative fixtures. The final live router comparison correctly failed on the two unresolved documented operations listed below. This is not a green architecture gate.
+Architecture Source Checks run `41911813789` checked Uter source `682bb73d728115fc8201e64b0fefddce14c2592d` and completed all preceding checks successfully: module manifests, RelayKit boundary and fixtures, Go module dependency allowlist and fixtures, API contract compatibility and fixtures, database migration inventory integrity, frontend production/test inventory and fixtures (including per-edge import-kind classification), and router/OpenAPI positive/negative fixtures. The final live router comparison correctly failed on the two unresolved documented operations listed below. This is not a green architecture gate.
 
 ### Go module and API evidence
 
@@ -90,7 +90,7 @@ Routes importing feature slices are normal route composition and should not be b
 
 ### Router / OpenAPI runtime evidence
 
-The runtime capture records **450 static Gin routes and 34 built-in dynamic plugin routes**. The route checker fixture suite passes before the live gate, including parameter routes, catch-all routes, missing-operation rejection, and method mismatch rejection.
+The runtime capture in run `41911813789` records **450 static Gin routes and 34 built-in dynamic plugin routes**. The route checker fixture suite passes before the live gate, including parameter routes, catch-all routes, missing-operation rejection, and method mismatch rejection.
 
 The live comparison still reports exactly two documented operations with no matching runtime route:
 - `POST /api/oauth/wechat/bind`
