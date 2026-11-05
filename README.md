@@ -7,7 +7,7 @@ UAES is the centralized AI engineering governance and standards repository for U
 | Field | Current value |
 |---|---|
 | Registry | `.uaes/STANDARD-REGISTRY.yaml` |
-| Registry version | `1.7.0` |
+| Registry version | `1.8.0` |
 | Lifecycle | **DRAFT** |
 | Domain coverage | P00–P12 |
 | Skill registry | `skills/registry.yaml` |
