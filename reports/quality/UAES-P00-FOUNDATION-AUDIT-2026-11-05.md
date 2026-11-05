@@ -64,12 +64,12 @@
 2. Independently audit all registered standards for semantic conflicts, duplicate definitions, and rule ownership.
 3. Review all exception/waiver records and confirm there are no unregistered exceptions outside the new registry.
 4. Verify the latest 22-case P00 suite and task-contract positive/negative Schema controls in CI; run #593 predates these additions.
-5. Verify Uter PR #15 current-head CI for the immutable UAES version/status pin checker.
+5. Allow the remaining Uter PR #15 CI jobs to finish; its UAES integration contract job has already passed.
 6. Complete full semantic comparison of Uter's 10 domain standards, 4 UEQE standards, design system, and all applicable UAES rules.
 7. Keep UAES DRAFT and Uter MIGRATION_PENDING until owner approval and independent acceptance; do not remove Uter project overlays.
 
 ## Acceptance decision
 
-**P00 overall: BLOCKED — 00-07, 00-09, 00-11, and 00-14 still require human review or Uter-side CI evidence.**
+**P00 overall: BLOCKED — 00-09 and 00-11 still require full semantic/exception-inventory review; the latest UAES P00 code/schema changes also need a fresh complete CI run.**
 
 No PR was merged. No production environment, database, payment configuration, deployment, or secret was modified.
