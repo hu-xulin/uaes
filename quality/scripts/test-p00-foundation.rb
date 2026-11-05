@@ -331,4 +331,24 @@ class P00FoundationAuditTest < Minitest::Test
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
 
+  def test_rejects_invalid_exception_expiry
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["exceptions"] << {
+      "id" => "UAES-EXC-0004", "exception_class" => "E1",
+      "related_rule_ids" => ["UAES-00-PRIN-001"], "status" => "REQUESTED",
+      "requester" => "fixture", "reason" => "fixture",
+      "business_justification" => "fixture", "technical_constraints" => "fixture",
+      "risk_assessment" => "fixture", "affected_components" => ["fixture"],
+      "security_impact" => "none", "data_impact" => "none",
+      "financial_impact" => "none", "compensating_controls" => ["fixture"],
+      "expires_at" => "not-a-date", "rollback_plan" => "fixture",
+      "verification_plan" => "fixture"
+    }
+    write_registry(root, registry)
+    assert_audit_fails(root, "exception expiry is ISO-8601")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
 end
