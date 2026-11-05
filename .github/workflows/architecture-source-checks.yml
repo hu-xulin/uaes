@@ -7,6 +7,8 @@ on:
       - "quality/scripts/architecture/**"
       - ".uaes/registry/modules.yaml"
       - ".uaes/registry/database-migration-inventory.yaml"
+      - ".uaes/registry/api-contract-baseline.json"
+      - ".uaes/registry/api-breaking-change-approvals.json"
       - ".github/workflows/architecture-source-checks.yml"
 
 permissions:
