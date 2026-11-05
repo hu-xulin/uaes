@@ -3,7 +3,7 @@
 **Standard ID:** UAES-00  
 **Standard Name:** Foundation Standard  
 **System:** UTER AI Engineering Standard  
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Status:** DRAFT  
 **Normative Level:** P0  
 **Owner:** Uter Engineering Governance  
@@ -206,17 +206,22 @@ AI 不得将 MUST 降级为 SHOULD，也不得将 MUST NOT 解释为可自由选
 
 ## 8. Standard Status
 
-标准状态：
+标准生命周期统一由 UAES-00-003 定义，注册表与 Schema 必须使用完全相同的状态集合：
 
+- PROPOSED：已提出，尚未正式起草。
 - DRAFT：草案。
 - IN_REVIEW：审查中。
-- APPROVED：已批准。
+- NEEDS_REVISION：需要修改并返回 DRAFT。
+- APPROVED：已批准，尚未完成实施与验证。
+- IMPLEMENTED：已完成工程实施，仍需验证。
+- VERIFIED：已通过规定验证，等待正式生效。
 - ACTIVE：正式生效。
-- DEPRECATED：不建议继续使用。
+- REJECTED：被拒绝。
+- DEPRECATED：不建议新任务继续采用。
+- SUPERSEDED：已被新标准或版本替代。
 - RETIRED：已退役。
-- SUPERSEDED：已被新版本替代。
 
-只有 ACTIVE 标准可以作为当前正式执行基线。DRAFT 标准可以用于试运行，但必须明确标识。
+只有 ACTIVE 标准可以作为当前正式执行基线。DRAFT、PROPOSED、IN_REVIEW、APPROVED、IMPLEMENTED 和 VERIFIED 均不得被误认为已正式生效。任何进入 APPROVED、IMPLEMENTED、VERIFIED 或 ACTIVE 的状态变更，都必须附带可追溯的审批记录；AI 不得自行伪造审批。
 
 ## 9. Mandatory Engineering Principles
 
@@ -388,4 +393,4 @@ UAES 体系只有同时满足以下条件，才可宣布完成：
 
 | Version | Status | Change |
 |---|---|---|
-| 1.0.0 | DRAFT | Initial UAES Foundation |
+| 1.0.0 | DRAFT | Initial UAES Foundation |\n| 1.1.0 | DRAFT | Namespace principle IDs to avoid collisions with registered standard IDs |\n| 1.2.0 | DRAFT | Align Foundation status vocabulary with UAES-00-003 and the global registry |
