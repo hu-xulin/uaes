@@ -294,11 +294,17 @@ class P00FoundationAuditTest < Minitest::Test
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
 
-  def test_rejects_rule_id_collision_with_standard_id
+  def test_rejects_rule_id_collision_with_registered_id
     root = fixture
-    path = File.join(root, "standards/00-foundation/UAES-01.md")
-    File.write(path, "# UAES-01\n\n**Status:** DRAFT\n\n### UAES-00-001 — collision\n")
-    assert_audit_fails(root, "rule IDs do not collide with registered standard/schema/gate IDs")
+    path = File.join(root, "standards/00-foundation/UAES-02.md")
+    File.write(path, "# UAES-02\n\n**Status:** DRAFT\n\n### UAES-00-PRIN-001 — collision\n")
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["standards"] << {
+      "id" => "UAES-00-PRIN-001", "file" => "standards/00-foundation/UAES-02.md",
+      "phase" => "P00", "status" => "DRAFT"
+    }
+    write_registry(root, registry)
+    assert_audit_fails(root, "rule ID collides with registered ID")
   ensure
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
