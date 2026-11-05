@@ -1,7 +1,7 @@
 version: 1.0.0
 authority: .uaes/STANDARD-REGISTRY.yaml
-registry_version: 1.7.0
-registry_status: DRAFT
+registry_version: 1.9.0
+registry_status: APPROVED
 generated_by: quality/scripts/uaes/validate-registry.mjs (derived index)
 note: Derived index only. The global registry remains the single source of truth; rule IDs remain authored in standards/**/*.md.
 counts:

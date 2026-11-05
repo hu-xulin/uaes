@@ -7,7 +7,8 @@
 # Registry: .uaes/STANDARD-REGISTRY.yaml
 # System: UTER AI Engineering Standard
 # Registry schema version: 1.0.0
-# Registry content version: 1.8.0
+# Registry content version: 1.9.0
+# Registry status: APPROVED (formal baseline; see .uaes/APPROVAL-RECORD.md)
 # Scope: P00 - P12 (domains 00-12; all 13 domains registered, see history 1.8.0)
 # Build depth: enterprise
 # Delivery mode: all
@@ -27,9 +28,9 @@ registry:
   id: "UAES-GLOBAL-REGISTRY"
   name: "UTER AI Engineering Standard"
   abbreviation: "UAES"
-  version: "1.8.0"
+  version: "1.9.0"
   schema_version: "1.0.0"
-  status: "DRAFT"
+  status: "APPROVED"
 
   project:
     name: "Uter"
@@ -3094,3 +3095,14 @@ history:
       - "Rule ID namespaces are collision-safe; governance workflow states align with the lifecycle model."
       - "Exception classes E0-E4 and complete approval evidence are enforced; E0 is non-waivable."
       - "Task contract schema includes data classification, required inputs, expected evidence, and approval points with positive/negative validation."
+
+  - version: "1.9.0"
+    date: "2026-11-06"
+    change: "Formal approval of the global registry as the published UAES normative baseline (registry.status DRAFT -> APPROVED) by explicit project-owner authorisation; derived indices synchronised."
+    scope:
+      - "Registry lifecycle state and derived indices"
+    notes:
+      - "Approval record: .uaes/APPROVAL-RECORD.md (UAES-APPROVAL-2026-11-06-001), compliant with UAES-01-003 approval classes A3 and mandatory rules UAES-APP-001..005."
+      - "Approval applies to the registry baseline only. All individual phase/standard/schema/gate/acceptance entries remain DRAFT; prohibit_implicit_approval and prohibit_implicit_implementation are preserved."
+      - "The 13 L3 domain gates remain execution: NOT_RUN and the L4 global gate remains BLOCKED; quality-gate-runner.mjs still defaults to evidence-only read-only behaviour."
+      - "No product conformance claim is made. This decision does not mark any Uter audit finding VERIFIED, does not merge any PR, and does not authorise production deployment."

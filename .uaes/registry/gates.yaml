@@ -1,6 +1,6 @@
 version: 1.0.0
 authority: .uaes/STANDARD-REGISTRY.yaml
-registry_version: 1.7.0
+registry_version: 1.9.0
 generated_by: quality/scripts/uaes/validate-registry.mjs (derived index)
 global_gate:
   id: UAES-GLOBAL-GATE-001
