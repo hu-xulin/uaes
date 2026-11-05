@@ -235,6 +235,14 @@ else
     id = exception["id"].to_s
     record(id.match?(/\AUAES-EXC-\d{4,}\z/), "exception ID format: #{id}")
     record(%w[REQUESTED RISK_ASSESSED IN_REVIEW NEEDS_REVISION APPROVED ACTIVE REJECTED EXPIRED REVOKED CLOSED].include?(exception["status"]), "#{id} exception status is valid")
+    record(%w[E0 E1 E2 E3 E4].include?(exception["exception_class"]), "#{id} exception class is valid")
+    %w[requester reason business_justification technical_constraints risk_assessment security_impact data_impact financial_impact expires_at rollback_plan verification_plan].each do |key|
+      record(!exception[key].to_s.empty?, "#{id} exception request includes #{key}")
+    end
+    record(Array(exception["affected_components"]).any?, "#{id} exception has affected components")
+    record(Array(exception["compensating_controls"]).any?, "#{id} exception has compensating controls")
+    record(exception["exception_class"] != "E0" || !%w[APPROVED ACTIVE].include?(exception["status"]),
+           "#{id} E0 exceptions cannot be approved or active")
     Array(exception["related_rule_ids"]).each do |rule_id|
       record(ids.include?(rule_id) || rule_occurrences.key?(rule_id), "#{id} references a known rule: #{rule_id}")
     end
