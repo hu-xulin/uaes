@@ -45,6 +45,7 @@
 | T01 | 注册表校验脚本 | 可对注册表执行 ID 唯一性、路径存在性、Schema 引用、依赖循环、生命周期状态、审批和例外校验 | UNIT | NOT_RUN |
 | T02 | Foundation Gate 执行 | UAES-00-GATE-001 可按报告模板产出结构化结果 | UNIT | NOT_RUN |
 | T03 | P00 自动化负向测试 | 重复 ID、缺失文件、悬空依赖、循环依赖、无效 Schema 引用、状态漂移、审批缺失均被拒绝 | UNIT | NOT_RUN |
+| T04 | Task Contract Schema | 合法任务契约被接受，缺失授权字段的负向实例被拒绝 | SCHEMA | NOT_RUN |
 
 ## 6. AI Practical Acceptance
 
