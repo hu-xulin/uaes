@@ -17,8 +17,8 @@ class P00FoundationAuditTest < Minitest::Test
     root = Dir.mktmpdir("uaes-p00-")
     %w[.uaes/schemas standards/00-foundation].each { |path| FileUtils.mkdir_p(File.join(root, path)) }
     File.write(File.join(root, ".uaes/VERSION"), "1.0.0\n")
-    File.write(File.join(root, "standards/00-foundation/UAES-00.md"), "# UAES-00\n")
-    File.write(File.join(root, "standards/00-foundation/UAES-01.md"), "# UAES-01\n")
+    File.write(File.join(root, "standards/00-foundation/UAES-00.md"), "# UAES-00\n\n**Status:** DRAFT\n")
+    File.write(File.join(root, "standards/00-foundation/UAES-01.md"), "# UAES-01\n\n**Status:** DRAFT\n")
 
     registry_schema = {
       "$schema" => "https://json-schema.org/draft/2020-12/schema",
