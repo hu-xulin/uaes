@@ -5,7 +5,7 @@
 | System | UTER AI Engineering Standard |
 | System ID | UAES-GLOBAL-REGISTRY |
 | Registry | `.uaes/STANDARD-REGISTRY.yaml` |
-| Registry version | 1.7.0 |
+| Registry version | 1.8.0 |
 | Registry lifecycle | DRAFT |
 | Domain range | P00–P12 |
 | Standard source | `standards/` |
