@@ -108,3 +108,22 @@ The final live inventory captured **450 static Gin routes and 34 dynamic plugin 
 Run: https://github.com/hu-xulin/uaes/actions/runs/41967574900
 
 This is a confirmed blocking contract discrepancy at the pinned integration baseline. It is not a checker-fixture failure. The gate remains blocking; no runtime handler or OpenAPI declaration has been changed. The API contract owner must select Option A, B, or C in §2/§4 before remediation.
+
+
+## 1C. Latest CI revalidation — run 41968779803
+
+The latest Architecture Source Checks run on 2026-11-05 again checked out and verified Uter source `008ec53adc9652ee454090b4fb1152536dd45bf3`. All architecture inventory and checker fixture steps passed, including:
+- database migration inventory integrity;
+- database source-pin positive/negative controls;
+- frontend import inventory and positive/negative controls;
+- router/OpenAPI drift checker positive/negative controls.
+
+The final live Gin/OpenAPI parity step remains **FAIL** with exactly the same two discrepancies:
+- `POST /api/oauth/wechat/bind`
+- `GET /api/verify/status`
+
+The runtime inventory again captured 450 static Gin routes and 34 dynamic plugin routes. The failure is reproducible on the pinned source baseline and is not caused by the route checker fixtures.
+
+Run: https://github.com/hu-xulin/uaes/actions/runs/41968779803
+
+No API owner decision has been recorded. Options A/B/C and the restrictions in §4 remain unchanged. Keep the gate blocking and Uter migration pending.
