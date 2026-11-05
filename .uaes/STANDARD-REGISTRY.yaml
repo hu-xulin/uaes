@@ -2450,6 +2450,8 @@ tool_adapters:
 # STANDARD DEPENDENCIES
 # =============================================================================
 
+exceptions: []
+
 dependencies:
 
   - standard: "UAES-00"
