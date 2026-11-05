@@ -43,7 +43,9 @@ class P00FoundationAuditTest < Minitest::Test
     registry = {
       "registry" => {
         "id" => "UAES-GLOBAL-REGISTRY", "version" => "1.0.0",
-        "status" => "DRAFT", "lifecycle_status" => STATUSES
+        "status" => "DRAFT", "lifecycle_status" => STATUSES,
+        "requirement_levels" => %w[MUST MUST_NOT SHOULD SHOULD_NOT MAY],
+        "priority_levels" => %w[P0 P1 P2 P3]
       },
       "phases" => phases, "standards" => entries, "schemas" => schema_entries,
       "gates" => [], "acceptance" => [], "system_files" => [], "tool_adapters" => [], "exceptions" => [],
@@ -151,4 +153,37 @@ class P00FoundationAuditTest < Minitest::Test
   ensure
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
+  def test_rejects_approved_standard_without_approval_record
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["standards"][0]["status"] = "APPROVED"
+    write_registry(root, registry)
+    assert_audit_fails(root, "approval record includes approver")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_active_exception_without_approval_evidence
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["exceptions"] << {
+      "id" => "UAES-EXC-0001", "related_rule_ids" => ["UAES-00"],
+      "status" => "ACTIVE", "requester" => "fixture", "reason" => "fixture"
+    }
+    write_registry(root, registry)
+    assert_audit_fails(root, "approved exception includes approver")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_rejects_unknown_normative_level
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["registry"]["requirement_levels"] = %w[MUST MAY]
+    write_registry(root, registry)
+    assert_audit_fails(root, "normative requirement levels match")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
 end
