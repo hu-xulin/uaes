@@ -164,14 +164,18 @@
   "$defs": {
     "lifecycleStatus": {
       "enum": [
-        "DRAFT",
         "PROPOSED",
+        "DRAFT",
         "IN_REVIEW",
+        "NEEDS_REVISION",
         "APPROVED",
         "IMPLEMENTED",
         "VERIFIED",
+        "ACTIVE",
+        "REJECTED",
         "DEPRECATED",
-        "SUPERSEDED"
+        "SUPERSEDED",
+        "RETIRED"
       ]
     },
     "phase": {
