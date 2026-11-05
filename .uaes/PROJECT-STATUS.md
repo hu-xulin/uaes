@@ -6,7 +6,7 @@
 
 ## Current governance state
 
-- Global registry version: 1.7.0.
+- Global registry version: 1.8.0.
 - Registered domain range: P00–P12 (13 domains).
 - Registry lifecycle: DRAFT.
 - All 278 registered file references exist and are non-empty.
