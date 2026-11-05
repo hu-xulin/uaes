@@ -1929,6 +1929,7 @@ schemas:
 
   - id: "UAES-SCHEMA-08-003"
     file: ".uaes/schemas/agent-handoff.schema.json"
+    shared_with: "UAES-SCHEMA-01-003"
     type: "SCHEMA"
     phase: "P08"
     status: "DRAFT"
@@ -2132,6 +2133,102 @@ schemas:
 # QUALITY GATES
 # =============================================================================
 
+
+  - id: "UAES-SCHEMA-08-009"
+    name: "Agent Result Schema"
+    file: ".uaes/schemas/agent-result.schema.json"
+    type: "SCHEMA"
+    phase: "P08"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-04-005"
+    name: "Architecture Review Schema"
+    file: ".uaes/schemas/architecture-review.schema.json"
+    type: "SCHEMA"
+    phase: "P04"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-12-006"
+    name: "Change Impact Schema"
+    file: ".uaes/schemas/change-impact.schema.json"
+    type: "SCHEMA"
+    phase: "P12"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-03-003"
+    name: "Knowledge Fact Schema"
+    file: ".uaes/schemas/fact.schema.json"
+    type: "SCHEMA"
+    phase: "P03"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-09-005"
+    name: "Gate Registry Schema"
+    file: ".uaes/schemas/gate-registry.schema.json"
+    type: "SCHEMA"
+    phase: "P09"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-03-004"
+    name: "Knowledge Record Schema"
+    file: ".uaes/schemas/knowledge.schema.json"
+    type: "SCHEMA"
+    phase: "P03"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-04-006"
+    name: "Module Registry Schema"
+    file: ".uaes/schemas/module-registry.schema.json"
+    type: "SCHEMA"
+    phase: "P04"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-03-005"
+    name: "Project Status Schema"
+    file: ".uaes/schemas/project-status.schema.json"
+    type: "SCHEMA"
+    phase: "P03"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-09-006"
+    name: "Engineering Report Schema"
+    file: ".uaes/schemas/report.schema.json"
+    type: "SCHEMA"
+    phase: "P09"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-04-007"
+    name: "Repository Inventory Schema"
+    file: ".uaes/schemas/repository-inventory.schema.json"
+    type: "SCHEMA"
+    phase: "P04"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-09-007"
+    name: "Standard Mapping Schema"
+    file: ".uaes/schemas/standard-mapping.schema.json"
+    type: "SCHEMA"
+    phase: "P09"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
+
+  - id: "UAES-SCHEMA-00-003"
+    name: "Engineering Task Contract Schema"
+    file: ".uaes/schemas/task.schema.json"
+    type: "SCHEMA"
+    phase: "P00"
+    status: "DRAFT"
+    provenance: "RECONSTRUCTED"
 gates:
 
   # P0
@@ -2653,22 +2750,14 @@ dependencies:
   # P5: Cross-Platform Engineering (per supplied P5 dependency table)
 
   - standard: "UAES-07"
-    # depends_on lists references resolvable in THIS registry.
-    # forward_depends_on records the remaining P5 dependency-table entries whose
-    # phases (P6 / P8-P12) are not yet registered; they MUST be moved into
-    # depends_on when those phases land (see reject_dangling_dependencies).
     depends_on:
-      - "UAES-00"   # REG-003 domain dependency baseline
+      - "UAES-00"
+      - "UAES-01"
       - "UAES-02"
+      - "UAES-03"
       - "UAES-04"
       - "UAES-05"
-      - "UAES-06"   # promoted from forward_depends_on when P06 documents landed (2026-11-04)
-      - "UAES-08"   # promoted from forward_depends_on when P6 landed
-      - "UAES-12"   # promoted from forward_depends_on when P12 documents landed (2026-11-04)
-      - "UAES-10"   # promoted from forward_depends_on when P10 landed
-    forward_depends_on:
-      - "UAES-09"
-      - "UAES-11"
+      - "UAES-06"
 
   # ---------------------------------------------------------------------------
   # P6: AI Agent Engineering
@@ -2678,17 +2767,12 @@ dependencies:
 
   - standard: "UAES-08"
     depends_on:
-      - "UAES-00"   # REG-003 domain dependency baseline
+      - "UAES-00"
       - "UAES-01"
       - "UAES-02"
+      - "UAES-03"
       - "UAES-04"
-      - "UAES-05"
-      - "UAES-07"
-      - "UAES-09"   # promoted from forward_depends_on when P09 documents landed (2026-11-04)
-      - "UAES-10"   # promoted from forward_depends_on when P10 landed
-      - "UAES-12"   # promoted from forward_depends_on when P12 documents landed (2026-11-04)
-    forward_depends_on:
-      - "UAES-11"
+      - "UAES-06"
 
   - standard: "UAES-08-001"
     depends_on:
