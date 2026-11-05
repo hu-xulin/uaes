@@ -21,21 +21,21 @@
 
 | ID | Audit item | Current result | Evidence / finding |
 |---|---|---|---|
-| 00-01 | Standard registry audit | PASS | P00 validator passed in UAES Governance Validation run #593; 2,255 invariant checks completed. |
-| 00-02 | Standard file integrity | PASS | All registered paths passed existence, non-empty, safe-path and metadata checks in run #593. |
-| 00-03 | Standard ID audit | PASS | Foundation principle ID collision fixed; duplicate ID and rule-heading scans passed in run #593. |
-| 00-04 | Schema registry audit | PASS | Registered all 12 orphan schemas, declared shared agent-handoff schema, and passed registry/schema checks; 72 JSON Schemas passed meta-validation in run #593. |
-| 00-05 | Standard dependencies | PASS | Corrected P07/P08 dependency records; no required dependency cycle or dangling dependency remained in run #593. |
-| 00-06 | Standard lifecycle status | PASS | Twelve states, schema enums, registry entries, standard file metadata, and promoted-state approval provenance passed run #593. |
-| 00-07 | Normative priority | NOT_VERIFIED | MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY and P0-P3 vocabularies passed; semantic precedence review remains a human governance task. |
-| 00-08 | Standard versioning | PASS | Registry 1.8.0, VERSION file, semantic format, unique history entries and latest history alignment passed run #593. |
-| 00-09 | Standard conflict audit | PARTIAL | Resolved status-vocabulary drift, registry-vs-metadata-schema ambiguity, dependency-type representation ambiguity, and P07/P08 dependency conflict. Full cross-domain semantic review remains open. |
-| 00-10 | Duplicate rule audit | PASS | Duplicate rule-heading scan and registry/rule collision check passed run #593. |
-| 00-11 | Exception approval | NOT_VERIFIED | Empty exception registry, schema, approval, expiry, and compensating-control checks passed; independent search for out-of-registry waivers remains open. |
+| 00-01 | Standard registry audit | NOT_VERIFIED | Registry structure passed run #593 on the prior revision; later P00 schema/validator edits await rerun. |
+| 00-02 | Standard file integrity | NOT_VERIFIED | Registered file checks passed run #593 on the prior revision; latest branch rerun is pending. |
+| 00-03 | Standard ID audit | NOT_VERIFIED | Foundation principle IDs were fixed; expanded table/label rule-ID scanner and tests were added after run #593 and await rerun. |
+| 00-04 | Schema registry audit | NOT_VERIFIED | All 72 schema files were registered; exception schema was subsequently strengthened and awaits rerun. |
+| 00-05 | Standard dependencies | NOT_VERIFIED | P07/P08 cycle was corrected and passed run #593; latest revision awaits rerun. |
+| 00-06 | Standard lifecycle status | NOT_VERIFIED | Lifecycle alignment passed run #593; latest exception model edits await the current full gate. |
+| 00-07 | Normative priority | NOT_VERIFIED | MUST/MUST_NOT/SHOULD/SHOULD_NOT/MAY and P0-P3 vocabularies passed earlier; rule-ID convention was revised and requires rerun plus semantic review. |
+| 00-08 | Standard versioning | NOT_VERIFIED | Registry 1.8.0 and history passed run #593; an additional 1.8.0 reconciliation note was added afterward. |
+| 00-09 | Standard conflict audit | NOT_VERIFIED | Resolved status-vocabulary drift, registry-vs-metadata-schema ambiguity, dependency-type representation ambiguity, and P07/P08 dependency conflict. Full cross-domain semantic review remains open. |
+| 00-10 | Duplicate rule audit | NOT_VERIFIED | Expanded rule definition scanner and duplicate/collision tests were added after run #593; rerun pending. |
+| 00-11 | Exception approval | NOT_VERIFIED | Exception schema now includes E0-E4 and complete request evidence; latest validator/tests await rerun, and out-of-registry waiver inventory remains open. |
 | 00-12 | Audit evidence | PASS | This report links to the audit branch and run #593; CI logs record exact checks and regression results. Independent semantic review remains separate. |
 | 00-13 | Repository boundary | PASS | UAES README defines governance-only scope and PARALLEL relationship; Uter remains product code repository. |
-| 00-14 | Integration version pin | PASS | Uter integration contract pins UAES commit 84416f7f55c1166e3f5adfa0575c1ea713ff20d2, registry blob 1c74e918b84b8cc18d2806a936721852b823ca75, version 1.7.0, status DRAFT. The pinned commit was resolved successfully. |
-| 00-15 | Registry/file consistency | PASS | All 72 schema files are registered (one explicitly shared); schema inventory and registry/file reconciliation passed run #593. |
+| 00-14 | Integration version pin | NOT_VERIFIED | Uter integration checker asserts commit, registry blob, version 1.7.0, and DRAFT status; negative fixtures exist, but Uter CI remains unconfirmed. |
+| 00-15 | Registry/file consistency | NOT_VERIFIED | All 72 schema files were reconciled in run #593; latest exception schema update awaits revalidation. |
 
 ## Changes made on the UAES audit branch
 
@@ -54,7 +54,7 @@
 - UAES Governance Validation run 42036237551 failed because the new file-status parity regex was over-escaped. The failure was corrected in commit e44b2d60e812af10ab6cfcf50d5bf8acb7013791.
 - UAES Governance Validation run 42037086837 passed the full P00 validator (2,255 checks) but exposed one negative-fixture YAML-alias issue; fixture serialization was corrected in commit 6de2e0e62d515cba38d18069d957cf1efa3e1a8a.
 - UAES Governance Validation run 42037232482 then passed: P00 validator 2,255 checks; P00 regression tests 17 runs / 49 assertions / 0 failures; skill adapter tests 3 runs / 11 assertions / 0 failures; 72 JSON Schemas validated.
-- UAES Governance Validation run #593 succeeded. A documentation-only registry history update after that run is being rechecked; P00 remains blocked on cross-standard semantic review and Uter integration CI.
+- UAES Governance Validation run #593 succeeded on the preceding revision (2,255 validator checks; P00 tests 17/49 with zero failures; skill adapter tests 3/11 with zero failures; 72 schemas validated). Subsequent rule-ID scanner, exception schema, and test updates are not yet revalidated; the next workflow run is pending.
 - Uter PR #15 now includes version/status pin checks and negative fixtures; its CI result is also pending.
 
 ## Remaining blockers
