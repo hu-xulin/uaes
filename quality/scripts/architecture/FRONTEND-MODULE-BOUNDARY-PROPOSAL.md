@@ -2,8 +2,8 @@
 
 > Status: **DRAFT / NOT ENFORCED**
 > Source repository: `hu-xulin/uter`
-> Pinned source commit: `337485b4b19824f9bee59b6f8226802b455ab0ec`
-> Evidence run: https://github.com/hu-xulin/uaes/actions/runs/41960573825
+> Pinned source commit: `008ec53adc9652ee454090b4fb1152536dd45bf3`
+> Evidence run: https://github.com/hu-xulin/uaes/actions/runs/41967181380
 > Owner approval: pending
 
 ## 1. Purpose and non-goals
@@ -35,6 +35,20 @@ The per-edge classifier passed its positive/negative fixture suite on the pinned
 - `stores → features`: 1 type-only
 
 Global production import-kind totals in the same run: 5,444 runtime, 518 type-only, and 16 dynamic. Test-only totals: 698 runtime, 104 type-only, and 33 dynamic. These totals are diagnostic counts, not policy acceptance.
+
+### 2.1 Revalidated inventory on the current Uter integration baseline
+
+The source baseline for this proposal is now `008ec53adc9652ee454090b4fb1152536dd45bf3`, matching Uter PR #15. The Architecture Source Checks run `41967181380` completed the frontend import inventory and its positive/negative fixture tests successfully before the later live router/OpenAPI parity step failed.
+
+The current run reconfirmed the relevant production reverse edges:
+- `components → features`: 17 runtime imports.
+- `hooks → features`: 1 type-only import.
+- `lib → features`: 1 runtime + 1 type-only import.
+- `stores → features`: 1 type-only import.
+
+It also reconfirmed the broader inventory totals: 1,500 source files (1,217 production, 282 test, 1 generated), with 2 generated route-tree imports excluded; production imports classified as 5,444 runtime, 518 type-only, and 16 dynamic. These are inventory measurements, not accepted architecture policy.
+
+**Consumer inventory limitation:** the scan establishes file-level import edges, not a complete symbol-level consumer map for every auth contract. The AuthBundle/LoginChallenge/SystemStatus migration map in §3.1–3.2 remains a targeted source audit. Before implementation, complete a symbol-level search across all 1,500 TypeScript/TSX files (including tests, story/demo fixtures, generated consumers and package entrypoints), inspect each serialized/runtime consumer, and record exact paths and ownership. No contract move is authorized until that inventory and regression evidence are complete.
 
 ## 3. Reverse-edge classification register
 
