@@ -309,4 +309,26 @@ class P00FoundationAuditTest < Minitest::Test
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
 
+  def test_accepts_valid_active_e1_exception
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["exceptions"] << {
+      "id" => "UAES-EXC-0003", "exception_class" => "E1",
+      "related_rule_ids" => ["UAES-00-PRIN-001"], "status" => "ACTIVE",
+      "requester" => "fixture", "reason" => "fixture",
+      "business_justification" => "fixture", "technical_constraints" => "fixture",
+      "risk_assessment" => "fixture", "affected_components" => ["fixture"],
+      "security_impact" => "none", "data_impact" => "none",
+      "financial_impact" => "none", "compensating_controls" => ["fixture"],
+      "expires_at" => "2099-01-01T00:00:00Z", "rollback_plan" => "fixture",
+      "verification_plan" => "fixture", "approver" => "owner",
+      "approved_at" => "2026-01-01T00:00:00Z", "approval_evidence" => "PR-1"
+    }
+    write_registry(root, registry)
+    out, err, status = run_audit(root)
+    assert status.success?, "#{err}\n#{out}"
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
 end
