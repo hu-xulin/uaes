@@ -50,6 +50,8 @@
         "IN_REVIEW",
         "NEEDS_REVISION",
         "APPROVED",
+        "IMPLEMENTED",
+        "VERIFIED",
         "ACTIVE",
         "REJECTED",
         "DEPRECATED",
@@ -62,7 +64,12 @@
       "minLength": 1
     },
     "priority": {
-      "enum": ["P0", "P1", "P2", "P3"]
+      "enum": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ]
     },
     "owner": {
       "type": "string",
