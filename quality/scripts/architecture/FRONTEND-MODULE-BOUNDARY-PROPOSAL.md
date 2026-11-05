@@ -195,3 +195,56 @@ The actual directory structure may not match these logical layers one-to-one. A 
 - No API, payment, auth/session, persisted state, or UI behavior changes without targeted regression tests.
 - The source commit and checker version are pinned in the report.
 - This proposal remains DRAFT until all criteria and owner approvals are satisfied.
+
+
+### 3.3 Symbol-level consumer audit — AuthBundle / LoginChallenge / SystemStatus
+
+A targeted source read was performed against the exact Uter PR #15 commit `008ec53adc9652ee454090b4fb1152536dd45bf3`. This audit used the pinned commit's Git tree and direct file reads; GitHub code search returned zero matches with `incomplete_results=true`, so it is **not** treated as an exhaustive repository-wide symbol search. The consumer inventory limitation in §2.1 remains open.
+
+**Verified production declarations and consumers**
+
+| Symbol | File / line | Verified use | Boundary implication |
+|---|---|---|---|
+| `AuthBundle` | `web/src/stores/auth-store.ts:72,95` | Canonical interface and store setter contract | Current canonical owner is the store, which is the wrong dependency direction for a shared session contract |
+| `AuthBundle` | `web/src/features/auth/types.ts:19,77` | Auth API response data type imports from store | Feature API contract depends on store implementation module |
+| `AuthBundle` | `web/src/features/auth/secure-verification/types.ts:19,153` | Login result union imports from store | Verification feature depends on store contract |
+| `AuthBundle` | `web/src/features/auth/secure-verification/api.ts:27,160` | Refresh API returns `Promise<AuthBundle>` | API adapter also depends on store module |
+| `AuthBundle` | `web/src/lib/auth-session.ts:31,38,52-53,135,184,408` | Session parser, authenticated state, callbacks and current-bundle validation | Shared auth-session infrastructure imports a store-owned type; move the type, not the session behavior |
+| `LoginChallenge` | `web/src/features/auth/secure-verification/types.ts:136,145,153` | Feature contract and login result union | Feature owns challenge orchestration today |
+| `LoginChallenge` | `web/src/stores/auth-store.ts:21,83` | Store imports and persists pending challenge | The store-to-feature type edge is the reverse edge to eliminate |
+| `LoginChallenge` | `web/src/features/auth/secure-verification/api.ts:45,112-157` | API validation and challenge handling | Runtime validation must remain feature-owned and behavior-preserving |
+| `SystemStatus` | `web/src/features/auth/types.ts:90` | Declared in auth feature types | It is a system-wide contract, not an auth UI contract |
+| `SystemStatus` | `web/src/hooks/use-status.ts:21,25-26,43` | Shared status hook and cached status casting | Shared hook currently imports feature type |
+| `SystemStatus` | `web/src/lib/oauth.ts:19,123` | Shared OAuth utility consumes status | Shared utility currently imports feature type |
+| `SystemStatus` | `web/src/features/auth/secure-verification/api.ts:42,349` | Auth status response parsing | Feature consumer can use the neutral contract |
+| `CustomOAuthProviderInfo` | `web/src/features/auth/types.ts:135,180,201` | Declared in auth types and referenced by `SystemStatus` properties | Must move with `SystemStatus` or to a neutral OAuth/system contract; do not strand this dependency in the auth feature |
+
+**Additional test and fixture consumers verified**
+
+- `web/src/features/auth/api.test.ts:24,89` imports and constructs `AuthBundle`.
+- `web/src/features/auth/otp/__tests__/login-verification.test.tsx:32,38,119-121` imports and uses `AuthBundle` in login verification fixtures.
+- `web/src/features/auth/secure-verification/__tests__/verification-api.test.ts:32,174` imports and uses `AuthBundle`.
+- `web/src/features/auth/secure-verification/__tests__/verification-flow.test.tsx:26,107,143` imports and uses `AuthBundle`.
+- `web/src/lib/auth-session.test.ts:22,33,90,103,247,332` imports and exercises `AuthBundle` through session behavior.
+- `web/src/lib/auth-saved-language.test.ts:24,35` imports and constructs `AuthBundle`.
+- The previously inventoried security session utility/item suites remain in the regression list; this targeted pass did not establish additional direct references to these four symbols in those two files.
+
+**Implications for the proposed refactor**
+
+1. Move the canonical `AuthBundle` declaration into neutral `web/src/types/auth.ts`; update the store and shared `lib/auth-session.ts` to import it from there. Keep temporary type re-exports from the old store path only if needed to avoid a broad consumer rewrite.
+2. Keep `LoginChallenge` feature validation/orchestration in `features/auth/secure-verification`, but extract a minimal serializable challenge shape to neutral auth contracts for the store's persisted pending-verification state. The feature validator must narrow untrusted API data to that neutral shape; do not move the validator into the store.
+3. Move `SystemStatus` and `CustomOAuthProviderInfo` together to neutral `web/src/types/system.ts` (or a neutral OAuth/system contract module). Update `hooks/use-status.ts` and `lib/oauth.ts` so shared layers no longer import `features/auth/types`.
+4. Preserve runtime imports of `useAuthStore` in tests where store behavior is under test; only type-only imports should be redirected. Do not change persisted JSON, Zustand state shape, response parsing, or auth/session behavior.
+5. Before declaring the symbol inventory complete, run a branch-pinned full source search over all 1,500 TS/TSX files, including tests, stories, generated entrypoints and package exports. The GitHub code-search response for this pass was incomplete and cannot be used as negative evidence.
+
+**Audit evidence**
+
+- Uter source commit: `008ec53adc9652ee454090b4fb1152536dd45bf3`.
+- `web/src/stores/auth-store.ts` blob: `5ef322afc2286584cc239e2df3c3bc2d745a33ea`.
+- `web/src/features/auth/types.ts` blob: `c737d1e87df713723755c0e6050951f6bcb361d7`.
+- `web/src/features/auth/secure-verification/types.ts` blob: `3b116537fabdeea554667fefab220a70800df7a3`.
+- `web/src/lib/auth-session.ts` blob: `83d7f8841084a1745eb2f48c5470346ab0f2e959`.
+- `web/src/hooks/use-status.ts` blob: `c87aa942b661496181b43b0c33c140f904afed54`.
+- `web/src/lib/oauth.ts` blob: `297cdc0be2fa3b53600306f2f40722350c2d6a31`.
+
+This section is source-audit evidence only. It does not authorize implementation or enforcement. The proposal remains DRAFT / NOT ENFORCED pending exhaustive branch-pinned search, owner approval, and regression evidence.
