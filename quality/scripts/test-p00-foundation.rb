@@ -206,4 +206,34 @@ class P00FoundationAuditTest < Minitest::Test
     FileUtils.remove_entry(root) if root && File.exist?(root)
   end
 
+  def test_rejects_duplicate_schema_path_without_explicit_sharing
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["schemas"] << {
+      "id" => "UAES-SCHEMA-00-003",
+      "file" => ".uaes/schemas/standard-metadata.schema.json",
+      "phase" => "P00", "status" => "DRAFT"
+    }
+    write_registry(root, registry)
+    assert_audit_fails(root, "explicitly shared with")
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
+  def test_accepts_explicit_shared_schema_reference
+    root = fixture
+    registry = YAML.safe_load_file(File.join(root, ".uaes/STANDARD-REGISTRY.yaml"))
+    registry["schemas"] << {
+      "id" => "UAES-SCHEMA-00-003",
+      "file" => ".uaes/schemas/standard-metadata.schema.json",
+      "phase" => "P00", "status" => "DRAFT",
+      "shared_with" => "UAES-SCHEMA-00-002"
+    }
+    write_registry(root, registry)
+    out, err, status = run_audit(root)
+    assert status.success?, "#{err}\n#{out}"
+  ensure
+    FileUtils.remove_entry(root) if root && File.exist?(root)
+  end
+
 end
