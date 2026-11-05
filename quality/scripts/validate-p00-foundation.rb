@@ -127,6 +127,14 @@ else
     record(!path.empty? && !path.start_with?("/") && !path.split("/").include?(".."), "#{id} uses a safe relative file path")
     record(nonempty?(ROOT, path), "#{id} file exists and is non-empty: #{path}")
     record(valid_statuses.include?(entry["status"]), "#{id} lifecycle status is valid")
+    if kind == "standards" && nonempty?(ROOT, path)
+      source = File.read(File.join(ROOT, path))
+      status_match = source.match(/^\\s*\\*\\*Status:\\*\\*\\s*([A-Z_]+)/i) ||
+                     source.match(/^\\s*\\|\\s*Status\\s*\\|\\s*([A-Z_]+)\\s*\\|/i) ||
+                     source.match(/^\\s*Status:\\s*([A-Z_]+)/i)
+      record(status_match && status_match[1] == entry["status"],
+             "#{id} file status matches registry status")
+    end
     if %w[standards schemas gates acceptance].include?(kind)
       record(!entry["phase"].to_s.empty? && phases.key?(entry["phase"]), "#{id} has a registered phase")
     end
