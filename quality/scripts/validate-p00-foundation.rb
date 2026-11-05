@@ -4,6 +4,7 @@
 require "json"
 require "yaml"
 require "set"
+require "date"
 
 ROOT = File.expand_path(ENV.fetch("UAES_ROOT", File.expand_path("../..", __dir__)))
 REGISTRY_PATH = ".uaes/STANDARD-REGISTRY.yaml"
@@ -79,6 +80,10 @@ else
   record(statuses.all? { |s| s.is_a?(String) && s.match?(/\A[A-Z][A-Z_]*\z/) }, "lifecycle status values use canonical uppercase identifiers")
   valid_statuses = statuses.to_set
   record(valid_statuses.include?(identity["status"]), "global registry status is declared")
+  if %w[APPROVED IMPLEMENTED VERIFIED ACTIVE].include?(identity["status"])
+    approval = identity["approval"].is_a?(Hash) ? identity["approval"] : {}
+    %w[approver approved_at evidence change_request].each { |key| record(!approval[key].to_s.empty?, "global registry approval record includes #{key}") }
+  end
 
   expected_phases = (0..12).map { |n| format("P%02d", n) }.to_set
   phases = registry["phases"].is_a?(Hash) ? registry["phases"] : {}
@@ -212,6 +217,12 @@ else
         record(!exception[key].to_s.empty?, "#{id} approved exception includes #{key}")
       end
       record(Array(exception["compensating_controls"]).any?, "#{id} approved exception has compensating controls")
+      begin
+        expiry = DateTime.iso8601(exception["expires_at"].to_s)
+        record(expiry.to_date >= Date.today, "#{id} approved exception has not expired")
+      rescue ArgumentError
+        record(false, "#{id} approved exception expiry is a valid ISO-8601 timestamp")
+      end
     end
   end
 
