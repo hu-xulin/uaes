@@ -31,6 +31,11 @@ registry:
   version: "1.9.0"
   schema_version: "1.0.0"
   status: "APPROVED"
+  approval:
+    approver: "Project owner (identified by role per UAES-APP-004); explicit written instruction in conversation 2026-11-06"
+    approved_at: "2026-11-05T17:45:52Z"
+    evidence: "UAES-APPROVAL-2026-11-06-001; APPROVAL-RECORD.md; user instruction items 3 and 5"
+    change_request: "UTER-UAES-FULL-COMPLIANCE-EXECUTION"
 
   project:
     name: "Uter"
